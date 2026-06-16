@@ -1,0 +1,2450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PawTrack · Multi-Pet Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+        /* ========== CSS Variables (Themes - Pastel) ========== */
+        :root {
+            --bg: #FFF0F0;
+            --card-bg: #FFFAFA;
+            --text: #3D1A1A;
+            --text-secondary: #6B3A3A;
+            --accent: #C0392B;
+            --accent-light: #F5C8C8;
+            --accent-dark: #A93226;
+            --border: #F0D0D0;
+            --shadow: 0 8px 24px rgba(192, 57, 43, 0.12);
+            --radius: 20px;
+            --font: 'Nunito', sans-serif;
+            --transition: 0.25s ease;
+            --tab-bg: #F5E0E0;
+            --tab-active: #C0392B;
+            --tab-text: #3D1A1A;
+            --input-bg: #FFF8F8;
+            --badge-bg: #C0392B20;
+            --tag-bg: #C0392B30;
+            --btn-primary: #C0392B;
+            --btn-primary-text: #FFF;
+            --btn-hover: #A93226;
+            --danger: #C0392B;
+            --success: #27AE60;
+            --warning: #E67E22;
+            --info: #2980B9;
+            --card-shadow: 0 4px 16px rgba(192, 57, 43, 0.08);
+            --tab-prominent-bg: #C0392B;
+            --tab-prominent-text: #FFF;
+            --header-accent: #C0392B;
+        }
+
+        [data-theme="midnight"] {
+            --bg: #F0F5FF;
+            --card-bg: #F8FAFF;
+            --text: #1A2A4A;
+            --text-secondary: #3A5A7A;
+            --accent: #1A5276;
+            --accent-light: #C8D8F0;
+            --accent-dark: #123B5E;
+            --border: #D0DCE8;
+            --shadow: 0 8px 24px rgba(26, 82, 118, 0.12);
+            --tab-bg: #D8E4F0;
+            --tab-active: #1A5276;
+            --tab-text: #1A2A4A;
+            --input-bg: #F5F9FF;
+            --badge-bg: #1A527620;
+            --tag-bg: #1A527630;
+            --btn-primary: #1A5276;
+            --btn-primary-text: #FFF;
+            --btn-hover: #123B5E;
+            --danger: #C0392B;
+            --success: #27AE60;
+            --warning: #E67E22;
+            --info: #2980B9;
+            --card-shadow: 0 4px 16px rgba(26, 82, 118, 0.08);
+            --tab-prominent-bg: #1A5276;
+            --tab-prominent-text: #FFF;
+            --header-accent: #1A5276;
+        }
+
+        [data-theme="forest"] {
+            --bg: #FFFDF0;
+            --card-bg: #FFFFF8;
+            --text: #3A3A1A;
+            --text-secondary: #5A5A3A;
+            --accent: #6B7A3A;
+            --accent-light: #D8E0C0;
+            --accent-dark: #4D5A2A;
+            --border: #E8E8D0;
+            --shadow: 0 8px 24px rgba(107, 122, 58, 0.12);
+            --tab-bg: #F0F0E0;
+            --tab-active: #6B7A3A;
+            --tab-text: #3A3A1A;
+            --input-bg: #FFFCF5;
+            --badge-bg: #6B7A3A20;
+            --tag-bg: #6B7A3A30;
+            --btn-primary: #6B7A3A;
+            --btn-primary-text: #FFF;
+            --btn-hover: #4D5A2A;
+            --danger: #C0392B;
+            --success: #27AE60;
+            --warning: #E67E22;
+            --info: #2980B9;
+            --card-shadow: 0 4px 16px rgba(107, 122, 58, 0.08);
+            --tab-prominent-bg: #6B7A3A;
+            --tab-prominent-text: #FFF;
+            --header-accent: #6B7A3A;
+        }
+
+        /* ========== Reset & Base ========== */
+        *,
+        *::before,
+        *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { font-size: 16px; scroll-behavior: smooth; }
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            transition: background var(--transition), color var(--transition);
+            min-height: 100vh;
+            padding: 16px;
+            line-height: 1.5;
+        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+
+        /* ========== Typography ========== */
+        h1, h2, h3, h4 { font-weight: 800; letter-spacing: -0.01em; }
+        h1 { font-size: 2rem; }
+        h2 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        h3 { font-size: 1.2rem; margin-bottom: 0.4rem; }
+        a { color: var(--accent); text-decoration: none; }
+
+        /* ========== Layout ========== */
+        .app-container { max-width: 1200px; margin: 0 auto; }
+
+        /* Header */
+        .app-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            transition: background var(--transition), box-shadow var(--transition);
+            border: 2px solid var(--border);
+            gap: 12px;
+        }
+        .app-header .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: var(--header-accent);
+        }
+        .app-header .logo span { color: var(--text); }
+        .app-header .pet-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .app-header .pet-selector select {
+            padding: 6px 12px;
+            border-radius: 30px;
+            border: 2px solid var(--border);
+            background: var(--input-bg);
+            font-family: var(--font);
+            font-weight: 700;
+            color: var(--text);
+            font-size: 0.95rem;
+            cursor: pointer;
+            outline: none;
+            min-width: 120px;
+        }
+        .app-header .pet-selector select:focus {
+            border-color: var(--accent);
+        }
+        .app-header .pet-selector .btn-sm {
+            padding: 4px 14px;
+            font-size: 0.8rem;
+        }
+        .app-header .pet-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            background: var(--badge-bg);
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-weight: 600;
+            border: 2px solid var(--border);
+        }
+        .app-header .pet-badge .pet-type {
+            background: var(--accent);
+            color: #fff;
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+        }
+        .theme-picker {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+        .theme-picker button {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: border var(--transition), transform var(--transition);
+            font-size: 0;
+            padding: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .theme-picker button:hover { transform: scale(1.12); }
+        .theme-picker button.active {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px var(--accent-light);
+        }
+        .theme-picker .th-warm { background: #FFD4D4; }
+        .theme-picker .th-midnight { background: #C8D8F0; }
+        .theme-picker .th-forest { background: #E8F0D0; }
+
+        /* ========== Tabs ========== */
+        .tab-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 12px 16px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            transition: background var(--transition);
+            border: 2px solid var(--border);
+            align-items: center;
+        }
+        .tab-nav button {
+            background: transparent;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-family: var(--font);
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition);
+            white-space: nowrap;
+        }
+        .tab-nav button:hover {
+            background: var(--tab-bg);
+            color: var(--text);
+            transform: translateY(-2px);
+        }
+        .tab-nav button.active {
+            background: var(--tab-active);
+            color: #fff;
+            box-shadow: 0 4px 16px var(--tab-active)50;
+        }
+        .tab-nav button.tab-prominent {
+            font-size: 1.05rem;
+            padding: 12px 28px;
+            font-weight: 900;
+            letter-spacing: 0.02em;
+            background: var(--tab-prominent-bg);
+            color: var(--tab-prominent-text);
+            box-shadow: 0 4px 16px var(--tab-prominent-bg)40;
+            border-radius: 50px;
+            flex-shrink: 0;
+        }
+        .tab-nav button.tab-prominent:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 6px 24px var(--tab-prominent-bg)50;
+        }
+        .tab-nav button.tab-prominent.active {
+            background: var(--tab-prominent-bg);
+            color: #fff;
+            box-shadow: 0 4px 20px var(--tab-prominent-bg)60;
+            transform: scale(1.02);
+        }
+        .tab-nav button.tab-prominent::after {
+            content: " ⭐";
+            font-size: 0.75rem;
+            opacity: 0.9;
+        }
+        .tab-nav .tab-divider {
+            width: 2px;
+            height: 30px;
+            background: var(--border);
+            border-radius: 10px;
+            margin: 0 4px;
+            flex-shrink: 0;
+        }
+
+        .tab-content { display: none; animation: fadeUp 0.3s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ========== Cards ========== */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--card-shadow);
+            padding: 20px 24px;
+            margin-bottom: 20px;
+            transition: background var(--transition), box-shadow var(--transition);
+            border: 2px solid var(--border);
+        }
+        .card-title {
+            font-weight: 800;
+            font-size: 1.15rem;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text);
+        }
+        .card-title .icon { font-size: 1.4rem; }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+
+        /* ========== Buttons ========== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 40px;
+            font-family: var(--font);
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all var(--transition);
+            background: var(--btn-primary);
+            color: var(--btn-primary-text);
+            box-shadow: 0 4px 12px var(--btn-primary)35;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--btn-primary)45;
+            background: var(--btn-hover);
+        }
+        .btn:active { transform: scale(0.97); }
+        .btn-sm { padding: 6px 16px; font-size: 0.8rem; }
+        .btn-outline {
+            background: transparent;
+            color: var(--text);
+            border: 2px solid var(--border);
+            box-shadow: none;
+        }
+        .btn-outline:hover {
+            background: var(--badge-bg);
+            border-color: var(--accent);
+            transform: none;
+            box-shadow: none;
+            color: var(--accent);
+        }
+        .btn-danger { background: var(--danger); color: #fff; }
+        .btn-danger:hover { background: #A93226; }
+        .btn-success { background: var(--success); color: #fff; }
+        .btn-success:hover { background: #1E8449; }
+        .btn-warning { background: var(--warning); color: #fff; }
+        .btn-warning:hover { background: #CA6F1E; }
+        .btn-block { width: 100%; justify-content: center; }
+        .btn-lg { padding: 16px 32px; font-size: 1.1rem; }
+
+        /* ========== Inputs ========== */
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-family: var(--font);
+            font-size: 0.95rem;
+            background: var(--input-bg);
+            color: var(--text);
+            transition: border var(--transition), background var(--transition);
+            outline: none;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px var(--accent-light);
+        }
+        textarea { min-height: 80px; resize: vertical; }
+        label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 4px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        .form-group { margin-bottom: 14px; }
+        .form-row { display: flex; gap: 12px; flex-wrap: wrap; }
+        .form-row>* { flex: 1; min-width: 140px; }
+
+        /* ========== Badge / Tag ========== */
+        .tag {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            background: var(--tag-bg);
+            color: var(--text);
+        }
+        .tag-success { background: var(--success)30; color: var(--success); }
+        .tag-danger { background: var(--danger)30; color: var(--danger); }
+        .tag-warning { background: var(--warning)30; color: var(--warning); }
+
+        /* ========== Toggle Button (for feeding) ========== */
+        .toggle-btn {
+            padding: 14px 20px;
+            border: 3px solid var(--border);
+            border-radius: 16px;
+            background: var(--card-bg);
+            color: var(--text);
+            font-family: var(--font);
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all var(--transition);
+            text-align: center;
+            width: 100%;
+        }
+        .toggle-btn.active {
+            border-color: var(--success);
+            background: var(--success)20;
+            color: var(--success);
+        }
+        .toggle-btn .sub {
+            font-weight: 400;
+            font-size: 0.8rem;
+            opacity: 0.7;
+            display: block;
+            margin-top: 4px;
+        }
+
+        /* ========== Timeline / Log ========== */
+        .timeline {
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+        .timeline-item .time {
+            font-weight: 600;
+            min-width: 70px;
+            color: var(--text-secondary);
+        }
+        .timeline-item .note { opacity: 0.7; font-style: italic; font-size: 0.85rem; }
+        .timeline-item .icon-badge { font-size: 1.2rem; }
+
+        /* ========== Medication ========== */
+        .med-card {
+            padding: 14px 18px;
+            border-radius: 14px;
+            background: var(--input-bg);
+            border-left: 5px solid var(--accent);
+            margin-bottom: 12px;
+            transition: background var(--transition);
+        }
+        .med-card .med-name { font-weight: 700; font-size: 1.05rem; }
+        .med-card .med-detail { font-size: 0.85rem; color: var(--text-secondary); }
+        .med-card .countdown {
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 0.95rem;
+        }
+
+        /* ========== Walk ========== */
+        .walk-entry {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .walk-entry .walk-info { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+
+        /* ========== Name finder ========== */
+        .name-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 8px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 4px 2px;
+        }
+        .name-chip {
+            padding: 6px 14px;
+            border-radius: 40px;
+            background: var(--badge-bg);
+            cursor: pointer;
+            transition: all var(--transition);
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: 2px solid var(--border);
+        }
+        .name-chip:hover {
+            background: var(--accent);
+            color: #fff;
+            transform: scale(1.04);
+            border-color: var(--accent);
+        }
+        .name-chip.fav {
+            border-color: var(--warning);
+            background: var(--warning)25;
+        }
+        .name-chip.fav:hover { background: var(--warning); color: #fff; }
+
+        /* ========== Sitter preview ========== */
+        .sitter-preview {
+            background: var(--input-bg);
+            border-radius: 14px;
+            padding: 20px;
+            border: 2px dashed var(--border);
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+        .sitter-preview strong { color: var(--accent); }
+
+        /* ========== Bath & Trimming ========== */
+        .bath-btn {
+            padding: 20px 24px;
+            border: 3px solid var(--border);
+            border-radius: 16px;
+            background: var(--card-bg);
+            color: var(--text);
+            font-family: var(--font);
+            font-weight: 700;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all var(--transition);
+            text-align: center;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        .bath-btn:hover {
+            transform: scale(1.02);
+            border-color: var(--accent);
+            box-shadow: 0 4px 16px var(--accent)25;
+        }
+        .bath-btn .bath-icon { font-size: 2.4rem; }
+        .bath-btn .bath-sub {
+            font-weight: 400;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+        .bath-btn.logged {
+            border-color: var(--success);
+            background: var(--success)15;
+            color: var(--success);
+        }
+
+        /* ========== Misc ========== */
+        .flex-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .flex-center { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .gap-sm { gap: 8px; }
+        .gap-md { gap: 16px; }
+        .mt-8 { margin-top: 8px; }
+        .mt-12 { margin-top: 12px; }
+        .mb-8 { margin-bottom: 8px; }
+        .mb-12 { margin-bottom: 12px; }
+        .text-center { text-align: center; }
+        .text-secondary { color: var(--text-secondary); }
+        .text-accent { color: var(--accent); }
+        .text-sm { font-size: 0.85rem; }
+        .text-xs { font-size: 0.75rem; }
+        .fw-bold { font-weight: 700; }
+
+        .overdue {
+            border-left-color: var(--danger) !important;
+            background: var(--danger)15 !important;
+        }
+        .overdue .tag { background: var(--danger); color: #fff; }
+
+        /* ========== Modal / Overlay for first load ========== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+        .modal-overlay.hidden { display: none; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .modal-box {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 32px 40px;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            transition: background var(--transition);
+            border: 2px solid var(--border);
+        }
+        .modal-box h2 { text-align: center; margin-bottom: 4px; }
+        .modal-box .subtitle { text-align: center; color: var(--text-secondary); margin-bottom: 20px; }
+        .modal-box .emoji-big { font-size: 3rem; text-align: center; display: block; margin-bottom: 6px; }
+
+        /* ========== Footer ========== */
+        .app-footer {
+            margin-top: 30px;
+            padding: 16px 20px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            border-top: 2px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            border: 2px solid var(--border);
+        }
+        .app-footer .reset-btn {
+            background: transparent;
+            border: none;
+            color: var(--danger);
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            font-family: var(--font);
+            padding: 6px 16px;
+            border-radius: 30px;
+            transition: all var(--transition);
+            border: 2px solid var(--danger);
+        }
+        .app-footer .reset-btn:hover {
+            background: var(--danger);
+            color: #fff;
+            transform: scale(1.02);
+        }
+
+        /* ========== Responsive ========== */
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .app-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+                padding: 14px 16px;
+            }
+            .app-header .logo { justify-content: center; font-size: 1.3rem; }
+            .app-header .pet-selector { justify-content: center; }
+            .app-header .pet-badge { justify-content: center; font-size: 0.85rem; }
+            .theme-picker { justify-content: center; }
+            .tab-nav {
+                padding: 10px 12px;
+                gap: 6px;
+                justify-content: center;
+            }
+            .tab-nav button { font-size: 0.75rem; padding: 6px 12px; }
+            .tab-nav button.tab-prominent { font-size: 0.85rem; padding: 8px 18px; }
+            .tab-nav button.tab-prominent::after { content: " ⭐"; font-size: 0.6rem; }
+            .tab-nav .tab-divider { height: 24px; margin: 0 2px; }
+            .card { padding: 14px 16px; }
+            .grid-2 { grid-template-columns: 1fr; }
+            .grid-3 { grid-template-columns: 1fr; }
+            .form-row { flex-direction: column; }
+            .modal-box { padding: 24px 20px; }
+            .name-grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); }
+            .app-footer { flex-direction: column; text-align: center; }
+            .toggle-btn { font-size: 0.9rem; padding: 12px 16px; }
+            .bath-btn { font-size: 1rem; padding: 16px 20px; }
+            .bath-btn .bath-icon { font-size: 2rem; }
+        }
+        @media (max-width: 480px) {
+            .tab-nav button { font-size: 0.7rem; padding: 4px 10px; }
+            .tab-nav button.tab-prominent { font-size: 0.75rem; padding: 6px 14px; }
+            .card-title { font-size: 1rem; }
+            .btn { font-size: 0.8rem; padding: 8px 16px; }
+            .btn-lg { padding: 12px 20px; font-size: 0.95rem; }
+            .app-header .logo { font-size: 1.1rem; }
+            .app-header .pet-selector select { min-width: 100px; font-size: 0.8rem; }
+        }
+
+        @media print {
+            body { background: #fff !important; padding: 0 !important; color: #000 !important; }
+            .app-header, .tab-nav, .app-footer, .no-print { display: none !important; }
+            .tab-content { display: block !important; }
+            .card { box-shadow: none !important; border: 1px solid #ccc !important; background: #fff !important; break-inside: avoid; }
+            .sitter-preview { border: 1px solid #ccc !important; background: #f9f9f9 !important; }
+            .modal-overlay { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===================== MODAL (First Load / Pet Setup) ===================== -->
+    <div class="modal-overlay" id="setupModal">
+        <div class="modal-box">
+            <span class="emoji-big">🐾</span>
+            <h2>Welcome to PawTrack!</h2>
+            <p class="subtitle">Let's set up your first pet.</p>
+            <div class="form-group">
+                <label for="petNameInput">Pet's Name</label>
+                <input type="text" id="petNameInput" placeholder="e.g. Luna" autofocus />
+            </div>
+            <div class="form-group">
+                <label for="petTypeInput">Pet Type</label>
+                <select id="petTypeInput">
+                    <option value="dog">🐕 Dog</option>
+                    <option value="cat">🐈 Cat</option>
+                    <option value="bird">🐦 Bird</option>
+                    <option value="other">🐾 Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="petBirthInput">Birthdate (optional)</label>
+                <input type="date" id="petBirthInput" />
+            </div>
+            <div class="form-group" id="sizeGroup" style="display:none;">
+                <label for="petSizeInput">Size (for age conversion)</label>
+                <select id="petSizeInput">
+                    <option value="small">Small</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="large">Large</option>
+                </select>
+            </div>
+            <button class="btn btn-block btn-lg" id="setupSaveBtn">🐾 Start Tracking!</button>
+        </div>
+    </div>
+
+    <!-- ===================== MAIN APP ===================== -->
+    <div class="app-container" id="app">
+
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo">🐾 PawTrack</div>
+            <div class="pet-selector">
+                <select id="petSelector"></select>
+                <button class="btn btn-sm btn-outline" id="addPetBtn">➕ Add</button>
+                <button class="btn btn-sm btn-danger" id="removePetBtn" style="padding:4px 12px;">✖</button>
+            </div>
+            <div class="pet-badge" id="petBadge">
+                <span id="petNameDisplay">—</span>
+                <span class="pet-type" id="petTypeDisplay">—</span>
+            </div>
+            <div class="theme-picker">
+                <button class="th-warm active" data-theme="warm" title="Baby Pink">🌸</button>
+                <button class="th-midnight" data-theme="midnight" title="Light Blue">💧</button>
+                <button class="th-forest" data-theme="forest" title="Light Yellow">🌼</button>
+            </div>
+        </header>
+
+        <!-- Tab Navigation -->
+        <nav class="tab-nav" id="tabNav">
+            <button class="tab-prominent active" data-tab="feeding">🍽 Who Fed?</button>
+            <button class="tab-prominent" data-tab="age">🎂 Age</button>
+            <button class="tab-prominent" data-tab="meds">💊 Meds</button>
+            <span class="tab-divider"></span>
+            <button data-tab="poop">💩 Poop &amp; Pee</button>
+            <button data-tab="vaccines">💉 Health</button>
+            <button data-tab="walks">🚶 Walks</button>
+            <button data-tab="names">📛 Names</button>
+            <button data-tab="sitter">📋 Sitter</button>
+            <button data-tab="bath">🛁 Bath</button>
+        </nav>
+
+        <!-- ===================== TAB: FEEDING ===================== -->
+        <div class="tab-content active" id="tab-feeding">
+            <div class="card">
+                <div class="card-title"><span class="icon">🍽</span> Who Fed?</div>
+                <div class="grid-3">
+                    <button class="toggle-btn" data-meal="breakfast">🌅 Breakfast<span class="sub" id="breakfast-status">Not fed</span></button>
+                    <button class="toggle-btn" data-meal="lunch">☀️ Lunch<span class="sub" id="lunch-status">Not fed</span></button>
+                    <button class="toggle-btn" data-meal="dinner">🌙 Dinner<span class="sub" id="dinner-status">Not fed</span></button>
+                </div>
+                <div class="form-row mt-8">
+                    <div class="form-group" style="flex:2;">
+                        <label for="mealNoteInput">Add a note (e.g. "extra treats")</label>
+                        <input type="text" id="mealNoteInput" placeholder="Optional note..." />
+                    </div>
+                    <div class="form-group" style="flex:0 0 auto; align-self:flex-end;">
+                        <button class="btn btn-sm" id="mealNoteAddBtn">✏️ Add Note</button>
+                    </div>
+                </div>
+                <div class="mt-12">
+                    <h4>📋 Today's Feeding History</h4>
+                    <div class="timeline" id="feedingHistory"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== TAB: AGE ===================== -->
+        <div class="tab-content" id="tab-age">
+            <div class="card">
+                <div class="card-title"><span class="icon">🎂</span> Pet Age Converter</div>
+                <div class="grid-2">
+                    <div>
+                        <div class="form-group">
+                            <label for="ageBirthInput">Birthdate</label>
+                            <input type="date" id="ageBirthInput" />
+                        </div>
+                        <button class="btn btn-sm" id="ageUpdateBtn">🔄 Update Age</button>
+                        <div class="mt-12">
+                            <p><strong>Age:</strong> <span id="ageDisplay">—</span></p>
+                            <p><strong>Human-equivalent:</strong> <span id="humanAgeDisplay">—</span></p>
+                            <p><strong>Next birthday in:</strong> <span id="birthdayCountdown">—</span></p>
+                        </div>
+                    </div>
+                    <div style="background:var(--input-bg);border-radius:14px;padding:16px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;border:2px solid var(--border);">
+                        <span style="font-size:3rem;">🎉</span>
+                        <p class="text-secondary text-sm">Live countdown to next birthday</p>
+                        <div id="birthdayCountdownLarge" style="font-size:1.8rem;font-weight:900;color:var(--accent);">—</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== TAB: MEDICATIONS ===================== -->
+        <div class="tab-content" id="tab-meds">
+            <div class="card">
+                <div class="card-title"><span class="icon">💊</span> Medication &amp; Supplement Reminder</div>
+                <div class="form-row">
+                    <div class="form-group"><label>Name</label><input type="text" id="medName" placeholder="e.g. Heartguard" /></div>
+                    <div class="form-group"><label>Dosage</label><input type="text" id="medDosage" placeholder="e.g. 1 tablet" /></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Frequency</label>
+                        <select id="medFrequency">
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="12h">Every 12 hours</option>
+                            <option value="8h">Every 8 hours</option>
+                            <option value="custom">Custom (hours)</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="medCustomHoursGroup" style="display:none;"><label>Hours</label><input type="number" id="medCustomHours" min="1" value="6" /></div>
+                    <div class="form-group"><label>Start Date</label><input type="date" id="medStartDate" /></div>
+                    <div class="form-group"><label>End Date (optional)</label><input type="date" id="medEndDate" /></div>
+                </div>
+                <button class="btn" id="medAddBtn">➕ Add Medication</button>
+                <div class="mt-12" id="medList"></div>
+            </div>
+        </div>
+
+        <!-- ===================== TAB: POOP & PEE ===================== -->
+        <div class="tab-content" id="tab-poop">
+            <div class="card">
+                <div class="card-title"><span class="icon">💩</span> Poop &amp; Pee Log</div>
+                <div class="grid-2">
+                    <div>
+                        <label style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                            <span>📍 Inside / Outside</span>
+                            <select id="ppLocation" style="width:auto;flex:1;">
+                                <option value="inside">🏠 Inside</option>
+                                <option value="outside">🌳 Outside</option>
+                            </select>
+                        </label>
+                        <div class="flex-center gap-md">
+                            <button class="btn btn-lg btn-success" id="ppPeeBtn">💧 Pee</button>
+                            <button class="btn btn-lg btn-warning" id="ppPoopBtn">💩 Poop</button>
+                        </div>
+                    </div>
+                    <div>
+                        <h4>📊 Weekly Summary</h4>
+                        <div id="weeklySummary" style="font-size:0.9rem;"></div>
+                    </div>
+                </div>
+                <div class="mt-12">
+                    <h4>📋 Today's Timeline</h4>
+                    <div class="timeline" id="ppTimeline"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== TAB: VACCINATIONS ===================== -->
+        <div class="tab-content" id="tab-vaccines">
+            <div class="card">
+                <div class="card-title"><span class="icon">💉</span> Vaccination &amp; Health Record</div>
+                <div class="form-row">
+                    <div class="form-group"><label>Vaccine Name</label><input type="text" id="vacName" placeholder="e.g. Rabies" /></div>
+                    <div class="form-group"><label>Date Administered</label><input type="date" id="vacDate" /></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Next Due Date</label><input type="date" id="vacDue" /></div>
+                    <div class="form-group"><label>Vet Notes</label><input type="text" id="vacNotes" placeholder="Optional notes" /></div>
+                </div>
+                <button class="btn" id="vacAddBtn">➕ Add Vaccine</button>
+                <div class="mt-12" id="vacList"></div>
+                <button class="btn btn-outline btn-sm mt-8" id="vacPrintBtn">🖨️ Print Health Card</button>
+            </div>
+        </div>
+
+        <!-- ===================== TAB: WALKS ===================== -->
+        <div class="tab-content" id="tab-walks">
+            <div class="card">
+                <div class="card-title"><span class="icon">🚶</span> Dog Walk Timer &amp; Log</div>
+                <div class="flex-center gap-md">
+                    <button class="btn btn-lg btn-success" id="walkStartBtn">▶️ Start Walk</button>
+                    <button class="btn btn-lg btn-danger" id="walkStopBtn" disabled>⏹ Stop</button>
+                    <span style="font-size:1.6rem;font-weight:900;font-variant-numeric:tabular-nums;" id="walkTimerDisplay">00:00:00</span>
+                </div>
+                <div class="form-row mt-8">
+                    <div class="form-group"><label>Distance (km, optional)</label><input type="number" step="0.1" id="walkDistance" placeholder="0.0" /></div>
+                    <div class="form-group"><label>Note</label><input type="text" id="walkNote" placeholder="e.g. Park, 2km" /></div>
+                </div>
+                <div class="mt-12">
+                    <h4>📋 Walk Log</h4>
+                    <div id="walkLog"></div>
+                    <div class="mt-8"><strong>Weekly total:</strong> <span id="walkWeeklyTotal">—</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== TAB: NAMES ===================== -->
+        <div class="tab-content" id="tab-names">
+            <div class="card">
+                <div class="card-title"><span class="icon">📛</span> Pet Name Finder</div>
+                <div class="form-row">
+                    <div class="form-group"><label>Gender</label>
+                        <select id="nameGender"><option value="all">All</option><option value="male">Male</option><option value="female">Female</option><option value="unisex">Unisex</option></select>
+                    </div>
+                    <div class="form-group"><label>Species</label>
+                        <select id="nameSpecies"><option value="all">All</option><option value="dog">Dog</option><option value="cat">Cat</option></select>
+                    </div>
+                    <div class="form-group"><label>Starts with</label><input type="text" id="nameStartsWith" maxlength="1" placeholder="A" style="text-transform:uppercase;" /></div>
+                    <div class="form-group"><label>Max length</label>
+                        <select id="nameLength"><option value="0">Any</option><option value="4">≤4</option><option value="5">≤5</option><option value="6">≤6</option><option value="7">≤7</option><option value="8">≤8</option></select>
+                    </div>
+                </div>
+                <div class="flex-center gap-sm">
+                    <button class="btn" id="nameFilterBtn">🔍 Filter</button>
+                    <button class="btn btn-warning" id="nameSurpriseBtn">🎲 Surprise Me!</button>
+                    <button class="btn btn-outline btn-sm" id="nameClearFilters">✖ Clear</button>
+                </div>
+                <div class="mt-12 name-grid" id="nameGrid"></div>
+                <div class="mt-12">
+                    <h4>⭐ My Favorites</h4>
+                    <div class="name-grid" id="favoritesGrid"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== TAB: SITTER ===================== -->
+        <div class="tab-content" id="tab-sitter">
+            <div class="card">
+                <div class="card-title"><span class="icon">📋</span> Pet Sitter Instruction Sheet</div>
+                <div class="grid-2">
+                    <div>
+                        <div class="form-group"><label>Pet Name</label><input type="text" id="sitterPetName" /></div>
+                        <div class="form-group"><label>Feeding Instructions</label><textarea id="sitterFeeding" placeholder="What, when, how much..."></textarea></div>
+                        <div class="form-group"><label>Medication Schedule</label><textarea id="sitterMeds" placeholder="List meds, dosage, timing..."></textarea></div>
+                        <div class="form-group"><label>Vet Contact</label><input type="text" id="sitterVet" placeholder="Name &amp; phone" /></div>
+                        <div class="form-group"><label>Walk Routine</label><textarea id="sitterWalk" placeholder="When, how long, where..."></textarea></div>
+                        <div class="form-group"><label>Special Notes</label><textarea id="sitterNotes" placeholder="Allergies, fears, favorite toys..."></textarea></div>
+                        <div class="form-group"><label>Sitter's Contact</label><input type="text" id="sitterContact" placeholder="Name &amp; phone" /></div>
+                        <button class="btn" id="sitterSaveBtn">💾 Save Sheet</button>
+                        <button class="btn btn-outline btn-sm" id="sitterPrintBtn">🖨️ Print Sheet</button>
+                    </div>
+                    <div>
+                        <h4>📄 Live Preview</h4>
+                        <div class="sitter-preview" id="sitterPreview"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== TAB: BATH & TRIMMING ===================== -->
+        <div class="tab-content" id="tab-bath">
+            <div class="card">
+                <div class="card-title"><span class="icon">🛁</span> Bath &amp; Trimming Log</div>
+                <div class="grid-2">
+                    <button class="bath-btn" id="bathBtn">
+                        <span class="bath-icon">🛁</span>
+                        Bath
+                        <span class="bath-sub" id="bathStatus">Not logged today</span>
+                    </button>
+                    <button class="bath-btn" id="trimBtn">
+                        <span class="bath-icon">✂️</span>
+                        Trimming
+                        <span class="bath-sub" id="trimStatus">Not logged today</span>
+                    </button>
+                </div>
+                <div class="form-row mt-8">
+                    <div class="form-group" style="flex:2;">
+                        <label for="bathNoteInput">Add a note (e.g. "with shampoo", "nail trim")</label>
+                        <input type="text" id="bathNoteInput" placeholder="Optional note..." />
+                    </div>
+                    <div class="form-group" style="flex:0 0 auto; align-self:flex-end;">
+                        <button class="btn btn-sm" id="bathNoteAddBtn">✏️ Add Note</button>
+                    </div>
+                </div>
+                <div class="mt-12">
+                    <h4>📋 Bath &amp; Trimming History</h4>
+                    <div class="timeline" id="bathHistory"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <span>🐾 PawTrack &bull; Multi-Pet</span>
+            <button class="reset-btn" id="resetAllBtn">🗑️ Reset All Data</button>
+        </footer>
+    </div>
+
+    <script>
+        // ========================================================================
+        //  DATA LAYER - Multi-Pet
+        // ========================================================================
+        const DEFAULT_PET_DATA = {
+            id: '',
+            name: '',
+            type: 'dog',
+            birthdate: '',
+            size: 'medium',
+            feeding: { breakfast: { fed: false, time: null, note: '' }, lunch: { fed: false, time: null, note: '' },
+                dinner: { fed: false, time: null, note: '' }, history: [] },
+            medications: [],
+            poopPee: { logs: [] },
+            vaccinations: [],
+            walks: [],
+            favorites: [],
+            sitter: { petName: '', feeding: '', meds: '', vet: '', walk: '', notes: '', contact: '' },
+            bath: { baths: [], trims: [] }  // NEW: store bath and trim logs
+        };
+
+        let data = null; // full app data: { pets: [], currentPetId: '', theme: '' }
+        let walkTimerInterval = null;
+        let walkSeconds = 0;
+        let walkRunning = false;
+        let walkStartTime = null;
+
+        // ========================================================================
+        //  PET NAMES DATABASE (200+)
+        // ========================================================================
+        const PET_NAMES = [
+            { name: 'Max', gender: 'male', species: 'dog' }, { name: 'Charlie', gender: 'male', species: 'dog' },
+            { name: 'Buddy', gender: 'male', species: 'dog' }, { name: 'Cooper', gender: 'male', species: 'dog' },
+            { name: 'Milo', gender: 'male', species: 'dog' }, { name: 'Rocky', gender: 'male', species: 'dog' },
+            { name: 'Bear', gender: 'male', species: 'dog' }, { name: 'Duke', gender: 'male', species: 'dog' },
+            { name: 'Leo', gender: 'male', species: 'dog' }, { name: 'Tucker', gender: 'male', species: 'dog' },
+            { name: 'Zeus', gender: 'male', species: 'dog' }, { name: 'Thor', gender: 'male', species: 'dog' },
+            { name: 'Apollo', gender: 'male', species: 'dog' }, { name: 'Finn', gender: 'male', species: 'dog' },
+            { name: 'Oscar', gender: 'male', species: 'dog' }, { name: 'Rusty', gender: 'male', species: 'dog' },
+            { name: 'Sam', gender: 'male', species: 'dog' }, { name: 'Winston', gender: 'male', species: 'dog' },
+            { name: 'Baxter', gender: 'male', species: 'dog' }, { name: 'Jasper', gender: 'male', species: 'dog' },
+            { name: 'Moose', gender: 'male', species: 'dog' }, { name: 'Riley', gender: 'male', species: 'dog' },
+            { name: 'Murphy', gender: 'male', species: 'dog' }, { name: 'Gus', gender: 'male', species: 'dog' },
+            { name: 'Marley', gender: 'male', species: 'dog' }, { name: 'Maverick', gender: 'male', species: 'dog' },
+            { name: 'Oliver', gender: 'male', species: 'dog' }, { name: 'Jack', gender: 'male', species: 'dog' },
+            { name: 'Teddy', gender: 'male', species: 'dog' }, { name: 'Archie', gender: 'male', species: 'dog' },
+            { name: 'Bella', gender: 'female', species: 'dog' }, { name: 'Lucy', gender: 'female', species: 'dog' },
+            { name: 'Daisy', gender: 'female', species: 'dog' }, { name: 'Luna', gender: 'female', species: 'dog' },
+            { name: 'Molly', gender: 'female', species: 'dog' }, { name: 'Sadie', gender: 'female', species: 'dog' },
+            { name: 'Roxy', gender: 'female', species: 'dog' }, { name: 'Lola', gender: 'female', species: 'dog' },
+            { name: 'Ginger', gender: 'female', species: 'dog' }, { name: 'Ruby', gender: 'female', species: 'dog' },
+            { name: 'Chloe', gender: 'female', species: 'dog' }, { name: 'Stella', gender: 'female', species: 'dog' },
+            { name: 'Maggie', gender: 'female', species: 'dog' }, { name: 'Sophie', gender: 'female', species: 'dog' },
+            { name: 'Mia', gender: 'female', species: 'dog' }, { name: 'Zoe', gender: 'female', species: 'dog' },
+            { name: 'Nala', gender: 'female', species: 'dog' }, { name: 'Penny', gender: 'female', species: 'dog' },
+            { name: 'Ellie', gender: 'female', species: 'dog' }, { name: 'Hazel', gender: 'female', species: 'dog' },
+            { name: 'Willow', gender: 'female', species: 'dog' }, { name: 'Harper', gender: 'female', species: 'dog' },
+            { name: 'Lily', gender: 'female', species: 'dog' }, { name: 'Maple', gender: 'female', species: 'dog' },
+            { name: 'Olive', gender: 'female', species: 'dog' }, { name: 'Poppy', gender: 'female', species: 'dog' },
+            { name: 'Rosie', gender: 'female', species: 'dog' }, { name: 'Skye', gender: 'female', species: 'dog' },
+            { name: 'Tilly', gender: 'female', species: 'dog' }, { name: 'Winnie', gender: 'female', species: 'dog' },
+            { name: 'Oliver', gender: 'male', species: 'cat' }, { name: 'Leo', gender: 'male', species: 'cat' },
+            { name: 'Milo', gender: 'male', species: 'cat' }, { name: 'Charlie', gender: 'male', species: 'cat' },
+            { name: 'Max', gender: 'male', species: 'cat' }, { name: 'Simon', gender: 'male', species: 'cat' },
+            { name: 'Felix', gender: 'male', species: 'cat' }, { name: 'Oscar', gender: 'male', species: 'cat' },
+            { name: 'Tiger', gender: 'male', species: 'cat' }, { name: 'Smokey', gender: 'male', species: 'cat' },
+            { name: 'Gizmo', gender: 'male', species: 'cat' }, { name: 'Jasper', gender: 'male', species: 'cat' },
+            { name: 'Loki', gender: 'male', species: 'cat' }, { name: 'Sebastian', gender: 'male', species: 'cat' },
+            { name: 'Theo', gender: 'male', species: 'cat' }, { name: 'Finn', gender: 'male', species: 'cat' },
+            { name: 'Archie', gender: 'male', species: 'cat' }, { name: 'Mowgli', gender: 'male', species: 'cat' },
+            { name: 'Remy', gender: 'male', species: 'cat' }, { name: 'Ziggy', gender: 'male', species: 'cat' },
+            { name: 'Luna', gender: 'female', species: 'cat' }, { name: 'Bella', gender: 'female', species: 'cat' },
+            { name: 'Chloe', gender: 'female', species: 'cat' }, { name: 'Daisy', gender: 'female', species: 'cat' },
+            { name: 'Lucy', gender: 'female', species: 'cat' }, { name: 'Molly', gender: 'female', species: 'cat' },
+            { name: 'Sophie', gender: 'female', species: 'cat' }, { name: 'Mia', gender: 'female', species: 'cat' },
+            { name: 'Nala', gender: 'female', species: 'cat' }, { name: 'Willow', gender: 'female', species: 'cat' },
+            { name: 'Lily', gender: 'female', species: 'cat' }, { name: 'Olive', gender: 'female', species: 'cat' },
+            { name: 'Poppy', gender: 'female', species: 'cat' }, { name: 'Rosie', gender: 'female', species: 'cat' },
+            { name: 'Skye', gender: 'female', species: 'cat' }, { name: 'Tilly', gender: 'female', species: 'cat' },
+            { name: 'Winnie', gender: 'female', species: 'cat' }, { name: 'Cleo', gender: 'female', species: 'cat' },
+            { name: 'Misty', gender: 'female', species: 'cat' }, { name: 'Sasha', gender: 'female', species: 'cat' },
+            { name: 'Avery', gender: 'unisex', species: 'dog' }, { name: 'Bailey', gender: 'unisex', species: 'dog' },
+            { name: 'Cody', gender: 'unisex', species: 'dog' }, { name: 'Dakota', gender: 'unisex', species: 'dog' },
+            { name: 'Ellis', gender: 'unisex', species: 'dog' }, { name: 'Finley', gender: 'unisex', species: 'dog' },
+            { name: 'Harley', gender: 'unisex', species: 'dog' }, { name: 'Indigo', gender: 'unisex', species: 'dog' },
+            { name: 'Jordy', gender: 'unisex', species: 'dog' }, { name: 'Kai', gender: 'unisex', species: 'dog' },
+            { name: 'Logan', gender: 'unisex', species: 'dog' }, { name: 'Morgan', gender: 'unisex', species: 'dog' },
+            { name: 'Nova', gender: 'unisex', species: 'dog' }, { name: 'Parker', gender: 'unisex', species: 'dog' },
+            { name: 'Quinn', gender: 'unisex', species: 'dog' }, { name: 'Riley', gender: 'unisex', species: 'dog' },
+            { name: 'Sawyer', gender: 'unisex', species: 'dog' }, { name: 'Taylor', gender: 'unisex', species: 'dog' },
+            { name: 'Ariel', gender: 'unisex', species: 'cat' }, { name: 'Blake', gender: 'unisex', species: 'cat' },
+            { name: 'Charlie', gender: 'unisex', species: 'cat' }, { name: 'Drew', gender: 'unisex', species: 'cat' },
+            { name: 'Eden', gender: 'unisex', species: 'cat' }, { name: 'Frankie', gender: 'unisex', species: 'cat' },
+            { name: 'Gray', gender: 'unisex', species: 'cat' }, { name: 'Harper', gender: 'unisex', species: 'cat' },
+            { name: 'Jules', gender: 'unisex', species: 'cat' }, { name: 'Lake', gender: 'unisex', species: 'cat' },
+            { name: 'Marlowe', gender: 'unisex', species: 'cat' }, { name: 'Noel', gender: 'unisex', species: 'cat' },
+            { name: 'Ori', gender: 'unisex', species: 'cat' }, { name: 'Phoenix', gender: 'unisex', species: 'cat' },
+            { name: 'Raven', gender: 'unisex', species: 'cat' }, { name: 'Sage', gender: 'unisex', species: 'cat' },
+            { name: 'Athena', gender: 'female', species: 'dog' }, { name: 'Bentley', gender: 'male', species: 'dog' },
+            { name: 'Cali', gender: 'female', species: 'dog' }, { name: 'Dexter', gender: 'male', species: 'dog' },
+            { name: 'Ella', gender: 'female', species: 'dog' }, { name: 'Fiona', gender: 'female', species: 'dog' },
+            { name: 'Gatsby', gender: 'male', species: 'dog' }, { name: 'Hank', gender: 'male', species: 'dog' },
+            { name: 'Ivy', gender: 'female', species: 'dog' }, { name: 'Jake', gender: 'male', species: 'dog' },
+            { name: 'Kobe', gender: 'male', species: 'dog' }, { name: 'Lexi', gender: 'female', species: 'dog' },
+            { name: 'Mack', gender: 'male', species: 'dog' }, { name: 'Nikki', gender: 'female', species: 'dog' },
+            { name: 'Oakley', gender: 'unisex', species: 'dog' }, { name: 'Pippa', gender: 'female', species: 'dog' },
+            { name: 'Quincy', gender: 'male', species: 'dog' }, { name: 'Remy', gender: 'unisex', species: 'dog' },
+            { name: 'Sasha', gender: 'female', species: 'dog' }, { name: 'Toby', gender: 'male', species: 'dog' },
+            { name: 'Uma', gender: 'female', species: 'dog' }, { name: 'Vivian', gender: 'female', species: 'dog' },
+            { name: 'Wyatt', gender: 'male', species: 'dog' }, { name: 'Xena', gender: 'female', species: 'dog' },
+            { name: 'Yuki', gender: 'unisex', species: 'dog' }, { name: 'Zara', gender: 'female', species: 'dog' },
+            { name: 'Ace', gender: 'male', species: 'cat' }, { name: 'Boo', gender: 'unisex', species: 'cat' },
+            { name: 'Coco', gender: 'unisex', species: 'cat' }, { name: 'Dusty', gender: 'male', species: 'cat' },
+            { name: 'Ember', gender: 'female', species: 'cat' }, { name: 'Frost', gender: 'male', species: 'cat' },
+            { name: 'Ginger', gender: 'female', species: 'cat' }, { name: 'Holly', gender: 'female', species: 'cat' },
+            { name: 'Iris', gender: 'female', species: 'cat' }, { name: 'Jinx', gender: 'unisex', species: 'cat' },
+            { name: 'Kiki', gender: 'female', species: 'cat' }, { name: 'Lucky', gender: 'unisex', species: 'cat' },
+            { name: 'Mochi', gender: 'unisex', species: 'cat' }, { name: 'Nemo', gender: 'male', species: 'cat' },
+            { name: 'Oreo', gender: 'unisex', species: 'cat' }, { name: 'Patch', gender: 'male', species: 'cat' },
+            { name: 'Queenie', gender: 'female', species: 'cat' }, { name: 'Ringo', gender: 'male', species: 'cat' },
+            { name: 'Spooky', gender: 'unisex', species: 'cat' }, { name: 'Trixie', gender: 'female', species: 'cat' },
+            { name: 'Ulysses', gender: 'male', species: 'cat' }, { name: 'Violet', gender: 'female', species: 'cat' },
+            { name: 'Whiskers', gender: 'male', species: 'cat' }, { name: 'Xander', gender: 'male', species: 'cat' },
+            { name: 'Yogi', gender: 'male', species: 'cat' }, { name: 'Zelda', gender: 'female', species: 'cat' },
+            { name: 'Avi', gender: 'unisex', species: 'bird' }, { name: 'Beak', gender: 'unisex', species: 'bird' },
+            { name: 'Blue', gender: 'unisex', species: 'bird' }, { name: 'Chirp', gender: 'unisex', species: 'bird' },
+            { name: 'Dodo', gender: 'unisex', species: 'bird' }, { name: 'Echo', gender: 'unisex', species: 'bird' },
+            { name: 'Feather', gender: 'unisex', species: 'bird' }, { name: 'Gully', gender: 'unisex', species: 'bird' },
+            { name: 'Hawk', gender: 'male', species: 'bird' }, { name: 'Icarus', gender: 'male', species: 'bird' },
+            { name: 'Jett', gender: 'unisex', species: 'bird' }, { name: 'Kiwi', gender: 'unisex', species: 'bird' },
+            { name: 'Lark', gender: 'unisex', species: 'bird' }, { name: 'Merlin', gender: 'male', species: 'bird' },
+            { name: 'Nimbus', gender: 'unisex', species: 'bird' }, { name: 'Owl', gender: 'unisex', species: 'bird' },
+            { name: 'Pip', gender: 'unisex', species: 'bird' }, { name: 'Quill', gender: 'unisex', species: 'bird' },
+            { name: 'Raven', gender: 'unisex', species: 'bird' }, { name: 'Sky', gender: 'unisex', species: 'bird' },
+            { name: 'Talon', gender: 'male', species: 'bird' }, { name: 'Umber', gender: 'unisex', species: 'bird' },
+            { name: 'Vega', gender: 'female', species: 'bird' }, { name: 'Wren', gender: 'unisex', species: 'bird' },
+            { name: 'Xeno', gender: 'unisex', species: 'bird' }, { name: 'Zen', gender: 'unisex', species: 'bird' },
+            { name: 'Aspen', gender: 'unisex', species: 'dog' }, { name: 'Briar', gender: 'unisex', species: 'dog' },
+            { name: 'Cedar', gender: 'unisex', species: 'dog' }, { name: 'Clover', gender: 'unisex', species: 'cat' },
+            { name: 'Fern', gender: 'unisex', species: 'cat' }, { name: 'Juniper', gender: 'unisex', species: 'dog' },
+            { name: 'Maple', gender: 'unisex', species: 'cat' }, { name: 'Oak', gender: 'unisex', species: 'dog' },
+            { name: 'Pine', gender: 'unisex', species: 'cat' }, { name: 'Willow', gender: 'unisex', species: 'dog' }
+        ];
+
+        // ========================================================================
+        //  STORAGE HELPERS
+        // ========================================================================
+        function loadData() {
+            const raw = localStorage.getItem('pawtrack_data');
+            if (raw) {
+                try {
+                    const parsed = JSON.parse(raw);
+                    // Migrate from old single-pet format
+                    if (parsed.pet && !parsed.pets) {
+                        const oldPet = parsed.pet;
+                        const newPet = {
+                            id: 'pet1',
+                            name: oldPet.name || '',
+                            type: oldPet.type || 'dog',
+                            birthdate: oldPet.birthdate || '',
+                            size: oldPet.size || 'medium',
+                            feeding: parsed.feeding || { breakfast: { fed: false, time: null, note: '' },
+                                lunch: { fed: false, time: null, note: '' }, dinner: { fed: false, time: null,
+                                    note: '' }, history: [] },
+                            medications: parsed.medications || [],
+                            poopPee: parsed.poopPee || { logs: [] },
+                            vaccinations: parsed.vaccinations || [],
+                            walks: parsed.walks || [],
+                            favorites: parsed.favorites || [],
+                            sitter: parsed.sitter || { petName: '', feeding: '', meds: '', vet: '', walk: '',
+                                notes: '', contact: '' },
+                            bath: { baths: [], trims: [] }  // NEW
+                        };
+                        data = {
+                            pets: [newPet],
+                            currentPetId: 'pet1',
+                            theme: parsed.theme || 'warm'
+                        };
+                        saveData();
+                        return;
+                    }
+                    if (parsed.pets && Array.isArray(parsed.pets)) {
+                        data = parsed;
+                        // Ensure each pet has a bath property
+                        data.pets.forEach(p => {
+                            if (!p.bath) p.bath = { baths: [], trims: [] };
+                        });
+                        // Ensure currentPetId exists
+                        if (!data.currentPetId || !data.pets.find(p => p.id === data.currentPetId)) {
+                            data.currentPetId = data.pets[0]?.id || '';
+                        }
+                        return;
+                    }
+                } catch (e) {}
+            }
+            // Default: no pets
+            data = { pets: [], currentPetId: '', theme: 'warm' };
+            saveData();
+        }
+
+        function saveData() {
+            localStorage.setItem('pawtrack_data', JSON.stringify(data));
+        }
+
+        function getCurrentPet() {
+            return data.pets.find(p => p.id === data.currentPetId) || null;
+        }
+
+        function setCurrentPetId(id) {
+            data.currentPetId = id;
+            saveData();
+        }
+
+        function updatePet(pet) {
+            const idx = data.pets.findIndex(p => p.id === pet.id);
+            if (idx !== -1) {
+                data.pets[idx] = pet;
+                saveData();
+            }
+        }
+
+        function addPet(pet) {
+            data.pets.push(pet);
+            data.currentPetId = pet.id;
+            saveData();
+        }
+
+        function removePet(id) {
+            const idx = data.pets.findIndex(p => p.id === id);
+            if (idx === -1) return;
+            data.pets.splice(idx, 1);
+            if (data.pets.length > 0) {
+                data.currentPetId = data.pets[0].id;
+            } else {
+                data.currentPetId = '';
+            }
+            saveData();
+        }
+
+        function generateId() {
+            return 'pet_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4);
+        }
+
+        function createPetData(name, type, birthdate, size) {
+            const pet = JSON.parse(JSON.stringify(DEFAULT_PET_DATA));
+            pet.id = generateId();
+            pet.name = name;
+            pet.type = type;
+            pet.birthdate = birthdate || '';
+            pet.size = size || 'medium';
+            pet.sitter.petName = name;
+            return pet;
+        }
+
+        // ========================================================================
+        //  THEME
+        // ========================================================================
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            data.theme = theme;
+            saveData();
+            document.querySelectorAll('.theme-picker button').forEach(b => {
+                b.classList.toggle('active', b.dataset.theme === theme);
+            });
+        }
+
+        // ========================================================================
+        //  UI HELPERS
+        // ========================================================================
+        function formatTime(ts) {
+            if (!ts) return '—';
+            const d = new Date(ts);
+            return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function formatDate(ts) {
+            if (!ts) return '—';
+            const d = new Date(ts);
+            return d.toLocaleDateString();
+        }
+
+        function formatDuration(seconds) {
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = Math.floor(seconds % 60);
+            return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+        }
+
+        function isToday(ts) {
+            if (!ts) return false;
+            const d = new Date(ts);
+            const today = new Date();
+            return d.getDate() === today.getDate() && d.getMonth() === today.getMonth() && d.getFullYear() === today
+                .getFullYear();
+        }
+
+        function getTodayStr() {
+            const d = new Date();
+            return d.toISOString().split('T')[0];
+        }
+
+        function getWeekStart() {
+            const d = new Date();
+            const day = d.getDay();
+            const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+            const start = new Date(d);
+            start.setDate(diff);
+            start.setHours(0, 0, 0, 0);
+            return start;
+        }
+
+        function getWeekDays() {
+            const start = getWeekStart();
+            const days = [];
+            for (let i = 0; i < 7; i++) {
+                const d = new Date(start);
+                d.setDate(d.getDate() + i);
+                days.push(d);
+            }
+            return days;
+        }
+
+        // ========================================================================
+        //  PET SETUP MODAL
+        // ========================================================================
+        function showSetupModal() {
+            document.getElementById('setupModal').classList.remove('hidden');
+            document.getElementById('petNameInput').value = '';
+            document.getElementById('petTypeInput').value = 'dog';
+            document.getElementById('petBirthInput').value = '';
+            document.getElementById('petSizeInput').value = 'medium';
+            updateSizeVisibility();
+            document.getElementById('petNameInput').focus();
+        }
+
+        function hideSetupModal() {
+            document.getElementById('setupModal').classList.add('hidden');
+        }
+
+        function updateSizeVisibility() {
+            const type = document.getElementById('petTypeInput').value;
+            document.getElementById('sizeGroup').style.display = type === 'dog' ? 'block' : 'none';
+        }
+        document.getElementById('petTypeInput').addEventListener('change', updateSizeVisibility);
+
+        document.getElementById('setupSaveBtn').addEventListener('click', function() {
+            const name = document.getElementById('petNameInput').value.trim();
+            if (!name) { alert('Please enter your pet\'s name.'); return; }
+            const type = document.getElementById('petTypeInput').value;
+            const birthdate = document.getElementById('petBirthInput').value || '';
+            const size = document.getElementById('petSizeInput').value || 'medium';
+            const pet = createPetData(name, type, birthdate, size);
+            addPet(pet);
+            hideSetupModal();
+            populatePetSelector();
+            updateUI();
+        });
+
+        document.getElementById('petNameInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') document.getElementById('setupSaveBtn').click();
+        });
+
+        // ========================================================================
+        //  PET SELECTOR
+        // ========================================================================
+        function populatePetSelector() {
+            const select = document.getElementById('petSelector');
+            select.innerHTML = '';
+            data.pets.forEach(pet => {
+                const opt = document.createElement('option');
+                opt.value = pet.id;
+                opt.textContent = pet.name + ' (' + pet.type + ')';
+                if (pet.id === data.currentPetId) opt.selected = true;
+                select.appendChild(opt);
+            });
+            // Update remove button visibility
+            document.getElementById('removePetBtn').style.display = data.pets.length > 1 ? 'inline-flex' : 'none';
+        }
+
+        document.getElementById('petSelector').addEventListener('change', function() {
+            const id = this.value;
+            if (id) {
+                setCurrentPetId(id);
+                // Reset walk timer if running
+                if (walkRunning) {
+                    walkRunning = false;
+                    if (walkTimerInterval) clearInterval(walkTimerInterval);
+                    walkTimerInterval = null;
+                    walkSeconds = 0;
+                    document.getElementById('walkStartBtn').disabled = false;
+                    document.getElementById('walkStopBtn').disabled = true;
+                    document.getElementById('walkTimerDisplay').textContent = '00:00:00';
+                }
+                updateUI();
+            }
+        });
+
+        document.getElementById('addPetBtn').addEventListener('click', function() {
+            const name = prompt('Enter pet name:');
+            if (!name) return;
+            const type = prompt('Enter pet type (dog, cat, bird, other):', 'dog');
+            if (!type) return;
+            const birthdate = prompt('Enter birthdate (YYYY-MM-DD) or leave empty:', '');
+            const size = (type === 'dog') ? prompt('Size (small, medium, large):', 'medium') : 'medium';
+            const pet = createPetData(name.trim(), type.trim().toLowerCase(), birthdate.trim(), size.trim().toLowerCase());
+            addPet(pet);
+            populatePetSelector();
+            updateUI();
+            alert(`🐾 Added ${pet.name}!`);
+        });
+
+        document.getElementById('removePetBtn').addEventListener('click', function() {
+            if (data.pets.length <= 1) {
+                alert('Cannot remove the only pet. Add another pet first.');
+                return;
+            }
+            const pet = getCurrentPet();
+            if (!pet) return;
+            if (confirm(`Remove "${pet.name}" and all its data?`)) {
+                removePet(pet.id);
+                populatePetSelector();
+                updateUI();
+            }
+        });
+
+        // ========================================================================
+        //  UPDATE UI
+        // ========================================================================
+        function updateUI() {
+            const pet = getCurrentPet();
+            if (!pet) {
+                showSetupModal();
+                return;
+            }
+            // Update header
+            document.getElementById('petNameDisplay').textContent = pet.name || '—';
+            const typeLabels = { dog: '🐕 Dog', cat: '🐈 Cat', bird: '🐦 Bird', other: '🐾 Other' };
+            document.getElementById('petTypeDisplay').textContent = typeLabels[pet.type] || pet.type || '—';
+
+            // Sitter pet name
+            document.getElementById('sitterPetName').value = pet.sitter.petName || pet.name || '';
+
+            // Update all tools
+            updateFeedingUI(pet);
+            updateAgeUI(pet);
+            updateMedUI(pet);
+            updatePoopUI(pet);
+            updateVacUI(pet);
+            updateWalkUI(pet);
+            updateNamesUI(pet);
+            updateSitterUI(pet);
+            updateBathUI(pet);  // NEW
+
+            // Theme
+            setTheme(data.theme || 'warm');
+        }
+
+        // ========================================================================
+        //  FEEDING (per pet)
+        // ========================================================================
+        function updateFeedingUI(pet) {
+            const f = pet.feeding;
+            const meals = ['breakfast', 'lunch', 'dinner'];
+            const labels = { breakfast: '🌅 Breakfast', lunch: '☀️ Lunch', dinner: '🌙 Dinner' };
+            meals.forEach(m => {
+                const btn = document.querySelector(`.toggle-btn[data-meal="${m}"]`);
+                const status = document.getElementById(`${m}-status`);
+                if (f[m].fed && isToday(f[m].time)) {
+                    btn.classList.add('active');
+                    status.textContent = `✅ Fed at ${formatTime(f[m].time)}`;
+                } else {
+                    btn.classList.remove('active');
+                    status.textContent = 'Not fed';
+                    if (f[m].fed && !isToday(f[m].time)) {
+                        f[m].fed = false;
+                        f[m].time = null;
+                        f[m].note = '';
+                        updatePet(pet);
+                    }
+                }
+                btn.innerHTML = `${labels[m]}<span class="sub" id="${m}-status">${status.textContent}</span>`;
+            });
+
+            const container = document.getElementById('feedingHistory');
+            const today = getTodayStr();
+            const history = f.history.filter(h => h.date === today).slice(-20).reverse();
+            if (history.length === 0) {
+                container.innerHTML = '<div class="text-secondary text-sm">No feeding records today.</div>';
+            } else {
+                container.innerHTML = history.map(h =>
+                    `<div class="timeline-item">
+                <span class="time">${formatTime(h.time)}</span>
+                <span><strong>${labels[h.meal] || h.meal}</strong></span>
+                ${h.note ? `<span class="note">📝 ${h.note}</span>` : ''}
+                <span style="margin-left:auto;font-size:0.75rem;opacity:0.6;">by me</span>
+              </div>`
+                ).join('');
+            }
+        }
+
+        // Feeding event listeners (delegated)
+        document.querySelectorAll('.toggle-btn[data-meal]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const pet = getCurrentPet();
+                if (!pet) return;
+                const meal = this.dataset.meal;
+                const f = pet.feeding;
+                const now = new Date();
+                const todayStr = getTodayStr();
+
+                if (f[meal].fed && isToday(f[meal].time)) {
+                    if (confirm(`Unmark ${meal} as fed?`)) {
+                        f[meal].fed = false;
+                        f[meal].time = null;
+                        f[meal].note = '';
+                        updatePet(pet);
+                        updateFeedingUI(pet);
+                    }
+                    return;
+                }
+
+                f[meal].fed = true;
+                f[meal].time = now.toISOString();
+                const noteInput = document.getElementById('mealNoteInput');
+                const note = noteInput.value.trim();
+                if (note) {
+                    f[meal].note = note;
+                    f.history.push({ meal, time: now.toISOString(), date: todayStr, note: note });
+                    noteInput.value = '';
+                } else {
+                    f.history.push({ meal, time: now.toISOString(), date: todayStr, note: '' });
+                }
+                updatePet(pet);
+                updateFeedingUI(pet);
+            });
+        });
+
+        document.getElementById('mealNoteAddBtn').addEventListener('click', function() {
+            const pet = getCurrentPet();
+            if (!pet) return;
+            const note = document.getElementById('mealNoteInput').value.trim();
+            if (!note) { alert('Please enter a note.'); return; }
+            const f = pet.feeding;
+            const todayStr = getTodayStr();
+            const meals = ['breakfast', 'lunch', 'dinner'];
+            let found = false;
+            for (const m of meals) {
+                if (f[m].fed && isToday(f[m].time) && !f[m].note) {
+                    f[m].note = note;
+                    const hist = f.history.find(h => h.meal === m && h.date === todayStr && !h.note);
+                    if (hist) hist.note = note;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                alert('No recent meal found to add a note to. Feed your pet first!');
+                return;
+            }
+            updatePet(pet);
+            document.getElementById('mealNoteInput').value = '';
+            updateFeedingUI(pet);
+        });
+
+        // ========================================================================
+        //  AGE (per pet)
+        // ========================================================================
+        function updateAgeUI(pet) {
+            const birthdate = pet.birthdate || '';
+            document.getElementById('ageBirthInput').value = birthdate;
+
+            if (!birthdate) {
+                document.getElementById('ageDisplay').textContent = 'Set birthdate';
+                document.getElementById('humanAgeDisplay').textContent = '—';
+                document.getElementById('birthdayCountdown').textContent = '—';
+                document.getElementById('birthdayCountdownLarge').textContent = '—';
+                return;
+            }
+
+            const birth = new Date(birthdate + 'T00:00:00');
+            const now = new Date();
+            let years = now.getFullYear() - birth.getFullYear();
+            let months = now.getMonth() - birth.getMonth();
+            let days = now.getDate() - birth.getDate();
+            if (days < 0) { months--;
+                days += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); }
+            if (months < 0) { years--;
+                months += 12; }
+            if (years < 0) { years = 0;
+                months = 0;
+                days = 0; }
+
+            document.getElementById('ageDisplay').textContent = `${years}y ${months}m ${days}d`;
+
+            let humanAge = 0;
+            const type = pet.type || 'dog';
+            const size = pet.size || 'medium';
+            if (type === 'dog') {
+                const ageMap = {
+                    small: [15, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 68, 72, 76, 80, 84, 88, 92, 96],
+                    medium: [15, 24, 28, 32, 36, 42, 47, 51, 56, 60, 65, 69, 74, 78, 83, 87, 92, 96, 101, 105],
+                    large: [15, 24, 28, 32, 36, 45, 50, 55, 61, 66, 72, 77, 82, 88, 93, 99, 104, 110, 115, 121]
+                };
+                const map = ageMap[size] || ageMap.medium;
+                const idx = Math.min(years, map.length - 1);
+                humanAge = map[idx] || 0;
+            } else if (type === 'cat') {
+                if (years <= 1) humanAge = 15;
+                else if (years <= 2) humanAge = 24;
+                else humanAge = 24 + (years - 2) * 4;
+            } else {
+                humanAge = years * 5;
+            }
+            document.getElementById('humanAgeDisplay').textContent = humanAge + ' years';
+
+            const nextBirthday = new Date(now.getFullYear(), birth.getMonth(), birth.getDate());
+            if (nextBirthday < now) nextBirthday.setFullYear(nextBirthday.getFullYear() + 1);
+            const diffMs = nextBirthday - now;
+            const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            const diffHrs = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+            document.getElementById('birthdayCountdown').textContent = `${diffDays}d ${diffHrs}h ${diffMins}m`;
+            document.getElementById('birthdayCountdownLarge').textContent = `${diffDays}d ${diffHrs}h ${diffMins}m`;
+        }
+
+        document.getElementById('ageUpdateBtn').addEventListener('click', function() {
+            const pet = getCurrentPet();
+            if (!pet) return;
+            const val = document.getElementById('ageBirthInput').value;
+            if (val) {
+                pet.birthdate = val;
+                updatePet(pet);
+                updateAgeUI(pet);
+            } else {
+                alert('Please select a birthdate.');
+            }
+        });
+
+        setInterval(() => {
+            const pet = getCurrentPet();
+            if (pet) updateAgeUI(pet);
+        }, 60000);
+
+        // ========================================================================
+        //  MEDICATIONS (per pet)
+        // ========================================================================
+        function updateMedUI(pet) {
+            const container = document.getElementById('medList');
+            const meds = pet.medications || [];
+            if (meds.length === 0) {
+                container.innerHTML = '<div class="text-secondary text-sm">No medications added.</div>';
+                return;
+            }
+
+            container.innerHTML = meds.map((med, idx) => {
+                const now = new Date();
+                const start = new Date(med.startDate);
+                const end = med.endDate ? new Date(med.endDate) : null;
+                let nextDose = new Date(med.lastGiven || start);
+                const freq = med.frequency;
+                let hours = 0;
+                if (freq === 'daily') hours = 24;
+                else if (freq === 'weekly') hours = 168;
+                else if (freq === '12h') hours = 12;
+                else if (freq === '8h') hours = 8;
+                else if (freq === 'custom') hours = med.customHours || 6;
+
+                while (nextDose <= now) {
+                    nextDose.setHours(nextDose.getHours() + hours);
+                }
+                const diffMs = nextDose - now;
+                const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
+                const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+                const countdownStr = `${diffHrs}h ${diffMins}m`;
+
+                const isOverdue = end && now > end;
+
+                return `<div class="med-card ${isOverdue ? 'overdue' : ''}">
+              <div class="flex-between">
+                <span class="med-name">${med.name}</span>
+                <span class="tag ${isOverdue ? 'tag-danger' : 'tag-success'}">${isOverdue ? '⏰ Overdue' : 'Active'}</span>
+              </div>
+              <div class="med-detail">💊 ${med.dosage || '—'} · ${med.frequency}</div>
+              <div class="med-detail">📅 Started ${formatDate(med.startDate)}${med.endDate ? ' · Ends '+formatDate(med.endDate) : ''}</div>
+              <div class="flex-between mt-8">
+                <span class="countdown">⏱ Next dose in ${countdownStr}</span>
+                <div class="flex-center gap-sm">
+                  <button class="btn btn-sm btn-success med-given-btn" data-idx="${idx}">✅ Mark Given</button>
+                  <button class="btn btn-sm btn-danger med-del-btn" data-idx="${idx}">🗑</button>
+                </div>
+              </div>
+              ${med.history && med.history.length > 0 ? `
+                <div class="text-xs text-secondary mt-8">Last 10 doses: ${med.history.slice(-10).map(h => formatTime(h)).join(', ')}</div>
+              ` : ''}
+            </div>`;
+            }).join('');
+
+            container.querySelectorAll('.med-given-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const pet = getCurrentPet();
+                    if (!pet) return;
+                    const idx = parseInt(this.dataset.idx);
+                    const med = pet.medications[idx];
+                    if (!med) return;
+                    const now = new Date();
+                    if (!med.history) med.history = [];
+                    med.history.push(now.toISOString());
+                    med.lastGiven = now.toISOString();
+                    updatePet(pet);
+                    updateMedUI(pet);
+                    if (Notification.permission === 'granted') {
+                        new Notification(`💊 ${med.name} given!`, { body: `Next dose scheduled.` });
+                    }
+                });
+            });
+            container.querySelectorAll('.med-del-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const pet = getCurrentPet();
+                    if (!pet) return;
+                    const idx = parseInt(this.dataset.idx);
+                    if (confirm(`Delete "${pet.medications[idx].name}"?`)) {
+                        pet.medications.splice(idx, 1);
+                        updatePet(pet);
+                        updateMedUI(pet);
+                    }
+                });
+            });
+        }
+
+        document.getElementById('medAddBtn').addEventListener('click', function() {
+            const pet = getCurrentPet();
+            if (!pet) return;
+            const name = document.getElementById('medName').value.trim();
+            const dosage = document.getElementById('medDosage').value.trim();
+            const frequency = document.getElementById('medFrequency').value;
+            const customHours = parseInt(document.getElementById('medCustomHours').value) || 6;
+            const startDate = document.getElementById('medStartDate').value;
+            const endDate = document.getElementById('medEndDate').value || null;
+
+            if (!name) { alert('Please enter a medication name.'); return; }
+            if (!startDate) { alert('Please select a start date.'); return; }
+
+            pet.medications.push({
+                name,
+                dosage: dosage || '—',
+                frequency,
+                customHours: frequency === 'custom' ? customHours : null,
+                startDate,
+                endDate,
+                lastGiven: null,
+                history: []
+            });
+            updatePet(pet);
+            document.getElementById('medName').value = '';
+            document.getElementById('medDosage').value = '';
+            document.getElementById('medStartDate').value = '';
+            document.getElementById('medEndDate').value = '';
+            updateMedUI(pet);
+
+            if (Notification.permission === 'default') {
+                Notification.requestPermission();
+            }
+        });
+
+        document.getElementById('medFrequency').addEventListener('change', function() {
+            document.getElementById('medCustomHoursGroup').style.display =
+                this.value === 'custom' ? 'block' : 'none';
+        });
+
+        // ========================================================================
+        //  POOP & PEE (per pet)
+        // ========================================================================
+        function updatePoopUI(pet) {
+            const logs = pet.poopPee.logs || [];
+            const todayStr = getTodayStr();
+            const todayLogs = logs.filter(l => l.date === todayStr).slice(-30).reverse();
+
+            const container = document.getElementById('ppTimeline');
+            if (todayLogs.length === 0) {
+                container.innerHTML = '<div class="text-secondary text-sm">No logs today.</div>';
+            } else {
+                container.innerHTML = todayLogs.map(l =>
+                    `<div class="timeline-item">
+                <span class="time">${formatTime(l.time)}</span>
+                <span class="icon-badge">${l.type === 'pee' ? '💧' : '💩'}</span>
+                <span>${l.type === 'pee' ? 'Pee' : 'Poop'} · ${l.location === 'inside' ? '🏠 Inside' : '🌳 Outside'}</span>
+              </div>`
+                ).join('');
+            }
+
+            const weekDays = getWeekDays();
+            const weekStr = weekDays.map(d => d.toISOString().split('T')[0]);
+            const summary = {};
+            weekStr.forEach(d => { summary[d] = { pee: 0, poop: 0 }; });
+            logs.forEach(l => {
+                if (weekStr.includes(l.date)) {
+                    if (l.type === 'pee') summary[l.date].pee++;
+                    else summary[l.date].poop++;
+                }
+            });
+
+            const weekContainer = document.getElementById('weeklySummary');
+            const dayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            weekContainer.innerHTML = `<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center;">
+            ${weekDays.map((d, i) => {
+              const ds = d.toISOString().split('T')[0];
+              const s = summary[ds] || {pee:0,poop:0};
+              const isToday = ds === todayStr;
+              return `<div style="background:${isToday ? 'var(--accent-light)' : 'var(--input-bg)'};border-radius:10px;padding:6px 2px;border:${isToday ? '2px solid var(--accent)' : '1px solid var(--border)'};">
+                <div style="font-weight:700;font-size:0.7rem;">${dayLabels[i]}</div>
+                <div style="font-size:0.9rem;">💧${s.pee} 💩${s.poop}</div>
+              </div>`;
+            }).join('')}
+          </div>`;
+        }
+
+        function logPP(type) {
+            const pet = getCurrentPet();
+            if (!pet) return;
+            const location = document.getElementById('ppLocation').value;
+            const now = new Date();
+            pet.poopPee.logs.push({
+                type,
+                location,
+                time: now.toISOString(),
+                date: now.toISOString().split('T')[0]
+            });
+            updatePet(pet);
+            updatePoopUI(pet);
+        }
+
+        document.getElementById('ppPeeBtn').addEventListener('click', () => logPP('pee'));
+        document.getElementById('ppPoopBtn').addEventListener('click', () => logPP('poop'));
+
+        // ========================================================================
+        //  VACCINATIONS (per pet)
+        // ========================================================================
+        function updateVacUI(pet) {
+            const container = document.getElementById('vacList');
+            const vacs = pet.vaccinations || [];
+            if (vacs.length === 0) {
+                container.innerHTML = '<div class="text-secondary text-sm">No vaccination records.</div>';
+                return;
+            }
+
+            const now = new Date();
+            const sorted = [...vacs].sort((a, b) => new Date(a.due) - new Date(b.due));
+
+            container.innerHTML = sorted.map((vac, idx) => {
+                const due = new Date(vac.due);
+                const overdue = due < now;
+                return `<div class="med-card ${overdue ? 'overdue' : ''}">
+              <div class="flex-between">
+                <span class="med-name">💉 ${vac.name}</span>
+                <span class="tag ${overdue ? 'tag-danger' : 'tag-success'}">${overdue ? '🔴 Overdue' : '✅ Up to date'}</span>
+              </div>
+              <div class="med-detail">📅 Administered: ${formatDate(vac.date)} · Next due: ${formatDate(vac.due)}</div>
+              ${vac.notes ? `<div class="med-detail">📝 ${vac.notes}</div>` : ''}
+              <div class="flex-center gap-sm mt-8">
+                <button class="btn btn-sm btn-outline vac-edit-btn" data-idx="${idx}">✏️ Edit</button>
+                <button class="btn btn-sm btn-danger vac-del-btn" data-idx="${idx}">🗑 Delete</button>
+              </div>
+            </div>`;
+            }).join('');
+
+            container.querySelectorAll('.vac-del-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const pet = getCurrentPet();
+                    if (!pet) return;
+                    const idx = parseInt(this.dataset.idx);
+                    if (confirm('Delete this vaccination record?')) {
+                        pet.vaccinations.splice(idx, 1);
+                        updatePet(pet);
+                        updateVacUI(pet);
+                    }
+                });
+            });
+            container.querySelectorAll('.vac-edit-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const pet = getCurrentPet();
+                    if (!pet) return;
+                    const idx = parseInt(this.dataset.idx);
+                    const vac = pet.vaccinations[idx];
+                    if (!vac) return;
+                    const newName = prompt('Vaccine name:', vac.name);
+                    if (newName === null) return;
+                    const newDate = prompt('Date administered (YYYY-MM-DD):', vac.date);
+                    if (newDate === null) return;
+                    const newDue = prompt('Next due date (YYYY-MM-DD):', vac.due);
+                    if (newDue === null) return;
+                    const newNotes = prompt('Vet notes:', vac.notes || '');
+                    if (newNotes === null) return;
+                    vac.name = newName.trim() || vac.name;
+                    vac.date = newDate.trim() || vac.date;
+                    vac.due = newDue.trim() || vac.due;
+                    vac.notes = newNotes.trim() || '';
+                    updatePet(pet);
+                    updateVacUI(pet);
+                });
+            });
+        }
+
+        document.getElementById('vacAddBtn').addEventListener('click', function() {
+            const pet = getCurrentPet();
+            if (!pet) return;
+            const name = document.getElementById('vacName').value.trim();
+            const date = document.getElementById('vacDate').value;
+            const due = document.getElementById('vacDue').value;
+            const notes = document.getElementById('vacNotes').value.trim();
+
+            if (!name) { alert('Please enter a vaccine name.'); return; }
+            if (!date) { alert('Please select the date administered.'); return; }
+            if (!due) { alert('Please select the next due date.'); return; }
+
+            pet.vaccinations.push({ name, date, due, notes: notes || '' });
+            updatePet(pet);
+            document.getElementById('vacName').value = '';
+            document.getElementById('vacDate').value = '';
+            document.getElementById('vacDue').value = '';
+            document.getElementById('vacNotes').value = '';
+            updateVacUI(pet);
+        });
+
+        document.getElementById('vacPrintBtn').addEventListener('click', function() {
+            window.print();
+        });
+
+        // ========================================================================
+        //  WALKS (per pet)
+        // ========================================================================
+        function updateWalkUI(pet) {
+            const walks = pet.walks || [];
+            const container = document.getElementById('walkLog');
+            if (walks.length === 0) {
+                container.innerHTML = '<div class="text-secondary text-sm">No walks logged.</div>';
+            } else {
+                const sorted = [...walks].reverse().slice(0, 20);
+                container.innerHTML = sorted.map(w =>
+                    `<div class="walk-entry">
+                <div class="walk-info">
+                  <span class="time">${formatDate(w.date)}</span>
+                  <span>🚶 ${formatDuration(w.duration)}</span>
+                  ${w.distance ? `<span>📏 ${w.distance}km</span>` : ''}
+                  ${w.note ? `<span class="note">📝 ${w.note}</span>` : ''}
+                </div>
+              </div>`
+                ).join('');
+            }
+
+            const weekStart = getWeekStart();
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekEnd.getDate() + 7);
+            const weekWalks = walks.filter(w => {
+                const d = new Date(w.date);
+                return d >= weekStart && d < weekEnd;
+            });
+            const totalSecs = weekWalks.reduce((sum, w) => sum + w.duration, 0);
+            const totalKm = weekWalks.reduce((sum, w) => sum + (w.distance || 0), 0);
+            document.getElementById('walkWeeklyTotal').textContent =
+                `${formatDuration(totalSecs)} ${totalKm > 0 ? `· ${totalKm.toFixed(1)}km` : ''}`;
+
+            document.getElementById('walkTimerDisplay').textContent = formatDuration(walkSeconds);
+        }
+
+        document.getElementById('walkStartBtn').addEventListener('click', function() {
+            if (walkRunning) return;
+            walkSeconds = 0;
+            walkRunning = true;
+            walkStartTime = Date.now();
+            document.getElementById('walkStartBtn').disabled = true;
+            document.getElementById('walkStopBtn').disabled = false;
+            if (walkTimerInterval) clearInterval(walkTimerInterval);
+            walkTimerInterval = setInterval(() => {
+                if (walkRunning) {
+                    walkSeconds = Math.floor((Date.now() - walkStartTime) / 1000);
+                    document.getElementById('walkTimerDisplay').textContent = formatDuration(walkSeconds);
+                }
+            }, 200);
+        });
+
+        document.getElementById('walkStopBtn').addEventListener('click', function() {
+            if (!walkRunning) return;
+            walkRunning = false;
+            if (walkTimerInterval) clearInterval(walkTimerInterval);
+            walkTimerInterval = null;
+            document.getElementById('walkStartBtn').disabled = false;
+            document.getElementById('walkStopBtn').disabled = true;
+
+            const pet = getCurrentPet();
+            if (!pet) { walkSeconds = 0;
+                document.getElementById('walkTimerDisplay').textContent = '00:00:00'; return; }
+
+            const duration = walkSeconds;
+            const distance = parseFloat(document.getElementById('walkDistance').value) || 0;
+            const note = document.getElementById('walkNote').value.trim() || '';
+
+            if (duration > 5) {
+                pet.walks.push({
+                    date: new Date().toISOString(),
+                    duration: duration,
+                    distance: distance,
+                    note: note
+                });
+                updatePet(pet);
+                document.getElementById('walkDistance').value = '';
+                document.getElementById('walkNote').value = '';
+                updateWalkUI(pet);
+            } else {
+                alert('Walk was too short (less than 5 seconds). Not logged.');
+            }
+            walkSeconds = 0;
+            document.getElementById('walkTimerDisplay').textContent = '00:00:00';
+        });
+
+        // ========================================================================
+        //  NAMES (per pet - favorites)
+        // ========================================================================
+        let filteredNames = [...PET_NAMES];
+
+        function updateNamesUI(pet) {
+            renderNameGrid(pet);
+            renderFavorites(pet);
+        }
+
+        function renderNameGrid(pet) {
+            const container = document.getElementById('nameGrid');
+            const gender = document.getElementById('nameGender').value;
+            const species = document.getElementById('nameSpecies').value;
+            const startsWith = document.getElementById('nameStartsWith').value.trim().toUpperCase();
+            const maxLen = parseInt(document.getElementById('nameLength').value) || 0;
+
+            let filtered = [...PET_NAMES];
+            if (gender !== 'all') filtered = filtered.filter(n => n.gender === gender);
+            if (species !== 'all') filtered = filtered.filter(n => n.species === species);
+            if (startsWith) filtered = filtered.filter(n => n.name.toUpperCase().startsWith(startsWith));
+            if (maxLen > 0) filtered = filtered.filter(n => n.name.length <= maxLen);
+
+            filteredNames = filtered;
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="text-secondary text-sm">No names match your filters.</div>';
+                return;
+            }
+
+            const favs = pet.favorites || [];
+            container.innerHTML = filtered.map(n =>
+                `<div class="name-chip ${favs.includes(n.name) ? 'fav' : ''}" data-name="${n.name}">
+              ${n.name}
+              <span style="font-size:0.6rem;opacity:0.6;display:block;">${n.gender} · ${n.species}</span>
+            </div>`
+            ).join('');
+
+            container.querySelectorAll('.name-chip').forEach(el => {
+                el.addEventListener('click', function() {
+                    const pet = getCurrentPet();
+                    if (!pet) return;
+                    const name = this.dataset.name;
+                    const favs = pet.favorites || [];
+                    const idx = favs.indexOf(name);
+                    if (idx >= 0) {
+                        favs.splice(idx, 1);
+                    } else {
+                        favs.push(name);
+                    }
+                    pet.favorites = favs;
+                    updatePet(pet);
+                    renderNameGrid(pet);
+                    renderFavorites(pet);
+                    navigator.clipboard?.writeText(name).catch(() => {});
+                });
+            });
+        }
+
+        function renderFavorites(pet) {
+            const container = document.getElementById('favoritesGrid');
+            const favs = pet.favorites || [];
+            if (favs.length === 0) {
+                container.innerHTML = '<div class="text-secondary text-sm">No favorites yet. Click a name to star it!</div>';
+                return;
+            }
+            container.innerHTML = favs.map(name =>
+                `<div class="name-chip fav" data-name="${name}">⭐ ${name}</div>`
+            ).join('');
+            container.querySelectorAll('.name-chip').forEach(el => {
+                el.addEventListener('click', function() {
+                    const pet = getCurrentPet();
+                    if (!pet) return;
+                    const name = this.dataset.name;
+                    const favs = pet.favorites || [];
+                    const idx = favs.indexOf(name);
+                    if (idx >= 0) {
+                        favs.splice(idx, 1);
+                        pet.favorites = favs;
+                        updatePet(pet);
+                        renderFavorites(pet);
+                        renderNameGrid(pet);
+                    }
+                });
+            });
+        }
+
+        document.getElementById('nameFilterBtn').addEventListener('click', function() {
+            const pet = getCurrentPet();
+            if (pet) renderNameGrid(pet);
+        });
+        document.getElementById('nameClearFilters').addEventListener('click', function() {
+            document.getElementById('nameGender').value = 'all';
+            document.getElementById('nameSpecies').value = 'all';
+            document.getElementById('nameStartsWith').value = '';
+            document.getElementById('nameLength').value = '0';
+            const pet = getCurrentPet();
+            if (pet) renderNameGrid(pet);
+        });
+
+        document.getElementById('nameSurpriseBtn').addEventListener('click', function() {
+            const pet = getCurrentPet();
+            if (!pet) return;
+            const filtered = filteredNames.length > 0 ? filteredNames : PET_NAMES;
+            if (filtered.length === 0) { alert('No names match your filters.'); return; }
+            const random = filtered[Math.floor(Math.random() * filtered.length)];
+            alert(`🎲 Surprise name: ${random.name} (${random.gender}, ${random.species})`);
+            if (confirm(`Add "${random.name}" to favorites?`)) {
+                const favs = pet.favorites || [];
+                if (!favs.includes(random.name)) {
+                    favs.push(random.name);
+                    pet.favorites = favs;
+                    updatePet(pet);
+                    renderNameGrid(pet);
+                    renderFavorites(pet);
+                }
+            }
+        });
+
+        // ========================================================================
+        //  SITTER (per pet)
+        // ========================================================================
+        function updateSitterUI(pet) {
+            const s = pet.sitter || {};
+            document.getElementById('sitterPetName').value = s.petName || pet.name || '';
+            document.getElementById('sitterFeeding').value = s.feeding || '';
+            document.getElementById('sitterMeds').value = s.meds || '';
+            document.getElementById('sitterVet').value = s.vet || '';
+            document.getElementById('sitterWalk').value = s.walk || '';
+            document.getElementById('sitterNotes').value = s.notes || '';
+            document.getElementById('sitterContact').value = s.contact || '';
+            renderSitterPreview(pet);
+        }
+
+        function renderSitterPreview(pet) {
+            const s = pet.sitter || {};
+            const name = s.petName || pet.name || '—';
+            const preview = document.getElementById('sitterPreview');
+            preview.innerHTML = `
+            <div style="text-align:center;font-size:1.3rem;font-weight:900;color:var(--accent);margin-bottom:8px;">🐾 Pet Sitter Instructions</div>
+            <p><strong>Pet:</strong> ${name}</p>
+            <p><strong>Feeding:</strong> ${s.feeding || '—'}</p>
+            <p><strong>Medication:</strong> ${s.meds || '—'}</p>
+            <p><strong>Vet Contact:</strong> ${s.vet || '—'}</p>
+            <p><strong>Walk Routine:</strong> ${s.walk || '—'}</p>
+            <p><strong>Special Notes:</strong> ${s.notes || '—'}</p>
+            <p><strong>Sitter Contact:</strong> ${s.contact || '—'}</p>
+          `;
+        }
+
+        document.getElementById('sitterSaveBtn').addEventListener('click', function() {
+            const pet = getCurrentPet();
+            if (!pet) return;
+            pet.sitter = {
+                petName: document.getElementById('sitterPetName').value.trim(),
+                feeding: document.getElementById('sitterFeeding').value.trim(),
+                meds: document.getElementById('sitterMeds').value.trim(),
+                vet: document.getElementById('sitterVet').value.trim(),
+                walk: document.getElementById('sitterWalk').value.trim(),
+                notes: document.getElementById('sitterNotes').value.trim(),
+                contact: document.getElementById('sitterContact').value.trim()
+            };
+            updatePet(pet);
+            renderSitterPreview(pet);
+            alert('✅ Sitter sheet saved!');
+        });
+
+        document.getElementById('sitterPrintBtn').addEventListener('click', function() {
+            window.print();
+        });
+
+        let sitterTimeout;
+        document.querySelectorAll('#tab-sitter input, #tab-sitter textarea').forEach(el => {
+            el.addEventListener('input', function() {
+                const pet = getCurrentPet();
+                if (!pet) return;
+                clearTimeout(sitterTimeout);
+                sitterTimeout = setTimeout(() => {
+                    pet.sitter = {
+                        petName: document.getElementById('sitterPetName').value.trim(),
+                        feeding: document.getElementById('sitterFeeding').value.trim(),
+                        meds: document.getElementById('sitterMeds').value.trim(),
+                        vet: document.getElementById('sitterVet').value.trim(),
+                        walk: document.getElementById('sitterWalk').value.trim(),
+                        notes: document.getElementById('sitterNotes').value.trim(),
+                        contact: document.getElementById('sitterContact').value.trim()
+                    };
+                    updatePet(pet);
+                    renderSitterPreview(pet);
+                }, 600);
+            });
+        });
+
+        // ========================================================================
+        //  BATH & TRIMMING (per pet) - NEW
+        // ========================================================================
+        function updateBathUI(pet) {
+            const bathData = pet.bath || { baths: [], trims: [] };
+            const todayStr = getTodayStr();
+
+            // Update button statuses
+            const hasBathToday = bathData.baths.some(b => b.date === todayStr);
+            const hasTrimToday = bathData.trims.some(t => t.date === todayStr);
+
+            const bathBtn = document.getElementById('bathBtn');
+            const trimBtn = document.getElementById('trimBtn');
+            const bathStatus = document.getElementById('bathStatus');
+            const trimStatus = document.getElementById('trimStatus');
+
+            if (hasBathToday) {
+                bathBtn.classList.add('logged');
+                const lastBath = bathData.baths.filter(b => b.date === todayStr).pop();
+                bathStatus.textContent = `✅ Done at ${formatTime(lastBath.time)}`;
+            } else {
+                bathBtn.classList.remove('logged');
+                bathStatus.textContent = 'Not logged today';
+            }
+
+            if (hasTrimToday) {
+                trimBtn.classList.add('logged');
+                const lastTrim = bathData.trims.filter(t => t.date === todayStr).pop();
+                trimStatus.textContent = `✅ Done at ${formatTime(lastTrim.time)}`;
+            } else {
+                trimBtn.classList.remove('logged');
+                trimStatus.textContent = 'Not logged today';
+            }
+
+            // History
+            const container = document.getElementById('bathHistory');
+            const allEvents = [
+                ...bathData.baths.map(b => ({ ...b, type: 'bath' })),
+                ...bathData.trims.map(t => ({ ...t, type: 'trim' }))
+            ].sort((a, b) => new Date(b.time) - new Date(a.time)).slice(0, 30);
+
+            if (allEvents.length === 0) {
+                container.innerHTML = '<div class="text-secondary text-sm">No bath or trimming records.</div>';
+            } else {
+                container.innerHTML = allEvents.map(e =>
+                    `<div class="timeline-item">
+                <span class="time">${formatTime(e.time)}</span>
+                <span class="icon-badge">${e.type === 'bath' ? '🛁' : '✂️'}</span>
+                <span><strong>${e.type === 'bath' ? 'Bath' : 'Trimming'}</strong></span>
+                ${e.note ? `<span class="note">📝 ${e.note}</span>` : ''}
+                <span style="margin-left:auto;font-size:0.7rem;opacity:0.5;">${formatDate(e.time)}</span>
+              </div>`
+                ).join('');
+            }
+        }
+
+        function logBath(type) {
+            const pet = getCurrentPet();
+            if (!pet) return;
+            if (!pet.bath) pet.bath = { baths: [], trims: [] };
+
+            const now = new Date();
+            const entry = {
+                time: now.toISOString(),
+                date: now.toISOString().split('T')[0],
+                note: document.getElementById('bathNoteInput').value.trim() || ''
+            };
+
+            if (type === 'bath') {
+                // Check if already logged today (optional)
+                const todayStr = getTodayStr();
+                const existing = pet.bath.baths.filter(b => b.date === todayStr);
+                if (existing.length > 0 && !confirm('Already logged a bath today. Log another?')) {
+                    return;
+                }
+                pet.bath.baths.push(entry);
+            } else {
+                const todayStr = getTodayStr();
+                const existing = pet.bath.trims.filter(t => t.date === todayStr);
+                if (existing.length > 0 && !confirm('Already logged a trimming today. Log another?')) {
+                    return;
+                }
+                pet.bath.trims.push(entry);
+            }
+
+            document.getElementById('bathNoteInput').value = '';
+            updatePet(pet);
+            updateBathUI(pet);
+        }
+
+        document.getElementById('bathBtn').addEventListener('click', () => logBath('bath'));
+        document.getElementById('trimBtn').addEventListener('click', () => logBath('trim'));
+
+        document.getElementById('bathNoteAddBtn').addEventListener('click', function() {
+            const pet = getCurrentPet();
+            if (!pet) return;
+            const note = document.getElementById('bathNoteInput').value.trim();
+            if (!note) { alert('Please enter a note.'); return; }
+
+            const bathData = pet.bath || { baths: [], trims: [] };
+            const todayStr = getTodayStr();
+
+            let found = false;
+            // Check baths
+            for (let i = bathData.baths.length - 1; i >= 0; i--) {
+                if (bathData.baths[i].date === todayStr && !bathData.baths[i].note) {
+                    bathData.baths[i].note = note;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                for (let i = bathData.trims.length - 1; i >= 0; i--) {
+                    if (bathData.trims[i].date === todayStr && !bathData.trims[i].note) {
+                        bathData.trims[i].note = note;
+                        found = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!found) {
+                alert('No recent bath or trimming found to add a note to. Log one first!');
+                return;
+            }
+
+            pet.bath = bathData;
+            updatePet(pet);
+            document.getElementById('bathNoteInput').value = '';
+            updateBathUI(pet);
+        });
+
+        // ========================================================================
+        //  TAB SWITCHING
+        // ========================================================================
+        document.querySelectorAll('.tab-nav button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-nav button').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const tab = this.dataset.tab;
+                document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+                document.getElementById(`tab-${tab}`).classList.add('active');
+            });
+        });
+
+        // ========================================================================
+        //  RESET ALL DATA - Clears everything and resets to empty
+        // ========================================================================
+        document.getElementById('resetAllBtn').addEventListener('click', function() {
+            if (confirm('⚠️ Are you sure you want to delete ALL data for ALL pets? This cannot be undone.')) {
+                if (confirm('This will remove all pets and their data. Continue?')) {
+                    localStorage.removeItem('pawtrack_data');
+                    data = { pets: [], currentPetId: '', theme: 'warm' };
+                    saveData();
+                    // Reset walk timer
+                    walkRunning = false;
+                    walkSeconds = 0;
+                    if (walkTimerInterval) clearInterval(walkTimerInterval);
+                    walkTimerInterval = null;
+                    document.getElementById('walkStartBtn').disabled = false;
+                    document.getElementById('walkStopBtn').disabled = true;
+                    document.getElementById('walkTimerDisplay').textContent = '00:00:00';
+                    showSetupModal();
+                    populatePetSelector();
+                    updateUI();
+                    alert('✅ All data cleared. You can start fresh.');
+                }
+            }
+        });
+
+        // ========================================================================
+        //  THEME PICKER
+        // ========================================================================
+        document.querySelectorAll('.theme-picker button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const theme = this.dataset.theme;
+                setTheme(theme);
+            });
+        });
+
+        // ========================================================================
+        //  INIT
+        // ========================================================================
+        loadData();
+
+        if (data.pets.length === 0) {
+            showSetupModal();
+        } else {
+            hideSetupModal();
+            if (!data.currentPetId || !data.pets.find(p => p.id === data.currentPetId)) {
+                data.currentPetId = data.pets[0].id;
+                saveData();
+            }
+            populatePetSelector();
+            updateUI();
+        }
+
+        if (Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
+
+        setInterval(() => {
+            const pet = getCurrentPet();
+            if (pet) {
+                updateMedUI(pet);
+                updateAgeUI(pet);
+            }
+        }, 30000);
+
+        console.log('🐾 PawTrack Multi-Pet with Bath & Trimming loaded!');
+    </script>
+</body>
+</html>
