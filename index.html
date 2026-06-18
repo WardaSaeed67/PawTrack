@@ -1041,28 +1041,201 @@
             flex: 1;
         }
 
-        /* Responsive changes for sidebar nav grid collapsing */
+        /* Toggle buttons and wrappers hidden on desktop */
+        .header-top-row {
+            display: contents;
+        }
+        .menu-toggle, .tab-menu-toggle {
+            display: none;
+        }
+        .menu-theme-row {
+            display: none;
+        }
+        .menu-spacer {
+            display: none;
+        }
+
+        /* Responsive changes for sidebar nav collapse and Care Tracker tab collapse */
         @media (max-width: 768px) {
             .app-layout {
                 grid-template-columns: 1fr;
                 gap: 16px;
                 margin-top: 12px;
             }
-            .sidebar {
-                flex-direction: row;
-                flex-wrap: wrap;
+            
+            /* Desktop elements hidden on mobile */
+            .desktop-only {
+                display: none !important;
+            }
+            .menu-spacer {
+                display: block !important;
+                width: 32px;
+                height: 32px;
+            }
+            
+            /* Header Top Row on Mobile */
+            .header-top-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+            }
+            
+            /* Sidebar Hamburger Toggle in Header */
+            .menu-toggle {
+                display: flex;
+                align-items: center;
                 justify-content: center;
-                padding: 10px;
+                background: transparent;
+                border: none;
+                font-size: 1.5rem;
+                color: var(--text);
+                cursor: pointer;
+                padding: 6px;
+                width: 32px;
+                height: 32px;
+                box-sizing: border-box;
+                border-radius: var(--radius);
+                transition: background var(--transition);
+            }
+            .menu-toggle:hover {
+                background: var(--tab-bg);
+            }
+            
+            /* Flat Sidebar Wrapper on Mobile */
+            .sidebar {
+                border: none;
+                background: transparent;
+                box-shadow: none;
+                padding: 0;
+                margin: 0;
+                display: flex;
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            /* Sidebar items container (dropdown card) */
+            .nav-items-container {
+                display: none;
+                flex-direction: column;
                 gap: 6px;
+                width: 100%;
+                background: var(--card-bg);
+                border: 2px solid var(--border);
+                border-radius: var(--radius);
+                padding: 10px;
+                box-shadow: var(--card-shadow);
+                box-sizing: border-box;
+                margin-top: 8px;
+            }
+            .nav-items-container.show {
+                display: flex;
+                animation: slideDownMenu 0.2s ease-out forwards;
             }
             .nav-item {
-                font-size: 0.8rem;
-                padding: 6px 12px;
-                gap: 6px;
+                font-size: 0.95rem;
+                padding: 10px 16px;
+                gap: 12px;
+                width: 100%;
+                box-sizing: border-box;
             }
             .nav-item:hover {
-                transform: translateY(-2px);
+                transform: translateX(4px);
             }
+            
+            /* Theme picker row inside menu dropdown */
+            .menu-theme-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 12px 16px;
+                border-top: 2px solid var(--border);
+                margin-top: 8px;
+            }
+            .menu-theme-row .theme-label {
+                font-weight: 800;
+                font-size: 0.95rem;
+                color: var(--text-secondary);
+            }
+            .menu-theme-row .theme-picker {
+                display: flex;
+                gap: 6px;
+            }
+            
+            /* Care Tracker Tab Hamburger Styles */
+            .tab-nav {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 8px;
+                gap: 0;
+                position: relative;
+            }
+            .tab-menu-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+                background: transparent;
+                border: none;
+                padding: 12px 16px;
+                font-family: var(--font);
+                font-weight: 800;
+                font-size: 1rem;
+                color: var(--text-secondary);
+                cursor: pointer;
+                box-sizing: border-box;
+                border-radius: var(--radius);
+                transition: background var(--transition), color var(--transition);
+            }
+            .tab-menu-toggle:hover {
+                background: var(--tab-bg);
+                color: var(--text);
+            }
+            .tab-menu-toggle .hamburger-icon {
+                font-size: 1.3rem;
+            }
+            .tab-items-container {
+                display: none;
+                flex-direction: column;
+                gap: 6px;
+                width: 100%;
+                margin-top: 8px;
+                border-top: 2px solid var(--border);
+                padding-top: 10px;
+                box-sizing: border-box;
+            }
+            .tab-items-container.show {
+                display: flex;
+                animation: slideDownMenu 0.2s ease-out forwards;
+            }
+            .tab-nav button, .tab-nav button.tab-prominent {
+                width: 100%;
+                text-align: left;
+                box-sizing: border-box;
+                font-size: 0.95rem;
+                padding: 10px 16px;
+                border-radius: 30px !important;
+                transform: none !important;
+                box-shadow: none !important;
+            }
+            .tab-nav button.tab-prominent::after {
+                content: "" !important; /* Hide stars on mobile list to save space */
+            }
+            .tab-nav .tab-divider {
+                display: none;
+            }
+
+            @keyframes slideDownMenu {
+                from {
+                    opacity: 0;
+                    transform: translateY(-8px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
             .chat-container {
                 height: 380px;
             }
@@ -1076,9 +1249,156 @@
             .sitter-preview { border: 1px solid #ccc !important; background: #f9f9f9 !important; }
             .modal-overlay { display: none !important; }
         }
+        /* ========================================================================
+           === START FLAT UI & FLOATING PET STYLES ===
+           ======================================================================== */
+        
+        /* Flat Pet Chips */
+        .pet-chips-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 16px;
+            margin-bottom: 20px;
+        }
+        .pet-chip {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            width: 250px;
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            padding: 12px 16px;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: transform var(--transition), border-color var(--transition), background var(--transition);
+        }
+        .pet-chip:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent);
+        }
+        .pet-chip.active-pet {
+            border-color: var(--accent);
+            background: rgba(255, 107, 107, 0.05);
+        }
+        .pet-chip .pet-avatar-container {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid var(--border);
+            background: var(--bg);
+            flex-shrink: 0;
+        }
+        .pet-chip .pet-avatar-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .pet-chip .pet-chip-details {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .pet-chip .pet-name {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text);
+        }
+        .pet-chip .pet-info {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        .pet-chip .pet-select-indicator {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-top: 2px;
+        }
+
+        /* Flat Modal Entrance */
+        @media (prefers-reduced-motion: no-preference) {
+            .modal-overlay:not(.hidden) .modal-box {
+                animation: modalFlatEntrance 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            }
+        }
+        @keyframes modalFlatEntrance {
+            from {
+                transform: scale(0.95);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Static Pattern Background (No Parallax Motion) */
+        .parallax-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -10;
+            pointer-events: none;
+            background-repeat: repeat;
+            opacity: 0.8;
+        }
+
+        /* Flat Toggle Buttons */
+        .toggle-btn {
+            position: relative;
+            transition: border-color var(--transition), background var(--transition), transform 0.1s ease;
+        }
+        .toggle-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* 3D Floating Pet Corner Widget */
+        .floating-pet-widget {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 90px;
+            height: 90px;
+            z-index: 2000;
+            pointer-events: auto;
+            will-change: transform;
+            cursor: pointer;
+            perspective: 1000px;
+            transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.2s ease;
+        }
+        .floating-pet-widget img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            border-radius: 50%;
+            border: 3px solid var(--border);
+            background: var(--card-bg);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15), 0 3px 10px rgba(0,0,0,0.1);
+            object-fit: cover;
+            transition: border-color var(--transition), background var(--transition);
+            animation: floatBob 4s ease-in-out infinite;
+        }
+        @keyframes floatBob {
+            0%, 100% {
+                transform: translateY(0px) rotateX(8deg) rotateY(-8deg);
+            }
+            50% {
+                transform: translateY(-10px) rotateX(12deg) rotateY(-4deg) rotateZ(1deg);
+            }
+        }
+        /* === END FLAT UI & FLOATING PET STYLES === */
     </style>
 </head>
 <body>
+    <!-- Parallax background -->
+    <div class="parallax-bg" id="parallaxBg"></div>
 
     <!-- ===================== MODAL (First Load / Pet Setup) ===================== -->
     <div class="modal-overlay" id="setupModal">
@@ -1120,7 +1440,18 @@
 
         <!-- Header -->
         <header class="app-header">
-            <div class="logo">🐾 PawTrack</div>
+            <div class="header-top-row">
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle Navigation Menu">
+                    <span class="hamburger-icon">☰</span>
+                </button>
+                <div class="logo">🐾 PawTrack</div>
+                <div class="theme-picker desktop-only">
+                    <button class="th-warm active" data-theme="warm" title="Baby Pink">🌸</button>
+                    <button class="th-midnight" data-theme="midnight" title="Light Blue">💧</button>
+                    <button class="th-forest" data-theme="forest" title="Light Yellow">🌼</button>
+                </div>
+                <div class="menu-spacer" style="width: 32px; display: none;"></div>
+            </div>
             <div class="pet-selector">
                 <select id="petSelector"></select>
                 <button class="btn btn-sm btn-outline" id="addPetBtn">➕ Add</button>
@@ -1130,25 +1461,30 @@
                 <span id="petNameDisplay">—</span>
                 <span class="pet-type" id="petTypeDisplay">—</span>
             </div>
-            <div class="theme-picker">
-                <button class="th-warm active" data-theme="warm" title="Baby Pink">🌸</button>
-                <button class="th-midnight" data-theme="midnight" title="Light Blue">💧</button>
-                <button class="th-forest" data-theme="forest" title="Light Yellow">🌼</button>
-            </div>
         </header>
 
         <!-- Sidebar + Content Layout -->
         <div class="app-layout">
             <!-- Sidebar Navigation -->
-            <aside class="sidebar no-print">
-                <a href="#dashboard" class="nav-item active"><span class="nav-icon">🏠</span> Dashboard</a>
-                <a href="#tracker" class="nav-item"><span class="nav-icon">🐾</span> Care Tracker</a>
-                <a href="#weight" class="nav-item"><span class="nav-icon">📊</span> Weight Log</a>
-                <a href="#tasks" class="nav-item"><span class="nav-icon">📋</span> Tasks &amp; Reminders</a>
-                <a href="#expenses" class="nav-item"><span class="nav-icon">💰</span> Expenses</a>
-                <a href="#appointments" class="nav-item"><span class="nav-icon">🏥</span> Vet Visits</a>
-                <a href="#documents" class="nav-item"><span class="nav-icon">📄</span> Documents</a>
-                <a href="#chat" class="nav-item"><span class="nav-icon">🤖</span> AI Helper</a>
+            <aside class="sidebar no-print" id="sidebarMenu">
+                <div class="nav-items-container" id="navItemsContainer">
+                    <a href="#dashboard" class="nav-item active"><span class="nav-icon">🏠</span> Dashboard</a>
+                    <a href="#tracker" class="nav-item"><span class="nav-icon">🐾</span> Care Tracker</a>
+                    <a href="#weight" class="nav-item"><span class="nav-icon">📊</span> Weight Log</a>
+                    <a href="#tasks" class="nav-item"><span class="nav-icon">📋</span> Tasks &amp; Reminders</a>
+                    <a href="#expenses" class="nav-item"><span class="nav-icon">💰</span> Expenses</a>
+                    <a href="#appointments" class="nav-item"><span class="nav-icon">🏥</span> Vet Visits</a>
+                    <a href="#documents" class="nav-item"><span class="nav-icon">📄</span> Documents</a>
+                    <a href="#chat" class="nav-item"><span class="nav-icon">🤖</span> AI Helper</a>
+                    <div class="menu-theme-row">
+                        <span class="theme-label">Theme</span>
+                        <div class="theme-picker">
+                            <button class="th-warm active" data-theme="warm" title="Baby Pink">🌸</button>
+                            <button class="th-midnight" data-theme="midnight" title="Light Blue">💧</button>
+                            <button class="th-forest" data-theme="forest" title="Light Yellow">🌼</button>
+                        </div>
+                    </div>
+                </div>
             </aside>
 
             <!-- Main Content Area -->
@@ -1207,16 +1543,22 @@
                 <div class="page-view" id="page-tracker">
                     <!-- Tab Navigation -->
                     <nav class="tab-nav" id="tabNav">
-                        <button class="tab-prominent active" data-tab="feeding">🍽 Who Fed?</button>
-                        <button class="tab-prominent" data-tab="age">🎂 Age</button>
-                        <button class="tab-prominent" data-tab="meds">💊 Meds</button>
-                        <span class="tab-divider"></span>
-                        <button data-tab="poop">💩 Poop &amp; Pee</button>
-                        <button data-tab="vaccines">💉 Health</button>
-                        <button data-tab="walks">🚶 Walks</button>
-                        <button data-tab="names">📛 Names</button>
-                        <button data-tab="sitter">📋 Sitter</button>
-                        <button data-tab="bath">🛁 Bath</button>
+                        <button class="tab-menu-toggle" id="tabMenuToggle" aria-label="Toggle Tracker Tabs">
+                            <span id="activeTabLabel">🍽 Who Fed?</span>
+                            <span class="hamburger-icon">☰</span>
+                        </button>
+                        <div class="tab-items-container" id="tabItemsContainer">
+                            <button class="tab-prominent active" data-tab="feeding">🍽 Who Fed?</button>
+                            <button class="tab-prominent" data-tab="age">🎂 Age</button>
+                            <button class="tab-prominent" data-tab="meds">💊 Meds</button>
+                            <span class="tab-divider"></span>
+                            <button data-tab="poop">💩 Poop &amp; Pee</button>
+                            <button data-tab="vaccines">💉 Health</button>
+                            <button data-tab="walks">🚶 Walks</button>
+                            <button data-tab="names">📛 Names</button>
+                            <button data-tab="sitter">📋 Sitter</button>
+                            <button data-tab="bath">🛁 Bath</button>
+                        </div>
                     </nav>
 
                     <!-- ===================== TAB: FEEDING ===================== -->
@@ -1668,6 +2010,10 @@
                         </div>
                     </div>
                 </div>
+                <!-- Floating 3D Pet Image Widget -->
+                <div class="floating-pet-widget" id="floatingPetWidget" style="display: none;">
+                    <img id="floatingPetImage" src="" alt="Active Pet" />
+                </div>
             </main>
         </div>
 
@@ -2050,6 +2396,7 @@
             hideSetupModal();
             populatePetSelector();
             updateUI();
+            playPetSound(pet.type);
         });
 
         document.getElementById('petNameInput').addEventListener('keydown', (e) => {
@@ -2088,6 +2435,8 @@
                     document.getElementById('walkTimerDisplay').textContent = '00:00:00';
                 }
                 updateUI();
+                const pet = getCurrentPet();
+                if (pet) playPetSound(pet.type);
             }
         });
 
@@ -2102,6 +2451,7 @@
             addPet(pet);
             populatePetSelector();
             updateUI();
+            playPetSound(pet.type);
             alert(`🐾 Added ${pet.name}!`);
         });
 
@@ -2152,6 +2502,16 @@
 
             // Refresh new pages
             updateNewPagesUI(pet);
+
+            // Render pet chips on dashboard
+            if (typeof renderPetChips === 'function') {
+                renderPetChips(pet);
+            }
+
+            // Update corner floating 3D pet image
+            if (typeof updateFloatingPet === 'function') {
+                updateFloatingPet(pet);
+            }
         }
 
         // ========================================================================
@@ -3039,13 +3399,19 @@
         // ========================================================================
         //  TAB SWITCHING
         // ========================================================================
-        document.querySelectorAll('.tab-nav button').forEach(btn => {
+        document.querySelectorAll('.tab-items-container button').forEach(btn => {
             btn.addEventListener('click', function() {
-                document.querySelectorAll('.tab-nav button').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-items-container button').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
                 const tab = this.dataset.tab;
                 document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
                 document.getElementById(`tab-${tab}`).classList.add('active');
+
+                // Update active tab label for mobile view dropdown header
+                const activeTabLabel = document.getElementById('activeTabLabel');
+                if (activeTabLabel) {
+                    activeTabLabel.textContent = this.textContent.trim();
+                }
             });
         });
 
@@ -3141,6 +3507,13 @@
                 const href = a.getAttribute('href');
                 a.classList.toggle('active', href === `#${pageToShow}`);
             });
+
+            // Update active menu label for mobile view header dropdown
+            const activeLink = document.querySelector(`.sidebar .nav-item[href="#${pageToShow}"]`);
+            const activeLabelEl = document.getElementById('activeMenuLabel');
+            if (activeLink && activeLabelEl) {
+                activeLabelEl.textContent = activeLink.textContent.trim();
+            }
 
             // Scroll to top of content
             window.scrollTo(0, 0);
@@ -4048,6 +4421,378 @@
         setInterval(checkUpcomingAlerts, 60000);
 
         console.log('🐾 PawTrack Multi-Pet with Multi-Page & Premium Features loaded!');
+
+        // ========================================================================
+        //  === START FLAT UI & CORNER FLOATING PETS ===
+        // ========================================================================
+        
+        const otherSvg = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="128" height="128"><rect width="100" height="100" rx="20" fill="%23FFFDF0"/><circle cx="50" cy="50" r="35" fill="%236B7A3A"/><circle cx="38" cy="45" r="5" fill="%23fff"/><circle cx="62" cy="45" r="5" fill="%23fff"/><path d="M 40 60 Q 50 68 60 60" fill="none" stroke="%23fff" stroke-width="3"/></svg>`;
+
+        // Helper to format short date for pet chips
+        function formatDateShort(dateStr) {
+            if (!dateStr) return '—';
+            const d = new Date(dateStr);
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            return `${d.getDate()} ${months[d.getMonth()]}`;
+        }
+
+        // Render flat 2D pet chips on dashboard
+        function renderPetChips(currentPet) {
+            const dashCard = document.querySelector('#page-dashboard > .card');
+            if (!dashCard) return;
+            
+            let container = document.getElementById('pet-chips-list-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'pet-chips-list-container';
+                container.className = 'pet-chips-container';
+                const title = dashCard.querySelector('.card-title');
+                if (title) title.after(container);
+                else dashCard.prepend(container);
+            }
+            
+            container.innerHTML = '';
+            
+            const pets = data.pets || [];
+            pets.forEach(pet => {
+                // Next appointment
+                const petAppts = (data.vetAppointments || []).filter(a => a.petId === pet.id);
+                const upcomingAppts = petAppts.filter(a => new Date(a.date + 'T' + (a.time || '00:00')) >= new Date())
+                    .sort((a, b) => new Date(a.date) - new Date(b.date));
+                const nextApptStr = upcomingAppts.length > 0 ? `${formatDateShort(upcomingAppts[0].date)}` : 'No appt';
+                
+                // Latest weight
+                const petWeights = (data.weightLogs || []).filter(w => w.petId === pet.id)
+                    .sort((a, b) => new Date(a.date) - new Date(b.date));
+                const weightStr = petWeights.length > 0 ? `${petWeights[petWeights.length - 1].weight} kg` : 'No weight';
+
+                const isActive = pet.id === currentPet.id;
+                
+                let avatarSrc = '';
+                if (pet.type === 'cat') avatarSrc = 'cat_avatar.jpg';
+                else if (pet.type === 'dog') avatarSrc = 'dog_avatar.png';
+                else if (pet.type === 'bird') avatarSrc = 'bird_avatar.png';
+                else if (pet.type === 'other') avatarSrc = 'other_avatar.jpg';
+                else avatarSrc = otherSvg; // default other svg
+
+                const chip = document.createElement('div');
+                chip.className = `pet-chip ${isActive ? 'active-pet' : ''}`;
+                chip.dataset.petId = pet.id;
+                
+                chip.innerHTML = `
+                    <div class="pet-avatar-container">
+                        <img src="${avatarSrc}" alt="${pet.name}" />
+                    </div>
+                    <div class="pet-chip-details">
+                        <span class="pet-name">${pet.name}</span>
+                        <span class="pet-info">⚖️ ${weightStr} | 🏥 ${nextApptStr}</span>
+                        <span class="pet-select-indicator">${isActive ? 'Active' : 'Click to activate'}</span>
+                    </div>
+                `;
+                
+                chip.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (pet.id !== currentPet.id) {
+                        setCurrentPetId(pet.id);
+                        if (typeof populatePetSelector === 'function') populatePetSelector();
+                        updateUI();
+                        playPetSound(pet.type);
+                    }
+                });
+                
+                container.appendChild(chip);
+            });
+        }
+
+        // Static pattern background (no parallax translation on scroll)
+        function initStaticBackground() {
+            updateStaticBackgroundPattern();
+            
+            document.querySelectorAll('.theme-picker button').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    setTimeout(updateStaticBackgroundPattern, 50);
+                });
+            });
+        }
+
+        function updateStaticBackgroundPattern() {
+            const bg = document.getElementById('parallaxBg');
+            if (!bg) return;
+            
+            const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+            const color = accentColor || '#C0392B';
+            
+            const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 100 100'><g fill='${color}' opacity='0.035'><path d='M50,75 C65,75 70,60 70,55 C70,45 60,40 50,40 C40,40 30,45 30,55 C30,60 35,75 50,75 Z'/><circle cx='25' cy='30' r='10'/><circle cx='40' cy='20' r='10'/><circle cx='60' cy='20' r='10'/><circle cx='75' cy='30' r='10'/></g></svg>`;
+            const encoded = btoa(svg);
+            bg.style.backgroundImage = `url("data:image/svg+xml;base64,${encoded}")`;
+        }
+
+        // Play synthesized sound for active pet type
+        function playPetSound(petType) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContext) return;
+            
+            try {
+                const ctx = new AudioContext();
+                const t = ctx.currentTime;
+                
+                if (petType === 'cat') {
+                    // Meow: triangle wave sweeping up then sliding down
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    
+                    osc.type = 'triangle';
+                    
+                    osc.frequency.setValueAtTime(380, t);
+                    osc.frequency.exponentialRampToValueAtTime(540, t + 0.12);
+                    osc.frequency.exponentialRampToValueAtTime(570, t + 0.28);
+                    osc.frequency.exponentialRampToValueAtTime(400, t + 0.6);
+                    
+                    gain.gain.setValueAtTime(0, t);
+                    gain.gain.linearRampToValueAtTime(0.15, t + 0.08);
+                    gain.gain.exponentialRampToValueAtTime(0.08, t + 0.3);
+                    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.65);
+                    
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    
+                    osc.start(t);
+                    osc.stop(t + 0.65);
+                    
+                } else if (petType === 'dog') {
+                    // Bark: sawtooth wave, fast pitch sweep down, bandpass filtered, double bark!
+                    const playSingleBark = (startTime) => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        const filter = ctx.createBiquadFilter();
+                        
+                        osc.type = 'sawtooth';
+                        
+                        osc.frequency.setValueAtTime(240, startTime);
+                        osc.frequency.exponentialRampToValueAtTime(75, startTime + 0.11);
+                        
+                        filter.type = 'bandpass';
+                        filter.frequency.setValueAtTime(260, startTime);
+                        filter.frequency.exponentialRampToValueAtTime(140, startTime + 0.11);
+                        filter.Q.setValueAtTime(1.5, startTime);
+                        
+                        gain.gain.setValueAtTime(0.18, startTime);
+                        gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.11);
+                        
+                        osc.connect(filter);
+                        filter.connect(gain);
+                        gain.connect(ctx.destination);
+                        
+                        osc.start(startTime);
+                        osc.stop(startTime + 0.12);
+                    };
+                    
+                    playSingleBark(t);
+                    
+                    // Second bark slightly delayed and slightly pitch shifted
+                    setTimeout(() => {
+                        try {
+                            const ctx2 = new AudioContext();
+                            const osc2 = ctx2.createOscillator();
+                            const gain2 = ctx2.createGain();
+                            const filter2 = ctx2.createBiquadFilter();
+                            osc2.type = 'sawtooth';
+                            const t2 = ctx2.currentTime;
+                            osc2.frequency.setValueAtTime(210, t2);
+                            osc2.frequency.exponentialRampToValueAtTime(65, t2 + 0.1);
+                            filter2.type = 'bandpass';
+                            filter2.frequency.setValueAtTime(230, t2);
+                            filter2.frequency.exponentialRampToValueAtTime(130, t2 + 0.1);
+                            filter2.Q.setValueAtTime(1.5, t2);
+                            gain2.gain.setValueAtTime(0.15, t2);
+                            gain2.gain.exponentialRampToValueAtTime(0.001, t2 + 0.1);
+                            osc2.connect(filter2);
+                            filter2.connect(gain2);
+                            gain2.connect(ctx2.destination);
+                            osc2.start(t2);
+                            osc2.stop(t2 + 0.11);
+                        } catch(e){}
+                    }, 180);
+                    
+                } else if (petType === 'bird') {
+                    // Bird Chirp: High frequency sinewave sweeping up and down very fast three times
+                    const playSingleChirp = (startTime, startFreq, endFreq, dur) => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        
+                        osc.type = 'sine';
+                        
+                        osc.frequency.setValueAtTime(startFreq, startTime);
+                        osc.frequency.exponentialRampToValueAtTime(endFreq, startTime + dur);
+                        
+                        gain.gain.setValueAtTime(0, startTime);
+                        gain.gain.linearRampToValueAtTime(0.12, startTime + 0.02);
+                        gain.gain.exponentialRampToValueAtTime(0.001, startTime + dur);
+                        
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        
+                        osc.start(startTime);
+                        osc.stop(startTime + dur);
+                    };
+                    
+                    playSingleChirp(t, 2200, 3200, 0.08);
+                    playSingleChirp(t + 0.1, 2300, 3400, 0.08);
+                    playSingleChirp(t + 0.2, 2400, 3600, 0.09);
+                    
+                } else {
+                    // "Other" (rabbit/bubble/sparkle): a clean bell or bubble drop chime
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(880, t);
+                    osc.frequency.exponentialRampToValueAtTime(1320, t + 0.12);
+                    osc.frequency.exponentialRampToValueAtTime(1760, t + 0.24);
+                    
+                    gain.gain.setValueAtTime(0, t);
+                    gain.gain.linearRampToValueAtTime(0.15, t + 0.04);
+                    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+                    
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    
+                    osc.start(t);
+                    osc.stop(t + 0.35);
+                }
+            } catch (e) {
+                console.error("Failed to play synthesized sound:", e);
+            }
+        }
+
+        // Corner floating pet avatar controller
+        function updateFloatingPet(pet) {
+            const widget = document.getElementById('floatingPetWidget');
+            const img = document.getElementById('floatingPetImage');
+            if (!widget || !img) return;
+            
+            if (!pet) {
+                widget.style.display = 'none';
+                return;
+            }
+            
+            let avatarSrc = '';
+            if (pet.type === 'cat') {
+                avatarSrc = 'cat_avatar.jpg';
+            } else if (pet.type === 'dog') {
+                avatarSrc = 'dog_avatar.png';
+            } else if (pet.type === 'bird') {
+                avatarSrc = 'bird_avatar.png';
+            } else if (pet.type === 'other') {
+                avatarSrc = 'other_avatar.jpg';
+            }
+            
+            if (avatarSrc) {
+                img.src = avatarSrc;
+                img.alt = pet.name;
+                widget.style.display = 'block';
+            } else {
+                widget.style.display = 'none';
+            }
+        }
+
+        // Dynamic 3D tilt tracking effect & audio playback
+        function initFloatingPetTilt() {
+            const el = document.getElementById('floatingPetWidget');
+            if (!el) return;
+            
+            el.addEventListener('click', () => {
+                const pet = getCurrentPet();
+                if (pet) playPetSound(pet.type);
+            });
+            
+            el.addEventListener('mousemove', (e) => {
+                const rect = el.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                // Calculate position relative to center (-0.5 to 0.5)
+                const px = (x / rect.width) - 0.5;
+                const py = (y / rect.height) - 0.5;
+                
+                // Tilt limits (up to 30 degrees)
+                const tiltX = -py * 30;
+                const tiltY = px * 30;
+                
+                const img = el.querySelector('img');
+                if (img) {
+                    img.style.animationPlayState = 'paused'; // pause float animation on hover
+                }
+                el.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(1.12)`;
+            });
+            
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = '';
+                const img = el.querySelector('img');
+                if (img) {
+                    img.style.animationPlayState = 'running'; // resume float animation
+                }
+            });
+        }
+
+        // Hamburger Menu Toggle Handlers for Mobile View
+        function initMobileMenuToggles() {
+            // Sidebar menu toggle
+            const menuToggle = document.getElementById('menuToggle');
+            const navItemsContainer = document.getElementById('navItemsContainer');
+            if (menuToggle && navItemsContainer) {
+                menuToggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    navItemsContainer.classList.toggle('show');
+                });
+            }
+
+            // Close sidebar menu when clicking a nav-item in mobile
+            document.querySelectorAll('.sidebar .nav-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    if (window.innerWidth <= 768 && navItemsContainer) {
+                        navItemsContainer.classList.remove('show');
+                    }
+                });
+            });
+
+            // Care Tracker tab menu toggle
+            const tabMenuToggle = document.getElementById('tabMenuToggle');
+            const tabItemsContainer = document.getElementById('tabItemsContainer');
+            if (tabMenuToggle && tabItemsContainer) {
+                tabMenuToggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    tabItemsContainer.classList.toggle('show');
+                });
+            }
+
+            // Close tab menu when selecting a tab in mobile
+            document.querySelectorAll('.tab-items-container button').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (window.innerWidth <= 768 && tabItemsContainer) {
+                        tabItemsContainer.classList.remove('show');
+                    }
+                });
+            });
+
+            // Close dropdowns if clicked anywhere else
+            document.addEventListener('click', (e) => {
+                if (window.innerWidth <= 768) {
+                    if (navItemsContainer && menuToggle && !menuToggle.contains(e.target) && !navItemsContainer.contains(e.target)) {
+                        navItemsContainer.classList.remove('show');
+                    }
+                    if (tabItemsContainer && tabMenuToggle && !tabMenuToggle.contains(e.target) && !tabItemsContainer.contains(e.target)) {
+                        tabItemsContainer.classList.remove('show');
+                    }
+                }
+            });
+        }
+
+        initStaticBackground();
+        initFloatingPetTilt();
+        initMobileMenuToggles();
+
+        // === END FLAT UI & CORNER FLOATING PETS ===
     </script>
 </body>
 </html>
