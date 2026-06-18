@@ -706,9 +706,371 @@
             .app-header .pet-selector select { min-width: 100px; font-size: 0.8rem; }
         }
 
+        /* ========== New Page Views & Routing ========== */
+        .app-layout {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 20px;
+            margin-top: 20px;
+            align-items: start;
+        }
+        .sidebar {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            border: 2px solid var(--border);
+            padding: 18px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: background var(--transition), border-color var(--transition);
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition);
+            border: 2px solid transparent;
+            text-decoration: none;
+        }
+        .nav-item:hover {
+            background: var(--tab-bg);
+            color: var(--text);
+            transform: translateX(4px);
+        }
+        .nav-item.active {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 4px 12px var(--accent)35;
+        }
+        .nav-icon {
+            font-size: 1.15rem;
+        }
+        .page-view {
+            display: none;
+            animation: fadeUp 0.35s ease;
+        }
+        .page-view.active {
+            display: block;
+        }
+        .main-content {
+            min-width: 0;
+        }
+
+        /* ========== Dashboard Specific ========== */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 18px;
+            margin-bottom: 20px;
+        }
+        .dash-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            border: 2px solid var(--border);
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+            transition: all var(--transition);
+        }
+        .dash-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+        }
+        .dash-stat {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--accent);
+            margin: 8px 0;
+            line-height: 1;
+        }
+        .dash-list {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .dash-list-item {
+            font-size: 0.9rem;
+            padding: 8px 12px;
+            background: var(--input-bg);
+            border-radius: 10px;
+            border-left: 4px solid var(--accent);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* ========== Weight Tracker Specific ========== */
+        .weight-chart-container {
+            position: relative;
+            background: var(--input-bg);
+            border-radius: var(--radius);
+            border: 2px solid var(--border);
+            padding: 20px;
+            margin-top: 16px;
+            text-align: center;
+        }
+        .weight-svg {
+            width: 100%;
+            height: 220px;
+        }
+        .weight-svg .grid-line {
+            stroke: var(--border);
+            stroke-width: 1;
+            stroke-dasharray: 4 4;
+        }
+        .weight-svg .chart-line {
+            fill: none;
+            stroke: var(--accent);
+            stroke-width: 3;
+            stroke-linecap: round;
+        }
+        .weight-svg .chart-point {
+            fill: var(--card-bg);
+            stroke: var(--accent);
+            stroke-width: 3;
+            cursor: pointer;
+            transition: r var(--transition);
+        }
+        .weight-svg .chart-point:hover {
+            r: 7;
+        }
+        .weight-svg text {
+            font-family: var(--font);
+            font-size: 0.75rem;
+            fill: var(--text-secondary);
+        }
+        .weight-delta-tag {
+            font-weight: 700;
+            font-size: 0.85rem;
+            padding: 2px 8px;
+            border-radius: 30px;
+            margin-left: 8px;
+        }
+        .weight-delta-gain {
+            background: var(--danger)20;
+            color: var(--danger);
+        }
+        .weight-delta-loss {
+            background: var(--success)20;
+            color: var(--success);
+        }
+
+        /* ========== Tasks Specific ========== */
+        .task-list {
+            margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .task-item {
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            padding: 14px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all var(--transition);
+            gap: 12px;
+        }
+        .task-item.completed {
+            opacity: 0.6;
+            text-decoration: line-through;
+            background: var(--input-bg);
+        }
+        .task-item.completed button {
+            text-decoration: none;
+        }
+        .task-priority-high {
+            border-left: 6px solid var(--danger);
+        }
+        .task-priority-medium {
+            border-left: 6px solid var(--warning);
+        }
+        .task-priority-low {
+            border-left: 6px solid var(--info);
+        }
+        .task-due {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 700;
+        }
+        .task-due.overdue {
+            color: var(--danger);
+            font-weight: 800;
+        }
+
+        /* ========== Expenses Specific ========== */
+        .expense-chart {
+            background: var(--input-bg);
+            padding: 16px;
+            border-radius: var(--radius);
+            border: 2px solid var(--border);
+            margin-top: 14px;
+        }
+        .expense-bar-wrapper {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .expense-bar-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.85rem;
+        }
+        .expense-bar-label {
+            width: 80px;
+            font-weight: 700;
+            text-align: right;
+            white-space: nowrap;
+        }
+        .expense-bar-outer {
+            flex: 1;
+            height: 14px;
+            background: var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .expense-bar-inner {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 10px;
+            transition: width 0.5s ease-out;
+        }
+        .expense-bar-val {
+            width: 60px;
+            font-weight: 700;
+        }
+
+        /* ========== Documents Specific ========== */
+        .doc-alert {
+            background: var(--warning)15;
+            border: 2px solid var(--warning);
+            color: var(--text);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* ========== AI Assistant Specific ========== */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 480px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--input-bg);
+            overflow: hidden;
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .chat-bubble {
+            max-width: 75%;
+            padding: 10px 16px;
+            border-radius: 18px;
+            font-size: 0.92rem;
+            line-height: 1.4;
+            animation: fadeUp 0.2s ease;
+        }
+        .chat-bubble.bot {
+            align-self: flex-start;
+            background: var(--card-bg);
+            color: var(--text);
+            border: 2px solid var(--border);
+            border-bottom-left-radius: 4px;
+        }
+        .chat-bubble.user {
+            align-self: flex-end;
+            background: var(--accent);
+            color: #fff;
+            border-bottom-right-radius: 4px;
+        }
+        .chat-quick-actions {
+            padding: 10px 16px;
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            flex-wrap: wrap;
+        }
+        .chat-quick-btn {
+            background: var(--tab-bg);
+            border: none;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-family: var(--font);
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all var(--transition);
+        }
+        .chat-quick-btn:hover {
+            background: var(--accent);
+            color: #fff;
+        }
+        .chat-input-area {
+            display: flex;
+            padding: 10px;
+            background: var(--card-bg);
+            border-top: 2px solid var(--border);
+            gap: 8px;
+        }
+        .chat-input-area input {
+            flex: 1;
+        }
+
+        /* Responsive changes for sidebar nav grid collapsing */
+        @media (max-width: 768px) {
+            .app-layout {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                margin-top: 12px;
+            }
+            .sidebar {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                padding: 10px;
+                gap: 6px;
+            }
+            .nav-item {
+                font-size: 0.8rem;
+                padding: 6px 12px;
+                gap: 6px;
+            }
+            .nav-item:hover {
+                transform: translateY(-2px);
+            }
+            .chat-container {
+                height: 380px;
+            }
+        }
+
         @media print {
             body { background: #fff !important; padding: 0 !important; color: #000 !important; }
-            .app-header, .tab-nav, .app-footer, .no-print { display: none !important; }
+            .app-header, .tab-nav, .app-footer, .sidebar, .primary-nav, .no-print { display: none !important; }
             .tab-content { display: block !important; }
             .card { box-shadow: none !important; border: 1px solid #ccc !important; background: #fff !important; break-inside: avoid; }
             .sitter-preview { border: 1px solid #ccc !important; background: #f9f9f9 !important; }
@@ -775,250 +1137,538 @@
             </div>
         </header>
 
-        <!-- Tab Navigation -->
-        <nav class="tab-nav" id="tabNav">
-            <button class="tab-prominent active" data-tab="feeding">🍽 Who Fed?</button>
-            <button class="tab-prominent" data-tab="age">🎂 Age</button>
-            <button class="tab-prominent" data-tab="meds">💊 Meds</button>
-            <span class="tab-divider"></span>
-            <button data-tab="poop">💩 Poop &amp; Pee</button>
-            <button data-tab="vaccines">💉 Health</button>
-            <button data-tab="walks">🚶 Walks</button>
-            <button data-tab="names">📛 Names</button>
-            <button data-tab="sitter">📋 Sitter</button>
-            <button data-tab="bath">🛁 Bath</button>
-        </nav>
+        <!-- Sidebar + Content Layout -->
+        <div class="app-layout">
+            <!-- Sidebar Navigation -->
+            <aside class="sidebar no-print">
+                <a href="#dashboard" class="nav-item active"><span class="nav-icon">🏠</span> Dashboard</a>
+                <a href="#tracker" class="nav-item"><span class="nav-icon">🐾</span> Care Tracker</a>
+                <a href="#weight" class="nav-item"><span class="nav-icon">📊</span> Weight Log</a>
+                <a href="#tasks" class="nav-item"><span class="nav-icon">📋</span> Tasks &amp; Reminders</a>
+                <a href="#expenses" class="nav-item"><span class="nav-icon">💰</span> Expenses</a>
+                <a href="#appointments" class="nav-item"><span class="nav-icon">🏥</span> Vet Visits</a>
+                <a href="#documents" class="nav-item"><span class="nav-icon">📄</span> Documents</a>
+                <a href="#chat" class="nav-item"><span class="nav-icon">🤖</span> AI Helper</a>
+            </aside>
 
-        <!-- ===================== TAB: FEEDING ===================== -->
-        <div class="tab-content active" id="tab-feeding">
-            <div class="card">
-                <div class="card-title"><span class="icon">🍽</span> Who Fed?</div>
-                <div class="grid-3">
-                    <button class="toggle-btn" data-meal="breakfast">🌅 Breakfast<span class="sub" id="breakfast-status">Not fed</span></button>
-                    <button class="toggle-btn" data-meal="lunch">☀️ Lunch<span class="sub" id="lunch-status">Not fed</span></button>
-                    <button class="toggle-btn" data-meal="dinner">🌙 Dinner<span class="sub" id="dinner-status">Not fed</span></button>
-                </div>
-                <div class="form-row mt-8">
-                    <div class="form-group" style="flex:2;">
-                        <label for="mealNoteInput">Add a note (e.g. "extra treats")</label>
-                        <input type="text" id="mealNoteInput" placeholder="Optional note..." />
-                    </div>
-                    <div class="form-group" style="flex:0 0 auto; align-self:flex-end;">
-                        <button class="btn btn-sm" id="mealNoteAddBtn">✏️ Add Note</button>
-                    </div>
-                </div>
-                <div class="mt-12">
-                    <h4>📋 Today's Feeding History</h4>
-                    <div class="timeline" id="feedingHistory"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ===================== TAB: AGE ===================== -->
-        <div class="tab-content" id="tab-age">
-            <div class="card">
-                <div class="card-title"><span class="icon">🎂</span> Pet Age Converter</div>
-                <div class="grid-2">
-                    <div>
-                        <div class="form-group">
-                            <label for="ageBirthInput">Birthdate</label>
-                            <input type="date" id="ageBirthInput" />
+            <!-- Main Content Area -->
+            <main class="main-content">
+                <!-- Page: Dashboard -->
+                <div class="page-view" id="page-dashboard">
+                    <div class="card">
+                        <div class="card-title"><span class="icon">🏠</span> Dashboard Overview</div>
+                        <div class="dashboard-grid">
+                            <!-- Stats & Highlights -->
+                            <div class="dash-card">
+                                <h3>⚖️ Last Weight</h3>
+                                <div class="dash-stat" id="dash-weight-val">—</div>
+                                <p class="text-secondary text-sm" id="dash-weight-diff">No records yet</p>
+                            </div>
+                            <div class="dash-card">
+                                <h3>📋 Pending Tasks</h3>
+                                <div class="dash-stat" id="dash-tasks-val">0</div>
+                                <p class="text-secondary text-sm" id="dash-tasks-due">None due soon</p>
+                            </div>
+                            <div class="dash-card">
+                                <h3>🏥 Vet Appointment</h3>
+                                <div class="dash-stat" style="font-size: 1.15rem; font-weight: 700; color: var(--text);" id="dash-vet-val">None scheduled</div>
+                                <p class="text-secondary text-sm" id="dash-vet-due">—</p>
+                            </div>
+                            <div class="dash-card">
+                                <h3>💰 Expense Summary</h3>
+                                <div class="dash-stat" id="dash-expenses-val">$0</div>
+                                <p class="text-secondary text-sm">Total spent this month</p>
+                            </div>
                         </div>
-                        <button class="btn btn-sm" id="ageUpdateBtn">🔄 Update Age</button>
+
+                        <div class="grid-2">
+                            <!-- Recent Logs / Alerts -->
+                            <div class="card" style="margin-bottom:0; padding:16px;">
+                                <h3>🔔 Overdue Alerts &amp; Activities</h3>
+                                <div class="dash-list" id="dash-alerts-list">
+                                    <div class="text-secondary text-sm">No active alerts.</div>
+                                </div>
+                            </div>
+                            <!-- Quick Actions -->
+                            <div class="card" style="margin-bottom:0; padding:16px;">
+                                <h3>⚡ Quick Actions</h3>
+                                <div style="display:flex; flex-direction:column; gap:10px; margin-top:10px;">
+                                    <button class="btn btn-outline" onclick="window.location.hash='#weight'">⚖️ Log Weight</button>
+                                    <button class="btn btn-outline" onclick="window.location.hash='#tasks'">📋 Add Task</button>
+                                    <button class="btn btn-outline" onclick="window.location.hash='#expenses'">💰 Record Expense</button>
+                                    <button class="btn btn-outline" onclick="window.location.hash='#tracker'">🐾 Go to Care Tracker</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page: Care Tracker (Original Tabbed UI) -->
+                <div class="page-view" id="page-tracker">
+                    <!-- Tab Navigation -->
+                    <nav class="tab-nav" id="tabNav">
+                        <button class="tab-prominent active" data-tab="feeding">🍽 Who Fed?</button>
+                        <button class="tab-prominent" data-tab="age">🎂 Age</button>
+                        <button class="tab-prominent" data-tab="meds">💊 Meds</button>
+                        <span class="tab-divider"></span>
+                        <button data-tab="poop">💩 Poop &amp; Pee</button>
+                        <button data-tab="vaccines">💉 Health</button>
+                        <button data-tab="walks">🚶 Walks</button>
+                        <button data-tab="names">📛 Names</button>
+                        <button data-tab="sitter">📋 Sitter</button>
+                        <button data-tab="bath">🛁 Bath</button>
+                    </nav>
+
+                    <!-- ===================== TAB: FEEDING ===================== -->
+                    <div class="tab-content active" id="tab-feeding">
+                        <div class="card">
+                            <div class="card-title"><span class="icon">🍽</span> Who Fed?</div>
+                            <div class="grid-3">
+                                <button class="toggle-btn" data-meal="breakfast">🌅 Breakfast<span class="sub" id="breakfast-status">Not fed</span></button>
+                                <button class="toggle-btn" data-meal="lunch">☀️ Lunch<span class="sub" id="lunch-status">Not fed</span></button>
+                                <button class="toggle-btn" data-meal="dinner">🌙 Dinner<span class="sub" id="dinner-status">Not fed</span></button>
+                            </div>
+                            <div class="form-row mt-8">
+                                <div class="form-group" style="flex:2;">
+                                    <label for="mealNoteInput">Add a note (e.g. "extra treats")</label>
+                                    <input type="text" id="mealNoteInput" placeholder="Optional note..." />
+                                </div>
+                                <div class="form-group" style="flex:0 0 auto; align-self:flex-end;">
+                                    <button class="btn btn-sm" id="mealNoteAddBtn">✏️ Add Note</button>
+                                </div>
+                            </div>
+                            <div class="mt-12">
+                                <h4>📋 Today's Feeding History</h4>
+                                <div class="timeline" id="feedingHistory"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===================== TAB: AGE ===================== -->
+                    <div class="tab-content" id="tab-age">
+                        <div class="card">
+                            <div class="card-title"><span class="icon">🎂</span> Pet Age Converter</div>
+                            <div class="grid-2">
+                                <div>
+                                    <div class="form-group">
+                                        <label for="ageBirthInput">Birthdate</label>
+                                        <input type="date" id="ageBirthInput" />
+                                    </div>
+                                    <button class="btn btn-sm" id="ageUpdateBtn">🔄 Update Age</button>
+                                    <div class="mt-12">
+                                        <p><strong>Age:</strong> <span id="ageDisplay">—</span></p>
+                                        <p><strong>Human-equivalent:</strong> <span id="humanAgeDisplay">—</span></p>
+                                        <p><strong>Next birthday in:</strong> <span id="birthdayCountdown">—</span></p>
+                                    </div>
+                                </div>
+                                <div style="background:var(--input-bg);border-radius:14px;padding:16px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;border:2px solid var(--border);">
+                                    <span style="font-size:3rem;">🎉</span>
+                                    <p class="text-secondary text-sm">Live countdown to next birthday</p>
+                                    <div id="birthdayCountdownLarge" style="font-size:1.8rem;font-weight:900;color:var(--accent);">—</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===================== TAB: MEDICATIONS ===================== -->
+                    <div class="tab-content" id="tab-meds">
+                        <div class="card">
+                            <div class="card-title"><span class="icon">💊</span> Medication &amp; Supplement Reminder</div>
+                            <div class="form-row">
+                                <div class="form-group"><label>Name</label><input type="text" id="medName" placeholder="e.g. Heartguard" /></div>
+                                <div class="form-group"><label>Dosage</label><input type="text" id="medDosage" placeholder="e.g. 1 tablet" /></div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group"><label>Frequency</label>
+                                    <select id="medFrequency">
+                                        <option value="daily">Daily</option>
+                                        <option value="weekly">Weekly</option>
+                                        <option value="12h">Every 12 hours</option>
+                                        <option value="8h">Every 8 hours</option>
+                                        <option value="custom">Custom (hours)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" id="medCustomHoursGroup" style="display:none;"><label>Hours</label><input type="number" id="medCustomHours" min="1" value="6" /></div>
+                                <div class="form-group"><label>Start Date</label><input type="date" id="medStartDate" /></div>
+                                <div class="form-group"><label>End Date (optional)</label><input type="date" id="medEndDate" /></div>
+                            </div>
+                            <button class="btn" id="medAddBtn">➕ Add Medication</button>
+                            <div class="mt-12" id="medList"></div>
+                        </div>
+                    </div>
+
+                    <!-- ===================== TAB: POOP & PEE ===================== -->
+                    <div class="tab-content" id="tab-poop">
+                        <div class="card">
+                            <div class="card-title"><span class="icon">💩</span> Poop &amp; Pee Log</div>
+                            <div class="grid-2">
+                                <div>
+                                    <label style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                                        <span>📍 Inside / Outside</span>
+                                        <select id="ppLocation" style="width:auto;flex:1;">
+                                            <option value="inside">🏠 Inside</option>
+                                            <option value="outside">🌳 Outside</option>
+                                        </select>
+                                    </label>
+                                    <div class="flex-center gap-md">
+                                        <button class="btn btn-lg btn-success" id="ppPeeBtn">💧 Pee</button>
+                                        <button class="btn btn-lg btn-warning" id="ppPoopBtn">💩 Poop</button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4>📊 Weekly Summary</h4>
+                                    <div id="weeklySummary" style="font-size:0.9rem;"></div>
+                                </div>
+                            </div>
+                            <div class="mt-12">
+                                <h4>📋 Today's Timeline</h4>
+                                <div class="timeline" id="ppTimeline"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===================== TAB: VACCINATIONS ===================== -->
+                    <div class="tab-content" id="tab-vaccines">
+                        <div class="card">
+                            <div class="card-title"><span class="icon">💉</span> Vaccination &amp; Health Record</div>
+                            <div class="form-row">
+                                <div class="form-group"><label>Vaccine Name</label><input type="text" id="vacName" placeholder="e.g. Rabies" /></div>
+                                <div class="form-group"><label>Date Administered</label><input type="date" id="vacDate" /></div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group"><label>Next Due Date</label><input type="date" id="vacDue" /></div>
+                                <div class="form-group"><label>Vet Notes</label><input type="text" id="vacNotes" placeholder="Optional notes" /></div>
+                            </div>
+                            <button class="btn" id="vacAddBtn">➕ Add Vaccine</button>
+                            <div class="mt-12" id="vacList"></div>
+                            <button class="btn btn-outline btn-sm mt-8" id="vacPrintBtn">🖨️ Print Health Card</button>
+                        </div>
+                    </div>
+
+                    <!-- ===================== TAB: WALKS ===================== -->
+                    <div class="tab-content" id="tab-walks">
+                        <div class="card">
+                            <div class="card-title"><span class="icon">🚶</span> Dog Walk Timer &amp; Log</div>
+                            <div class="flex-center gap-md">
+                                <button class="btn btn-lg btn-success" id="walkStartBtn">▶️ Start Walk</button>
+                                <button class="btn btn-lg btn-danger" id="walkStopBtn" disabled>⏹ Stop</button>
+                                <span style="font-size:1.6rem;font-weight:900;font-variant-numeric:tabular-nums;" id="walkTimerDisplay">00:00:00</span>
+                            </div>
+                            <div class="form-row mt-8">
+                                <div class="form-group"><label>Distance (km, optional)</label><input type="number" step="0.1" id="walkDistance" placeholder="0.0" /></div>
+                                <div class="form-group"><label>Note</label><input type="text" id="walkNote" placeholder="e.g. Park, 2km" /></div>
+                            </div>
+                            <div class="mt-12">
+                                <h4>📋 Walk Log</h4>
+                                <div id="walkLog"></div>
+                                <div class="mt-8"><strong>Weekly total:</strong> <span id="walkWeeklyTotal">—</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===================== TAB: NAMES ===================== -->
+                    <div class="tab-content" id="tab-names">
+                        <div class="card">
+                            <div class="card-title"><span class="icon">📛</span> Pet Name Finder</div>
+                            <div class="form-row">
+                                <div class="form-group"><label>Gender</label>
+                                    <select id="nameGender"><option value="all">All</option><option value="male">Male</option><option value="female">Female</option><option value="unisex">Unisex</option></select>
+                                </div>
+                                <div class="form-group"><label>Species</label>
+                                    <select id="nameSpecies"><option value="all">All</option><option value="dog">Dog</option><option value="cat">Cat</option></select>
+                                </div>
+                                <div class="form-group"><label>Starts with</label><input type="text" id="nameStartsWith" maxlength="1" placeholder="A" style="text-transform:uppercase;" /></div>
+                                <div class="form-group"><label>Max length</label>
+                                    <select id="nameLength"><option value="0">Any</option><option value="4">≤4</option><option value="5">≤5</option><option value="6">≤6</option><option value="7">≤7</option><option value="8">≤8</option></select>
+                                </div>
+                            </div>
+                            <div class="flex-center gap-sm">
+                                <button class="btn" id="nameFilterBtn">🔍 Filter</button>
+                                <button class="btn btn-warning" id="nameSurpriseBtn">🎲 Surprise Me!</button>
+                                <button class="btn btn-outline btn-sm" id="nameClearFilters">✖ Clear</button>
+                            </div>
+                            <div class="mt-12 name-grid" id="nameGrid"></div>
+                            <div class="mt-12">
+                                <h4>⭐ My Favorites</h4>
+                                <div class="name-grid" id="favoritesGrid"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===================== TAB: SITTER ===================== -->
+                    <div class="tab-content" id="tab-sitter">
+                        <div class="card">
+                            <div class="card-title"><span class="icon">📋</span> Pet Sitter Instruction Sheet</div>
+                            <div class="grid-2">
+                                <div>
+                                    <div class="form-group"><label>Pet Name</label><input type="text" id="sitterPetName" /></div>
+                                    <div class="form-group"><label>Feeding Instructions</label><textarea id="sitterFeeding" placeholder="What, when, how much..."></textarea></div>
+                                    <div class="form-group"><label>Medication Schedule</label><textarea id="sitterMeds" placeholder="List meds, dosage, timing..."></textarea></div>
+                                    <div class="form-group"><label>Vet Contact</label><input type="text" id="sitterVet" placeholder="Name &amp; phone" /></div>
+                                    <div class="form-group"><label>Walk Routine</label><textarea id="sitterWalk" placeholder="When, how long, where..."></textarea></div>
+                                    <div class="form-group"><label>Special Notes</label><textarea id="sitterNotes" placeholder="Allergies, fears, favorite toys..."></textarea></div>
+                                    <div class="form-group"><label>Sitter's Contact</label><input type="text" id="sitterContact" placeholder="Name &amp; phone" /></div>
+                                    <button class="btn" id="sitterSaveBtn">💾 Save Sheet</button>
+                                    <button class="btn btn-outline btn-sm" id="sitterPrintBtn">🖨️ Print Sheet</button>
+                                </div>
+                                <div>
+                                    <h4>📄 Live Preview</h4>
+                                    <div class="sitter-preview" id="sitterPreview"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===================== TAB: BATH & TRIMMING ===================== -->
+                    <div class="tab-content" id="tab-bath">
+                        <div class="card">
+                            <div class="card-title"><span class="icon">🛁</span> Bath &amp; Trimming Log</div>
+                            <div class="grid-2">
+                                <button class="bath-btn" id="bathBtn">
+                                    <span class="bath-icon">🛁</span>
+                                    Bath
+                                    <span class="bath-sub" id="bathStatus">Not logged today</span>
+                                </button>
+                                <button class="bath-btn" id="trimBtn">
+                                    <span class="bath-icon">✂️</span>
+                                    Trimming
+                                    <span class="bath-sub" id="trimStatus">Not logged today</span>
+                                </button>
+                            </div>
+                            <div class="form-row mt-8">
+                                <div class="form-group" style="flex:2;">
+                                    <label for="bathNoteInput">Add a note (e.g. "with shampoo", "nail trim")</label>
+                                    <input type="text" id="bathNoteInput" placeholder="Optional note..." />
+                                </div>
+                                <div class="form-group" style="flex:0 0 auto; align-self:flex-end;">
+                                    <button class="btn btn-sm" id="bathNoteAddBtn">✏️ Add Note</button>
+                                </div>
+                            </div>
+                            <div class="mt-12">
+                                <h4>📋 Bath &amp; Trimming History</h4>
+                                <div class="timeline" id="bathHistory"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- End of Page: Tracker -->
+
+                <!-- Page: Weight -->
+                <div class="page-view" id="page-weight">
+                    <div class="card">
+                        <div class="card-title"><span class="icon">📊</span> Weight Tracker</div>
+                        <div class="grid-2">
+                            <div>
+                                <div class="form-group">
+                                    <label for="weightInput">Weight (kg or lbs)</label>
+                                    <input type="number" step="0.01" id="weightInput" placeholder="e.g. 12.5" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="weightDate">Date</label>
+                                    <input type="date" id="weightDate" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="weightNotes">Notes</label>
+                                    <input type="text" id="weightNotes" placeholder="e.g. After vet visit" />
+                                </div>
+                                <button class="btn" id="weightSaveBtn">💾 Log Weight</button>
+                            </div>
+                            <div>
+                                <h4>📈 Weight Trend</h4>
+                                <div class="weight-chart-container">
+                                    <svg class="weight-svg" id="weightChart"></svg>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="mt-12">
-                            <p><strong>Age:</strong> <span id="ageDisplay">—</span></p>
-                            <p><strong>Human-equivalent:</strong> <span id="humanAgeDisplay">—</span></p>
-                            <p><strong>Next birthday in:</strong> <span id="birthdayCountdown">—</span></p>
+                            <h4>📋 Weight History</h4>
+                            <div class="timeline" id="weightLogHistory" style="max-height: 250px;"></div>
                         </div>
                     </div>
-                    <div style="background:var(--input-bg);border-radius:14px;padding:16px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;border:2px solid var(--border);">
-                        <span style="font-size:3rem;">🎉</span>
-                        <p class="text-secondary text-sm">Live countdown to next birthday</p>
-                        <div id="birthdayCountdownLarge" style="font-size:1.8rem;font-weight:900;color:var(--accent);">—</div>
-                    </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- ===================== TAB: MEDICATIONS ===================== -->
-        <div class="tab-content" id="tab-meds">
-            <div class="card">
-                <div class="card-title"><span class="icon">💊</span> Medication &amp; Supplement Reminder</div>
-                <div class="form-row">
-                    <div class="form-group"><label>Name</label><input type="text" id="medName" placeholder="e.g. Heartguard" /></div>
-                    <div class="form-group"><label>Dosage</label><input type="text" id="medDosage" placeholder="e.g. 1 tablet" /></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label>Frequency</label>
-                        <select id="medFrequency">
-                            <option value="daily">Daily</option>
-                            <option value="weekly">Weekly</option>
-                            <option value="12h">Every 12 hours</option>
-                            <option value="8h">Every 8 hours</option>
-                            <option value="custom">Custom (hours)</option>
-                        </select>
-                    </div>
-                    <div class="form-group" id="medCustomHoursGroup" style="display:none;"><label>Hours</label><input type="number" id="medCustomHours" min="1" value="6" /></div>
-                    <div class="form-group"><label>Start Date</label><input type="date" id="medStartDate" /></div>
-                    <div class="form-group"><label>End Date (optional)</label><input type="date" id="medEndDate" /></div>
-                </div>
-                <button class="btn" id="medAddBtn">➕ Add Medication</button>
-                <div class="mt-12" id="medList"></div>
-            </div>
-        </div>
+                <!-- Page: Tasks -->
+                <div class="page-view" id="page-tasks">
+                    <div class="card">
+                        <div class="card-title"><span class="icon">📋</span> Tasks &amp; Reminders</div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Task Title</label><input type="text" id="taskTitle" placeholder="e.g. Give Flea Treatment" /></div>
+                            <div class="form-group">
+                                <label>Priority</label>
+                                <select id="taskPriority">
+                                    <option value="low">Low</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="high">High</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Due Date (optional)</label><input type="date" id="taskDueDate" /></div>
+                            <div class="form-group">
+                                <label>Recurrence</label>
+                                <select id="taskRecurrence">
+                                    <option value="none">One-time</option>
+                                    <option value="daily">Daily</option>
+                                    <option value="weekly">Weekly</option>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="custom">Custom (days)</option>
+                                </select>
+                            </div>
+                            <div class="form-group" id="taskCustomIntervalGroup" style="display:none;"><label>Every X Days</label><input type="number" id="taskCustomInterval" min="1" value="14" /></div>
+                        </div>
+                        <div class="form-group">
+                            <label>Description (optional)</label>
+                            <input type="text" id="taskDescription" placeholder="Notes for the task..." />
+                        </div>
+                        <button class="btn" id="taskAddBtn">➕ Schedule Task</button>
 
-        <!-- ===================== TAB: POOP & PEE ===================== -->
-        <div class="tab-content" id="tab-poop">
-            <div class="card">
-                <div class="card-title"><span class="icon">💩</span> Poop &amp; Pee Log</div>
-                <div class="grid-2">
-                    <div>
-                        <label style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-                            <span>📍 Inside / Outside</span>
-                            <select id="ppLocation" style="width:auto;flex:1;">
-                                <option value="inside">🏠 Inside</option>
-                                <option value="outside">🌳 Outside</option>
-                            </select>
-                        </label>
-                        <div class="flex-center gap-md">
-                            <button class="btn btn-lg btn-success" id="ppPeeBtn">💧 Pee</button>
-                            <button class="btn btn-lg btn-warning" id="ppPoopBtn">💩 Poop</button>
+                        <div class="grid-2 mt-12">
+                            <div>
+                                <h4>📋 Active Tasks</h4>
+                                <div class="task-list" id="activeTasksList"></div>
+                            </div>
+                            <div>
+                                <h4>✅ Completed Tasks</h4>
+                                <div class="task-list" id="completedTasksList"></div>
+                            </div>
                         </div>
                     </div>
-                    <div>
-                        <h4>📊 Weekly Summary</h4>
-                        <div id="weeklySummary" style="font-size:0.9rem;"></div>
-                    </div>
                 </div>
-                <div class="mt-12">
-                    <h4>📋 Today's Timeline</h4>
-                    <div class="timeline" id="ppTimeline"></div>
-                </div>
-            </div>
-        </div>
 
-        <!-- ===================== TAB: VACCINATIONS ===================== -->
-        <div class="tab-content" id="tab-vaccines">
-            <div class="card">
-                <div class="card-title"><span class="icon">💉</span> Vaccination &amp; Health Record</div>
-                <div class="form-row">
-                    <div class="form-group"><label>Vaccine Name</label><input type="text" id="vacName" placeholder="e.g. Rabies" /></div>
-                    <div class="form-group"><label>Date Administered</label><input type="date" id="vacDate" /></div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group"><label>Next Due Date</label><input type="date" id="vacDue" /></div>
-                    <div class="form-group"><label>Vet Notes</label><input type="text" id="vacNotes" placeholder="Optional notes" /></div>
-                </div>
-                <button class="btn" id="vacAddBtn">➕ Add Vaccine</button>
-                <div class="mt-12" id="vacList"></div>
-                <button class="btn btn-outline btn-sm mt-8" id="vacPrintBtn">🖨️ Print Health Card</button>
-            </div>
-        </div>
+                <!-- Page: Expenses -->
+                <div class="page-view" id="page-expenses">
+                    <div class="card">
+                        <div class="card-title"><span class="icon">💰</span> Pet Expense Tracker</div>
+                        <div class="grid-2">
+                            <div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Category</label>
+                                        <select id="expenseCategory">
+                                            <option value="Food">Food</option>
+                                            <option value="Vet">Vet &amp; Medical</option>
+                                            <option value="Grooming">Grooming</option>
+                                            <option value="Toys">Toys &amp; Gear</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group"><label>Amount ($)</label><input type="number" step="0.01" id="expenseAmount" placeholder="0.00" /></div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group"><label>Date</label><input type="date" id="expenseDate" /></div>
+                                    <div class="form-group"><label>Description</label><input type="text" id="expenseDescription" placeholder="e.g. Royal Canin 10kg" /></div>
+                                </div>
+                                <button class="btn" id="expenseAddBtn">➕ Log Expense</button>
+                            </div>
+                            <div>
+                                <h4>📊 Category Breakdown</h4>
+                                <div class="expense-chart">
+                                    <div class="expense-bar-wrapper" id="expenseChartContainer"></div>
+                                </div>
+                            </div>
+                        </div>
 
-        <!-- ===================== TAB: WALKS ===================== -->
-        <div class="tab-content" id="tab-walks">
-            <div class="card">
-                <div class="card-title"><span class="icon">🚶</span> Dog Walk Timer &amp; Log</div>
-                <div class="flex-center gap-md">
-                    <button class="btn btn-lg btn-success" id="walkStartBtn">▶️ Start Walk</button>
-                    <button class="btn btn-lg btn-danger" id="walkStopBtn" disabled>⏹ Stop</button>
-                    <span style="font-size:1.6rem;font-weight:900;font-variant-numeric:tabular-nums;" id="walkTimerDisplay">00:00:00</span>
+                        <div class="mt-12">
+                            <h4>📋 Expense History</h4>
+                            <div class="timeline" id="expenseHistoryList" style="max-height: 250px;"></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-row mt-8">
-                    <div class="form-group"><label>Distance (km, optional)</label><input type="number" step="0.1" id="walkDistance" placeholder="0.0" /></div>
-                    <div class="form-group"><label>Note</label><input type="text" id="walkNote" placeholder="e.g. Park, 2km" /></div>
-                </div>
-                <div class="mt-12">
-                    <h4>📋 Walk Log</h4>
-                    <div id="walkLog"></div>
-                    <div class="mt-8"><strong>Weekly total:</strong> <span id="walkWeeklyTotal">—</span></div>
-                </div>
-            </div>
-        </div>
 
-        <!-- ===================== TAB: NAMES ===================== -->
-        <div class="tab-content" id="tab-names">
-            <div class="card">
-                <div class="card-title"><span class="icon">📛</span> Pet Name Finder</div>
-                <div class="form-row">
-                    <div class="form-group"><label>Gender</label>
-                        <select id="nameGender"><option value="all">All</option><option value="male">Male</option><option value="female">Female</option><option value="unisex">Unisex</option></select>
-                    </div>
-                    <div class="form-group"><label>Species</label>
-                        <select id="nameSpecies"><option value="all">All</option><option value="dog">Dog</option><option value="cat">Cat</option></select>
-                    </div>
-                    <div class="form-group"><label>Starts with</label><input type="text" id="nameStartsWith" maxlength="1" placeholder="A" style="text-transform:uppercase;" /></div>
-                    <div class="form-group"><label>Max length</label>
-                        <select id="nameLength"><option value="0">Any</option><option value="4">≤4</option><option value="5">≤5</option><option value="6">≤6</option><option value="7">≤7</option><option value="8">≤8</option></select>
-                    </div>
-                </div>
-                <div class="flex-center gap-sm">
-                    <button class="btn" id="nameFilterBtn">🔍 Filter</button>
-                    <button class="btn btn-warning" id="nameSurpriseBtn">🎲 Surprise Me!</button>
-                    <button class="btn btn-outline btn-sm" id="nameClearFilters">✖ Clear</button>
-                </div>
-                <div class="mt-12 name-grid" id="nameGrid"></div>
-                <div class="mt-12">
-                    <h4>⭐ My Favorites</h4>
-                    <div class="name-grid" id="favoritesGrid"></div>
-                </div>
-            </div>
-        </div>
+                <!-- Page: Appointments -->
+                <div class="page-view" id="page-appointments">
+                    <div class="card">
+                        <div class="card-title"><span class="icon">🏥</span> Vet Appointments</div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Vet Name / Clinic</label><input type="text" id="apptVet" placeholder="e.g. Dr. Adams, Green Vet" /></div>
+                            <div class="form-group"><label>Reason</label><input type="text" id="apptReason" placeholder="e.g. Annual Checkup" /></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Date</label><input type="date" id="apptDate" /></div>
+                            <div class="form-group"><label>Time</label><input type="time" id="apptTime" /></div>
+                            <div class="form-group" style="display:flex; align-items:center; gap:8px; align-self:flex-end; padding-bottom:12px;">
+                                <input type="checkbox" id="apptReminder" style="width:auto;" checked />
+                                <label for="apptReminder" style="margin-bottom:0; cursor:pointer;">Set reminder alert</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Notes</label>
+                            <input type="text" id="apptNotes" placeholder="e.g. Fast 12 hours before" />
+                        </div>
+                        <button class="btn" id="apptAddBtn">🏥 Schedule Appointment</button>
 
-        <!-- ===================== TAB: SITTER ===================== -->
-        <div class="tab-content" id="tab-sitter">
-            <div class="card">
-                <div class="card-title"><span class="icon">📋</span> Pet Sitter Instruction Sheet</div>
-                <div class="grid-2">
-                    <div>
-                        <div class="form-group"><label>Pet Name</label><input type="text" id="sitterPetName" /></div>
-                        <div class="form-group"><label>Feeding Instructions</label><textarea id="sitterFeeding" placeholder="What, when, how much..."></textarea></div>
-                        <div class="form-group"><label>Medication Schedule</label><textarea id="sitterMeds" placeholder="List meds, dosage, timing..."></textarea></div>
-                        <div class="form-group"><label>Vet Contact</label><input type="text" id="sitterVet" placeholder="Name &amp; phone" /></div>
-                        <div class="form-group"><label>Walk Routine</label><textarea id="sitterWalk" placeholder="When, how long, where..."></textarea></div>
-                        <div class="form-group"><label>Special Notes</label><textarea id="sitterNotes" placeholder="Allergies, fears, favorite toys..."></textarea></div>
-                        <div class="form-group"><label>Sitter's Contact</label><input type="text" id="sitterContact" placeholder="Name &amp; phone" /></div>
-                        <button class="btn" id="sitterSaveBtn">💾 Save Sheet</button>
-                        <button class="btn btn-outline btn-sm" id="sitterPrintBtn">🖨️ Print Sheet</button>
-                    </div>
-                    <div>
-                        <h4>📄 Live Preview</h4>
-                        <div class="sitter-preview" id="sitterPreview"></div>
+                        <div class="mt-12">
+                            <h4>📋 Appointment List</h4>
+                            <div class="timeline" id="apptList" style="max-height: 350px;"></div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- ===================== TAB: BATH & TRIMMING ===================== -->
-        <div class="tab-content" id="tab-bath">
-            <div class="card">
-                <div class="card-title"><span class="icon">🛁</span> Bath &amp; Trimming Log</div>
-                <div class="grid-2">
-                    <button class="bath-btn" id="bathBtn">
-                        <span class="bath-icon">🛁</span>
-                        Bath
-                        <span class="bath-sub" id="bathStatus">Not logged today</span>
-                    </button>
-                    <button class="bath-btn" id="trimBtn">
-                        <span class="bath-icon">✂️</span>
-                        Trimming
-                        <span class="bath-sub" id="trimStatus">Not logged today</span>
-                    </button>
-                </div>
-                <div class="form-row mt-8">
-                    <div class="form-group" style="flex:2;">
-                        <label for="bathNoteInput">Add a note (e.g. "with shampoo", "nail trim")</label>
-                        <input type="text" id="bathNoteInput" placeholder="Optional note..." />
+                <!-- Page: Documents -->
+                <div class="page-view" id="page-documents">
+                    <div class="card">
+                        <div class="card-title"><span class="icon">📄</span> Document Storage</div>
+                        <div class="doc-alert">
+                            <span>⚠️</span>
+                            <div><strong>Local Storage Warning:</strong> To prevent slow page load and storage overflow, please avoid uploading large files. File uploads are strictly restricted to 500KB. Larger records should be logged as metadata only.</div>
+                        </div>
+                        <div class="grid-2">
+                            <div>
+                                <div class="form-row">
+                                    <div class="form-group"><label>Document Name</label><input type="text" id="docName" placeholder="e.g. Rabies Certificate" /></div>
+                                    <div class="form-group">
+                                        <label>Document Type</label>
+                                        <select id="docType">
+                                            <option value="Vaccination">Vaccination</option>
+                                            <option value="Lab Results">Lab Results</option>
+                                            <option value="Prescription">Prescription</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group"><label>Date</label><input type="date" id="docDate" /></div>
+                                    <div class="form-group"><label>File Upload (<500KB)</label><input type="file" id="docFile" accept="image/*,application/pdf" /></div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <input type="text" id="docDescription" placeholder="Optional notes about this document..." />
+                                </div>
+                                <button class="btn" id="docAddBtn">➕ Save Document</button>
+                            </div>
+                            <div>
+                                <h4>📋 Documents Catalog</h4>
+                                <div class="timeline" id="docsList" style="max-height: 350px;"></div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group" style="flex:0 0 auto; align-self:flex-end;">
-                        <button class="btn btn-sm" id="bathNoteAddBtn">✏️ Add Note</button>
+                </div>
+
+                <!-- Page: AI Assistant -->
+                <div class="page-view" id="page-chat">
+                    <div class="card">
+                        <div class="card-title"><span class="icon">🤖</span> AI Health Assistant</div>
+                        <div class="chat-container">
+                            <div class="chat-messages" id="chatMessages">
+                                <div class="chat-bubble bot">
+                                    🐾 Hello! I am your rule-based AI Health Assistant. I can answer common veterinary questions. Choose a topic below or type your question.
+                                </div>
+                            </div>
+                            <div class="chat-quick-actions">
+                                <button class="chat-quick-btn" data-query="chocolate">🍫 Chocolate Poisoning</button>
+                                <button class="chat-quick-btn" data-query="vaccines">💉 Puppy Vaccine Schedule</button>
+                                <button class="chat-quick-btn" data-query="fever">🔥 Dog Fever Signs</button>
+                                <button class="chat-quick-btn" data-query="ticks">🕷️ Tick Removal</button>
+                                <button class="chat-quick-btn" data-query="cat_food">🐈 Dog eating Cat food</button>
+                            </div>
+                            <div class="chat-input-area">
+                                <input type="text" id="chatInput" placeholder="Type your question..." />
+                                <button class="btn" id="chatSendBtn">Send</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="mt-12">
-                    <h4>📋 Bath &amp; Trimming History</h4>
-                    <div class="timeline" id="bathHistory"></div>
-                </div>
-            </div>
+            </main>
         </div>
 
         <!-- Footer -->
@@ -1215,6 +1865,13 @@
                         data.pets.forEach(p => {
                             if (!p.bath) p.bath = { baths: [], trims: [] };
                         });
+                        // Initialize new database lists if they don't exist
+                        data.weightLogs = data.weightLogs || [];
+                        data.tasks = data.tasks || [];
+                        data.expenses = data.expenses || [];
+                        data.vetAppointments = data.vetAppointments || [];
+                        data.documents = data.documents || [];
+
                         // Ensure currentPetId exists
                         if (!data.currentPetId || !data.pets.find(p => p.id === data.currentPetId)) {
                             data.currentPetId = data.pets[0]?.id || '';
@@ -1224,7 +1881,16 @@
                 } catch (e) {}
             }
             // Default: no pets
-            data = { pets: [], currentPetId: '', theme: 'warm' };
+            data = {
+                pets: [],
+                currentPetId: '',
+                theme: 'warm',
+                weightLogs: [],
+                tasks: [],
+                expenses: [],
+                vetAppointments: [],
+                documents: []
+            };
             saveData();
         }
 
@@ -1483,6 +2149,9 @@
 
             // Theme
             setTheme(data.theme || 'warm');
+
+            // Refresh new pages
+            updateNewPagesUI(pet);
         }
 
         // ========================================================================
@@ -2387,7 +3056,16 @@
             if (confirm('⚠️ Are you sure you want to delete ALL data for ALL pets? This cannot be undone.')) {
                 if (confirm('This will remove all pets and their data. Continue?')) {
                     localStorage.removeItem('pawtrack_data');
-                    data = { pets: [], currentPetId: '', theme: 'warm' };
+                    data = {
+                        pets: [],
+                        currentPetId: '',
+                        theme: 'warm',
+                        weightLogs: [],
+                        tasks: [],
+                        expenses: [],
+                        vetAppointments: [],
+                        documents: []
+                    };
                     saveData();
                     // Reset walk timer
                     walkRunning = false;
@@ -2444,7 +3122,932 @@
             }
         }, 30000);
 
-        console.log('🐾 PawTrack Multi-Pet with Bath & Trimming loaded!');
+        // ========================================================================
+        //  MULTI-PAGE ROUTING & INITIALIZATION
+        // ========================================================================
+        function handleRouting() {
+            const hash = window.location.hash || '#dashboard';
+            const pages = ['dashboard', 'tracker', 'weight', 'tasks', 'expenses', 'appointments', 'documents', 'chat'];
+            const activePage = hash.substring(1);
+            const pageToShow = pages.includes(activePage) ? activePage : 'dashboard';
+
+            // Hide all pages, show active one
+            document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+            const targetPageEl = document.getElementById(`page-${pageToShow}`);
+            if (targetPageEl) targetPageEl.classList.add('active');
+
+            // Update active class on sidebar navigation links
+            document.querySelectorAll('.sidebar .nav-item').forEach(a => {
+                const href = a.getAttribute('href');
+                a.classList.toggle('active', href === `#${pageToShow}`);
+            });
+
+            // Scroll to top of content
+            window.scrollTo(0, 0);
+
+            // Special initial redraws if charts need sizing
+            const pet = getCurrentPet();
+            if (pet) {
+                if (pageToShow === 'weight') {
+                    renderWeightChart(pet);
+                } else if (pageToShow === 'expenses') {
+                    renderExpensesChart(pet);
+                }
+            }
+        }
+
+        window.addEventListener('hashchange', handleRouting);
+        window.addEventListener('load', handleRouting);
+
+        // Core new pages refresh dispatcher
+        function updateNewPagesUI(pet) {
+            if (!pet) return;
+            updateDashboardUI(pet);
+            updateWeightUI(pet);
+            updateTasksUI(pet);
+            updateExpensesUI(pet);
+            updateAppointmentsUI(pet);
+            updateDocumentsUI(pet);
+        }
+
+        // ========================================================================
+        //  DASHBOARD FEATURE MODULE
+        // ========================================================================
+        function updateDashboardUI(pet) {
+            if (!pet) return;
+
+            // 1. Weight Summary
+            const petWeights = (data.weightLogs || []).filter(w => w.petId === pet.id)
+                .sort((a, b) => new Date(a.date) - new Date(b.date));
+            const weightValEl = document.getElementById('dash-weight-val');
+            const weightDiffEl = document.getElementById('dash-weight-diff');
+            if (petWeights.length > 0) {
+                const latest = petWeights[petWeights.length - 1];
+                weightValEl.textContent = `${latest.weight} kg`;
+                if (petWeights.length > 1) {
+                    const prev = petWeights[petWeights.length - 2];
+                    const diff = latest.weight - prev.weight;
+                    const diffText = diff > 0 ? `+${diff.toFixed(2)} kg since last log` : `${diff.toFixed(2)} kg since last log`;
+                    weightDiffEl.textContent = diffText;
+                    weightDiffEl.className = diff > 0 ? 'text-secondary text-sm text-accent' : 'text-secondary text-sm text-success';
+                } else {
+                    weightDiffEl.textContent = 'First logged weight';
+                    weightDiffEl.className = 'text-secondary text-sm';
+                }
+            } else {
+                weightValEl.textContent = '—';
+                weightDiffEl.textContent = 'No records yet';
+                weightDiffEl.className = 'text-secondary text-sm';
+            }
+
+            // 2. Pending Tasks Summary
+            const petTasks = (data.tasks || []).filter(t => t.petId === pet.id && !t.completed);
+            document.getElementById('dash-tasks-val').textContent = petTasks.length;
+            const tasksDueEl = document.getElementById('dash-tasks-due');
+            if (petTasks.length > 0) {
+                const dueSoon = [...petTasks].filter(t => t.dueDate).sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+                if (dueSoon.length > 0) {
+                    tasksDueEl.textContent = `Next: "${dueSoon[0].title}" due ${formatDate(dueSoon[0].dueDate)}`;
+                } else {
+                    tasksDueEl.textContent = 'No due dates set';
+                }
+            } else {
+                tasksDueEl.textContent = 'All caught up!';
+            }
+
+            // 3. Vet Appointment Summary
+            const petAppts = (data.vetAppointments || []).filter(a => a.petId === pet.id);
+            const upcomingAppts = petAppts.filter(a => new Date(a.date + 'T' + (a.time || '00:00')) >= new Date())
+                .sort((a, b) => new Date(a.date + 'T' + (a.time || '00:00')) - new Date(b.date + 'T' + (b.time || '00:00')));
+            const vetValEl = document.getElementById('dash-vet-val');
+            const vetDueEl = document.getElementById('dash-vet-due');
+            if (upcomingAppts.length > 0) {
+                const nextAppt = upcomingAppts[0];
+                vetValEl.textContent = nextAppt.reason || 'Checkup';
+                vetDueEl.textContent = `on ${formatDate(nextAppt.date)} at ${nextAppt.time || '—'} with ${nextAppt.vetName}`;
+            } else {
+                vetValEl.textContent = 'None scheduled';
+                vetDueEl.textContent = '—';
+            }
+
+            // 4. Monthly Expenses Summary
+            const petExpenses = (data.expenses || []).filter(e => e.petId === pet.id);
+            const now = new Date();
+            const thisMonthExpenses = petExpenses.filter(e => {
+                const ed = new Date(e.date);
+                return ed.getMonth() === now.getMonth() && ed.getFullYear() === now.getFullYear();
+            });
+            const totalThisMonth = thisMonthExpenses.reduce((sum, e) => sum + parseFloat(e.amount), 0);
+            document.getElementById('dash-expenses-val').textContent = `$${totalThisMonth.toFixed(2)}`;
+
+            // 5. Dashboard Alert Checker
+            const alertListEl = document.getElementById('dash-alerts-list');
+            alertListEl.innerHTML = '';
+            const alerts = [];
+            const todayStr = getTodayStr();
+
+            // Check Overdue Vaccines
+            (pet.vaccinations || []).forEach(v => {
+                if (v.due && v.due < todayStr) {
+                    alerts.push(`💉 Vaccine <strong>${v.name}</strong> was due on ${formatDate(v.due)}`);
+                }
+            });
+
+            // Check Overdue Tasks
+            petTasks.forEach(t => {
+                if (t.dueDate && t.dueDate < todayStr) {
+                    alerts.push(`📋 Task <strong>${t.title}</strong> is overdue (due ${formatDate(t.dueDate)})`);
+                }
+            });
+
+            // Check Overdue Medications
+            (pet.medications || []).forEach(m => {
+                const start = new Date(m.startDate);
+                const end = m.endDate ? new Date(m.endDate) : null;
+                if (end && new Date() > end) return;
+                
+                let nextDose = new Date(m.lastGiven || start);
+                let hours = 0;
+                if (m.frequency === 'daily') hours = 24;
+                else if (m.frequency === 'weekly') hours = 168;
+                else if (m.frequency === '12h') hours = 12;
+                else if (m.frequency === '8h') hours = 8;
+                else if (m.frequency === 'custom') hours = m.customHours || 6;
+
+                const cur = new Date();
+                while (nextDose <= cur) {
+                    nextDose.setHours(nextDose.getHours() + hours);
+                }
+                const diffMs = nextDose - cur;
+                if (diffMs < 0 || (m.lastGiven && (cur - new Date(m.lastGiven)) > hours * 3600000)) {
+                    alerts.push(`💊 Med <strong>${m.name}</strong> dose is overdue`);
+                }
+            });
+
+            if (alerts.length === 0) {
+                alertListEl.innerHTML = '<div class="text-secondary text-sm">✅ All metrics are up to date!</div>';
+            } else {
+                alertListEl.innerHTML = alerts.map(a => `<div class="dash-list-item">${a}</div>`).join('');
+            }
+        }
+
+        // ========================================================================
+        //  WEIGHT TRACKER FEATURE MODULE
+        // ========================================================================
+        function formatDateForChart(dateStr) {
+            if (!dateStr) return '';
+            const d = new Date(dateStr + 'T00:00:00');
+            return (d.getMonth() + 1) + '/' + d.getDate();
+        }
+
+        function renderWeightChart(pet) {
+            const svg = document.getElementById('weightChart');
+            svg.innerHTML = '';
+
+            const logs = (data.weightLogs || []).filter(w => w.petId === pet.id)
+                .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            if (logs.length === 0) {
+                svg.innerHTML = `<text x="250" y="100" text-anchor="middle" font-family="var(--font)">No weight logs logged yet.</text>`;
+                return;
+            }
+
+            const width = 500;
+            const height = 200;
+            const padding = 35;
+            const chartWidth = width - 2 * padding;
+            const chartHeight = height - 2 * padding;
+
+            svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+
+            let maxW = Math.max(...logs.map(l => l.weight));
+            let minW = Math.min(...logs.map(l => l.weight));
+            if (maxW === minW) {
+                maxW += 2;
+                minW -= 2;
+            } else {
+                const pad = (maxW - minW) * 0.15 || 1;
+                maxW += pad;
+                minW -= pad;
+            }
+
+            // Draw Y-Axis Gridlines & Labels
+            const gridLinesCount = 4;
+            for (let i = 0; i <= gridLinesCount; i++) {
+                const y = padding + (chartHeight / gridLinesCount) * i;
+                const weightVal = maxW - ((maxW - minW) / gridLinesCount) * i;
+
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute("x1", padding);
+                line.setAttribute("y1", y);
+                line.setAttribute("x2", width - padding);
+                line.setAttribute("y2", y);
+                line.setAttribute("class", "grid-line");
+                svg.appendChild(line);
+
+                const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                text.setAttribute("x", padding - 6);
+                text.setAttribute("y", y + 4);
+                text.setAttribute("text-anchor", "end");
+                text.textContent = weightVal.toFixed(1);
+                svg.appendChild(text);
+            }
+
+            // Plot Graph Points & Lines
+            let pointsStr = "";
+            const coords = [];
+            logs.forEach((log, index) => {
+                const x = padding + (chartWidth / (logs.length > 1 ? logs.length - 1 : 1)) * index;
+                const y = padding + chartHeight - ((log.weight - minW) / (maxW - minW)) * chartHeight;
+                coords.push({ x, y, log, index });
+                pointsStr += `${x},${y} `;
+            });
+
+            if (logs.length > 1) {
+                const polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+                polyline.setAttribute("points", pointsStr.trim());
+                polyline.setAttribute("class", "chart-line");
+                svg.appendChild(polyline);
+            }
+
+            coords.forEach(coord => {
+                const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                circle.setAttribute("cx", coord.x);
+                circle.setAttribute("cy", coord.y);
+                circle.setAttribute("r", 5);
+                circle.setAttribute("class", "chart-point");
+
+                const title = document.createElementNS("http://www.w3.org/2000/svg", "title");
+                title.textContent = `${formatDate(coord.log.date)}: ${coord.log.weight} kg`;
+                circle.appendChild(title);
+                svg.appendChild(circle);
+
+                // Add date labels
+                if (logs.length <= 7 || coord.index === 0 || coord.index === logs.length - 1 || (logs.length > 3 && coord.index === Math.floor(logs.length / 2))) {
+                    const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                    label.setAttribute("x", coord.x);
+                    label.setAttribute("y", height - 8);
+                    label.setAttribute("text-anchor", "middle");
+                    label.textContent = formatDateForChart(coord.log.date);
+                    svg.appendChild(label);
+                }
+            });
+        }
+
+        function updateWeightUI(pet) {
+            const historyContainer = document.getElementById('weightLogHistory');
+            const logs = (data.weightLogs || []).filter(w => w.petId === pet.id)
+                .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            document.getElementById('weightDate').value = getTodayStr();
+
+            if (logs.length === 0) {
+                historyContainer.innerHTML = '<div class="text-secondary text-sm">No weight records logged.</div>';
+            } else {
+                historyContainer.innerHTML = logs.map(l => `
+                    <div class="timeline-item">
+                        <span class="time">${formatDate(l.date)}</span>
+                        <span><strong>${l.weight} kg</strong></span>
+                        ${l.notes ? `<span class="note">📝 ${l.notes}</span>` : ''}
+                        <button class="btn btn-sm btn-danger weight-del-btn" data-id="${l.id}" style="margin-left:auto; padding: 2px 8px; font-size: 0.75rem;">🗑</button>
+                    </div>
+                `).join('');
+
+                historyContainer.querySelectorAll('.weight-del-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        if (confirm('Delete this weight entry?')) {
+                            data.weightLogs = data.weightLogs.filter(w => w.id !== this.dataset.id);
+                            saveData();
+                            updateUI();
+                        }
+                    });
+                });
+            }
+
+            renderWeightChart(pet);
+        }
+
+        document.getElementById('weightSaveBtn').addEventListener('click', function() {
+            const pet = getCurrentPet();
+            if (!pet) return;
+
+            const weight = parseFloat(document.getElementById('weightInput').value);
+            const date = document.getElementById('weightDate').value;
+            const notes = document.getElementById('weightNotes').value.trim();
+
+            if (isNaN(weight) || weight <= 0) {
+                alert('Please enter a valid weight.');
+                return;
+            }
+            if (!date) {
+                alert('Please select a date.');
+                return;
+            }
+
+            const log = {
+                id: 'weight_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+                petId: pet.id,
+                weight: weight,
+                date: date,
+                notes: notes
+            };
+
+            data.weightLogs = data.weightLogs || [];
+            data.weightLogs.push(log);
+            saveData();
+
+            document.getElementById('weightInput').value = '';
+            document.getElementById('weightNotes').value = '';
+            updateUI();
+        });
+
+        // ========================================================================
+        //  RECURRING TASKS & REMINDERS MODULE
+        // ========================================================================
+        function getNextRecurrenceDate(baseDateStr, rule, interval) {
+            const base = new Date(baseDateStr + 'T00:00:00');
+            const next = new Date(base);
+            if (rule === 'daily') {
+                next.setDate(next.getDate() + 1);
+            } else if (rule === 'weekly') {
+                next.setDate(next.getDate() + 7);
+            } else if (rule === 'monthly') {
+                next.setMonth(next.getMonth() + 1);
+            } else if (rule === 'custom') {
+                const days = parseInt(interval) || 1;
+                next.setDate(next.getDate() + days);
+            }
+            return next.toISOString().split('T')[0];
+        }
+
+        function completeTask(taskId) {
+            const task = data.tasks.find(t => t.id === taskId);
+            if (!task) return;
+
+            task.completed = true;
+            task.completedAt = new Date().toISOString();
+
+            if (task.isRecurring) {
+                const nextDueDate = getNextRecurrenceDate(task.dueDate || getTodayStr(), task.recurrenceRule, task.recurrenceInterval);
+                const nextTask = {
+                    id: 'task_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+                    petId: task.petId,
+                    title: task.title,
+                    description: task.description,
+                    priority: task.priority,
+                    dueDate: nextDueDate,
+                    isRecurring: true,
+                    recurrenceRule: task.recurrenceRule,
+                    recurrenceInterval: task.recurrenceInterval,
+                    completed: false,
+                    createdAt: new Date().toISOString()
+                };
+                data.tasks.push(nextTask);
+            }
+
+            saveData();
+            updateUI();
+        }
+
+        function updateTasksUI(pet) {
+            const activeList = document.getElementById('activeTasksList');
+            const completedList = document.getElementById('completedTasksList');
+            document.getElementById('taskDueDate').value = getTodayStr();
+
+            const petTasks = (data.tasks || []).filter(t => t.petId === pet.id);
+            const active = petTasks.filter(t => !t.completed).sort((a, b) => {
+                const aOverdue = a.dueDate && a.dueDate < getTodayStr();
+                const bOverdue = b.dueDate && b.dueDate < getTodayStr();
+                if (aOverdue && !bOverdue) return -1;
+                if (!aOverdue && bOverdue) return 1;
+                if (a.dueDate && b.dueDate) return new Date(a.dueDate) - new Date(b.dueDate);
+                return 0;
+            });
+            const completed = petTasks.filter(t => t.completed).sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt));
+            const priorityLabels = { low: '🟢 Low', medium: '🟡 Medium', high: '🔴 High' };
+
+            // Render Active Tasks
+            if (active.length === 0) {
+                activeList.innerHTML = '<div class="text-secondary text-sm">No active tasks. Good job!</div>';
+            } else {
+                activeList.innerHTML = active.map(t => {
+                    const overdue = t.dueDate && t.dueDate < getTodayStr();
+                    return `
+                        <div class="task-item task-priority-${t.priority}">
+                            <div style="flex:1;">
+                                <div style="font-weight:700; font-size:1.05rem;">${t.title}</div>
+                                ${t.description ? `<div class="text-secondary text-sm" style="margin-top:2px;">${t.description}</div>` : ''}
+                                <div style="margin-top:6px; display:flex; align-items:center; gap:8px;">
+                                    <span class="tag">${priorityLabels[t.priority] || t.priority}</span>
+                                    ${t.isRecurring ? `<span class="tag" style="background:#e0f7fa; color:#006064;">🔁 ${t.recurrenceRule}</span>` : ''}
+                                    ${t.dueDate ? `<span class="task-due ${overdue ? 'overdue' : ''}">${overdue ? '⚠️ Overdue: ' : '📅 Due: '}${formatDate(t.dueDate)}</span>` : ''}
+                                </div>
+                            </div>
+                            <div class="flex-center gap-sm">
+                                <button class="btn btn-sm btn-success task-done-btn" data-id="${t.id}">✅ Done</button>
+                                <button class="btn btn-sm btn-danger task-del-btn" data-id="${t.id}">🗑</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                activeList.querySelectorAll('.task-done-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        completeTask(this.dataset.id);
+                    });
+                });
+
+                activeList.querySelectorAll('.task-del-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        if (confirm('Delete this task?')) {
+                            data.tasks = data.tasks.filter(t => t.id !== this.dataset.id);
+                            saveData();
+                            updateUI();
+                        }
+                    });
+                });
+            }
+
+            // Render Completed Tasks
+            if (completed.length === 0) {
+                completedList.innerHTML = '<div class="text-secondary text-sm">No completed tasks yet.</div>';
+            } else {
+                completedList.innerHTML = completed.map(t => `
+                    <div class="task-item completed">
+                        <div style="flex:1;">
+                            <div style="font-weight:700;">${t.title}</div>
+                            <div class="text-xs text-secondary">Completed at: ${formatTime(t.completedAt)} on ${formatDate(t.completedAt)}</div>
+                        </div>
+                        <button class="btn btn-sm btn-danger task-del-btn" data-id="${t.id}">🗑</button>
+                    </div>
+                `).join('');
+
+                completedList.querySelectorAll('.task-del-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        if (confirm('Delete this task history record?')) {
+                            data.tasks = data.tasks.filter(t => t.id !== this.dataset.id);
+                            saveData();
+                            updateUI();
+                        }
+                    });
+                });
+            }
+        }
+
+        document.getElementById('taskRecurrence').addEventListener('change', function() {
+            document.getElementById('taskCustomIntervalGroup').style.display =
+                this.value === 'custom' ? 'block' : 'none';
+        });
+
+        document.getElementById('taskAddBtn').addEventListener('click', function() {
+            const pet = getCurrentPet();
+            if (!pet) return;
+
+            const title = document.getElementById('taskTitle').value.trim();
+            const priority = document.getElementById('taskPriority').value;
+            const dueDate = document.getElementById('taskDueDate').value;
+            const recurrence = document.getElementById('taskRecurrence').value;
+            const customInterval = parseInt(document.getElementById('taskCustomInterval').value) || 14;
+            const description = document.getElementById('taskDescription').value.trim();
+
+            if (!title) {
+                alert('Please enter a task title.');
+                return;
+            }
+
+            const task = {
+                id: 'task_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+                petId: pet.id,
+                title: title,
+                description: description,
+                priority: priority,
+                dueDate: dueDate || null,
+                isRecurring: recurrence !== 'none',
+                recurrenceRule: recurrence,
+                recurrenceInterval: recurrence === 'custom' ? customInterval : null,
+                completed: false,
+                createdAt: new Date().toISOString()
+            };
+
+            data.tasks = data.tasks || [];
+            data.tasks.push(task);
+            saveData();
+
+            document.getElementById('taskTitle').value = '';
+            document.getElementById('taskDescription').value = '';
+            document.getElementById('taskRecurrence').value = 'none';
+            document.getElementById('taskCustomIntervalGroup').style.display = 'none';
+            updateUI();
+        });
+
+        // ========================================================================
+        //  EXPENSE TRACKER FEATURE MODULE
+        // ========================================================================
+        function renderExpensesChart(pet) {
+            const container = document.getElementById('expenseChartContainer');
+            container.innerHTML = '';
+
+            const petExpenses = (data.expenses || []).filter(e => e.petId === pet.id);
+            const totalsByCategory = { Food: 0, Vet: 0, Grooming: 0, Toys: 0, Other: 0 };
+
+            let grandTotal = 0;
+            petExpenses.forEach(e => {
+                const amt = parseFloat(e.amount) || 0;
+                if (totalsByCategory[e.category] !== undefined) {
+                    totalsByCategory[e.category] += amt;
+                } else {
+                    totalsByCategory.Other += amt;
+                }
+                grandTotal += amt;
+            });
+
+            if (grandTotal === 0) {
+                container.innerHTML = '<div class="text-secondary text-sm text-center" style="padding: 20px;">No expenses recorded yet.</div>';
+                return;
+            }
+
+            const colors = { Food: '#E67E22', Vet: '#C0392B', Grooming: '#2980B9', Toys: '#27AE60', Other: '#7F8C8D' };
+
+            let html = '<div class="expense-bar-wrapper">';
+            for (const category in totalsByCategory) {
+                const amt = totalsByCategory[category];
+                const percentage = grandTotal > 0 ? (amt / grandTotal) * 100 : 0;
+
+                html += `
+                    <div class="expense-bar-row">
+                        <span class="expense-bar-label">${category}</span>
+                        <div class="expense-bar-outer">
+                            <div class="expense-bar-inner" style="width: ${percentage}%; background-color: ${colors[category]}"></div>
+                        </div>
+                        <span class="expense-bar-val">$${amt.toFixed(2)} (${percentage.toFixed(0)}%)</span>
+                    </div>
+                `;
+            }
+            html += `
+                <div style="border-top: 2px solid var(--border); margin-top: 10px; padding-top: 8px; font-weight:800; font-size:1.1rem; display:flex; justify-content:space-between;">
+                    <span>Grand Total:</span>
+                    <span style="color: var(--accent);">$${grandTotal.toFixed(2)}</span>
+                </div>
+            `;
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function updateExpensesUI(pet) {
+            const list = document.getElementById('expenseHistoryList');
+            document.getElementById('expenseDate').value = getTodayStr();
+
+            const petExpenses = (data.expenses || []).filter(e => e.petId === pet.id)
+                .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            if (petExpenses.length === 0) {
+                list.innerHTML = '<div class="text-secondary text-sm">No expenses recorded.</div>';
+            } else {
+                list.innerHTML = petExpenses.map(e => `
+                    <div class="timeline-item">
+                        <span class="time">${formatDate(e.date)}</span>
+                        <span><strong>${e.category}</strong>: $${parseFloat(e.amount).toFixed(2)}</span>
+                        ${e.description ? `<span class="note">📝 ${e.description}</span>` : ''}
+                        <button class="btn btn-sm btn-danger expense-del-btn" data-id="${e.id}" style="margin-left:auto; padding: 2px 8px; font-size: 0.75rem;">🗑</button>
+                    </div>
+                `).join('');
+
+                list.querySelectorAll('.expense-del-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        if (confirm('Delete this expense record?')) {
+                            data.expenses = data.expenses.filter(e => e.id !== this.dataset.id);
+                            saveData();
+                            updateUI();
+                        }
+                    });
+                });
+            }
+
+            renderExpensesChart(pet);
+        }
+
+        document.getElementById('expenseAddBtn').addEventListener('click', function() {
+            const pet = getCurrentPet();
+            if (!pet) return;
+
+            const category = document.getElementById('expenseCategory').value;
+            const amount = parseFloat(document.getElementById('expenseAmount').value);
+            const date = document.getElementById('expenseDate').value;
+            const description = document.getElementById('expenseDescription').value.trim();
+
+            if (isNaN(amount) || amount <= 0) {
+                alert('Please enter a valid amount.');
+                return;
+            }
+            if (!date) {
+                alert('Please select a date.');
+                return;
+            }
+
+            const exp = {
+                id: 'exp_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+                petId: pet.id,
+                category: category,
+                amount: amount,
+                date: date,
+                description: description
+            };
+
+            data.expenses = data.expenses || [];
+            data.expenses.push(exp);
+            saveData();
+
+            document.getElementById('expenseAmount').value = '';
+            document.getElementById('expenseDescription').value = '';
+            updateUI();
+        });
+
+        // ========================================================================
+        //  VET APPOINTMENTS MODULE
+        // ========================================================================
+        function updateAppointmentsUI(pet) {
+            const list = document.getElementById('apptList');
+            document.getElementById('apptDate').value = getTodayStr();
+
+            const appts = (data.vetAppointments || []).filter(a => a.petId === pet.id)
+                .sort((a, b) => new Date(a.date + 'T' + (a.time || '00:00')) - new Date(b.date + 'T' + (b.time || '00:00')));
+
+            if (appts.length === 0) {
+                list.innerHTML = '<div class="text-secondary text-sm">No vet appointments scheduled.</div>';
+            } else {
+                const now = new Date();
+                list.innerHTML = appts.map(a => {
+                    const apptTime = new Date(a.date + 'T' + (a.time || '00:00'));
+                    const isPast = apptTime < now;
+                    return `
+                        <div class="med-card" style="opacity: ${isPast ? 0.6 : 1}; background: ${isPast ? 'var(--border)' : 'var(--input-bg)'};">
+                            <div class="flex-between">
+                                <span class="med-name">🏥 ${a.reason || 'Checkup'}</span>
+                                <span class="tag ${isPast ? 'tag-danger' : 'tag-success'}">${isPast ? 'Past' : 'Upcoming'}</span>
+                            </div>
+                            <div class="med-detail">👨‍⚕️ Vet: ${a.vetName || '—'}</div>
+                            <div class="med-detail">📅 When: ${formatDate(a.date)} at ${a.time || '—'}</div>
+                            ${a.notes ? `<div class="med-detail">📝 Notes: ${a.notes}</div>` : ''}
+                            <div class="flex-between mt-8" style="justify-content: flex-end;">
+                                <button class="btn btn-sm btn-danger appt-del-btn" data-id="${a.id}">🗑 Delete</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                list.querySelectorAll('.appt-del-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        if (confirm('Delete this appointment?')) {
+                            data.vetAppointments = data.vetAppointments.filter(a => a.id !== this.dataset.id);
+                            saveData();
+                            updateUI();
+                        }
+                    });
+                });
+            }
+        }
+
+        document.getElementById('apptAddBtn').addEventListener('click', function() {
+            const pet = getCurrentPet();
+            if (!pet) return;
+
+            const vetName = document.getElementById('apptVet').value.trim();
+            const reason = document.getElementById('apptReason').value.trim();
+            const date = document.getElementById('apptDate').value;
+            const time = document.getElementById('apptTime').value;
+            const reminder = document.getElementById('apptReminder').checked;
+            const notes = document.getElementById('apptNotes').value.trim();
+
+            if (!vetName) {
+                alert('Please enter a vet name.');
+                return;
+            }
+            if (!date) {
+                alert('Please select a date.');
+                return;
+            }
+
+            const appt = {
+                id: 'appt_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+                petId: pet.id,
+                vetName: vetName,
+                reason: reason || 'Routine Checkup',
+                date: date,
+                time: time,
+                reminder: reminder,
+                notes: notes
+            };
+
+            data.vetAppointments = data.vetAppointments || [];
+            data.vetAppointments.push(appt);
+            saveData();
+
+            document.getElementById('apptVet').value = '';
+            document.getElementById('apptReason').value = '';
+            document.getElementById('apptTime').value = '';
+            document.getElementById('apptNotes').value = '';
+            updateUI();
+        });
+
+        // ========================================================================
+        //  MEDICAL DOCUMENTS STORAGE MODULE
+        // ========================================================================
+        function updateDocumentsUI(pet) {
+            const list = document.getElementById('docsList');
+            document.getElementById('docDate').value = getTodayStr();
+
+            const docs = (data.documents || []).filter(d => d.petId === pet.id)
+                .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            if (docs.length === 0) {
+                list.innerHTML = '<div class="text-secondary text-sm">No documents uploaded yet.</div>';
+            } else {
+                list.innerHTML = docs.map(d => `
+                    <div class="timeline-item">
+                        <span class="time">${formatDate(d.date)}</span>
+                        <span><strong>${d.name}</strong> (${d.type})</span>
+                        ${d.description ? `<span class="note">📝 ${d.description}</span>` : ''}
+                        <div style="margin-left:auto; display:flex; gap:8px; align-items:center;">
+                            ${d.fileData ? `<a href="${d.fileData}" download="${d.name}" class="btn btn-sm btn-outline" style="padding: 2px 8px; font-size: 0.75rem;">💾 Download</a>` : '<span class="text-xs text-secondary">(Metadata)</span>'}
+                            <button class="btn btn-sm btn-danger doc-del-btn" data-id="${d.id}" style="padding: 2px 8px; font-size: 0.75rem;">🗑</button>
+                        </div>
+                    </div>
+                `).join('');
+
+                list.querySelectorAll('.doc-del-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        if (confirm('Delete this document?')) {
+                            data.documents = data.documents.filter(d => d.id !== this.dataset.id);
+                            saveData();
+                            updateUI();
+                        }
+                    });
+                });
+            }
+        }
+
+        document.getElementById('docAddBtn').addEventListener('click', function() {
+            const pet = getCurrentPet();
+            if (!pet) return;
+
+            const name = document.getElementById('docName').value.trim();
+            const type = document.getElementById('docType').value;
+            const date = document.getElementById('docDate').value;
+            const description = document.getElementById('docDescription').value.trim();
+            const fileInput = document.getElementById('docFile');
+
+            if (!name) {
+                alert('Please enter a document name.');
+                return;
+            }
+            if (!date) {
+                alert('Please select a date.');
+                return;
+            }
+
+            const doc = {
+                id: 'doc_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+                petId: pet.id,
+                name: name,
+                type: type,
+                date: date,
+                description: description,
+                fileData: null
+            };
+
+            const file = fileInput.files[0];
+            if (file) {
+                if (file.size > 500 * 1024) {
+                    alert('File is too large! Maximum limit is 500KB. It will be saved as metadata only (no file attached).');
+                    saveDoc(doc);
+                } else {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        doc.fileData = e.target.result;
+                        saveDoc(doc);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            } else {
+                saveDoc(doc);
+            }
+        });
+
+        function saveDoc(doc) {
+            data.documents = data.documents || [];
+            data.documents.push(doc);
+            saveData();
+            
+            document.getElementById('docName').value = '';
+            document.getElementById('docDescription').value = '';
+            document.getElementById('docFile').value = '';
+            updateUI();
+        }
+
+        // ========================================================================
+        //  AI HEALTH ASSISTANT MODULE
+        // ========================================================================
+        const BOT_RESPONSES = {
+            chocolate: "🍫 <strong>Chocolate Toxicity:</strong> Chocolate contains theobromine, which is toxic to dogs and cats. Dark and baking chocolate are the most dangerous. Signs include vomiting, diarrhea, rapid breathing, and seizures. <strong>Action:</strong> If ingested, call your vet immediately or an animal poison control center.",
+            vaccines: "💉 <strong>Puppy Vaccine Schedule:</strong><br>- 6-8 weeks: DHPP (Distemper, Hepatitis, Parvovirus, Parainfluenza)<br>- 10-12 weeks: DHPP booster + Leptospirosis + Bordetella<br>- 14-16 weeks: DHPP booster + Rabies vaccine<br>- Annually or every 3 years: Boosters as advised by your vet.",
+            fever: "🔥 <strong>Fever Signs in Pets:</strong> Normal dog/cat temperature is 38°C to 39.2°C (101°F to 102.5°F). Signs of fever include lethargy, warm ears/nose, shivering, loss of appetite, and coughing. <strong>Action:</strong> Do not give human medicines (like Tylenol/Advil - they are highly toxic!). Call a vet if temp exceeds 39.5°C.",
+            ticks: "🕷️ <strong>Tick Removal Guide:</strong><br>1. Use fine-tipped tweezers or a tick hook.<br>2. Grasp the tick as close to the skin's surface as possible.<br>3. Pull upward with steady, even pressure. Do not twist or jerk.<br>4. Clean the bite area and your hands with alcohol or soap.<br>5. Monitor for signs of Lyme disease (lethargy, limping).",
+            cat_food: "🐈 <strong>Dog eating Cat Food:</strong> Cat food is higher in protein and fat than dog food. If eaten occasionally, it might cause mild stomach upset but is not toxic. However, a continuous diet of cat food can lead to obesity, pancreatitis, and nutritional imbalances in dogs.",
+            default: "🐾 I'm not sure about that specific query. Please consult with a licensed vet for medical concerns. You can also try searching for terms like: <em>chocolate</em>, <em>vaccines</em>, <em>fever</em>, <em>ticks</em>, or <em>cat_food</em>."
+        };
+
+        function addChatMessage(sender, text) {
+            const chatMessages = document.getElementById('chatMessages');
+            const bubble = document.createElement('div');
+            bubble.className = `chat-bubble ${sender}`;
+            bubble.innerHTML = text;
+            chatMessages.appendChild(bubble);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function handleChatQuery(queryText) {
+            const cleanQuery = queryText.toLowerCase().trim();
+            addChatMessage('user', queryText);
+
+            setTimeout(() => {
+                let response = BOT_RESPONSES.default;
+                for (const key in BOT_RESPONSES) {
+                    if (cleanQuery.includes(key)) {
+                        response = BOT_RESPONSES[key];
+                        break;
+                    }
+                }
+                addChatMessage('bot', response);
+            }, 500);
+        }
+
+        document.querySelectorAll('.chat-quick-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const query = this.dataset.query;
+                if (BOT_RESPONSES[query]) {
+                    addChatMessage('user', this.textContent);
+                    setTimeout(() => {
+                        addChatMessage('bot', BOT_RESPONSES[query]);
+                    }, 500);
+                }
+            });
+        });
+
+        document.getElementById('chatSendBtn').addEventListener('click', function() {
+            const input = document.getElementById('chatInput');
+            const val = input.value.trim();
+            if (val) {
+                handleChatQuery(val);
+                input.value = '';
+            }
+        });
+
+        document.getElementById('chatInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('chatSendBtn').click();
+            }
+        });
+
+        // ========================================================================
+        //  BACKGROUND REMINDER CHECKS
+        // ========================================================================
+        const firedAlerts = new Set();
+
+        function checkUpcomingAlerts() {
+            const pet = getCurrentPet();
+            if (!pet || Notification.permission !== 'granted') return;
+
+            const now = new Date();
+            const todayStr = getTodayStr();
+
+            // Check Vet appointments
+            const petAppts = (data.vetAppointments || []).filter(a => a.petId === pet.id && a.reminder);
+            petAppts.forEach(a => {
+                const alertKey = `appt_${a.id}`;
+                if (a.date === todayStr && !firedAlerts.has(alertKey)) {
+                    new Notification(`🏥 Vet Appointment Today!`, {
+                        body: `${pet.name} has an appointment with ${a.vetName} for ${a.reason} at ${a.time || '—'}.`
+                    });
+                    firedAlerts.add(alertKey);
+                }
+            });
+
+            // Check tasks due
+            const petTasks = (data.tasks || []).filter(t => t.petId === pet.id && !t.completed && t.dueDate);
+            petTasks.forEach(t => {
+                const alertKey = `task_${t.id}`;
+                if (t.dueDate === todayStr && !firedAlerts.has(alertKey)) {
+                    new Notification(`📋 Task Due Today!`, {
+                        body: `Reminder: "${t.title}" is due today for ${pet.name}.`
+                    });
+                    firedAlerts.add(alertKey);
+                }
+            });
+        }
+
+        setInterval(checkUpcomingAlerts, 60000);
+
+        console.log('🐾 PawTrack Multi-Pet with Multi-Page & Premium Features loaded!');
     </script>
 </body>
 </html>
