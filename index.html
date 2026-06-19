@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>PawTrack · Multi-Pet Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -110,7 +110,7 @@
             color: var(--text);
             transition: background var(--transition), color var(--transition);
             min-height: 100vh;
-            padding: 16px;
+            padding: calc(16px + env(safe-area-inset-top)) calc(16px + env(safe-area-inset-right)) calc(16px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left));
             line-height: 1.5;
         }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -600,6 +600,7 @@
             position: fixed;
             inset: 0;
             background: rgba(0,0,0,0.4);
+            -webkit-backdrop-filter: blur(4px);
             backdrop-filter: blur(4px);
             display: flex;
             align-items: center;
@@ -1393,6 +1394,152 @@
                 transform: translateY(-10px) rotateX(12deg) rotateY(-4deg) rotateZ(1deg);
             }
         }
+        
+        /* ========== SAFARI / IOS COMPATIBILITY ========== */
+        button,
+        select,
+        .btn,
+        .nav-item,
+        .name-chip,
+        .pet-chip,
+        .toggle-btn,
+        .bath-btn,
+        .collapsible-trigger,
+        .app-footer a,
+        .theme-picker button {
+            touch-action: manipulation;
+            cursor: pointer;
+        }
+
+        @media (hover: none) {
+            .theme-picker button:hover,
+            .tab-nav button:hover,
+            .tab-nav button.tab-prominent:hover,
+            .btn:hover,
+            .name-chip:hover,
+            .bath-btn:hover,
+            .app-footer .reset-btn:hover,
+            .nav-item:hover,
+            .dash-card:hover,
+            .pet-chip:hover {
+                transform: none !important;
+            }
+        }
+
+        /* ========== NEW SETTINGS & APPEARANCE SYSTEM ========== */
+        body.card-style-flat .card,
+        body.card-style-flat .dash-card,
+        body.card-style-flat .pet-chip,
+        body.card-style-flat .collapsible-section {
+            box-shadow: none !important;
+        }
+        body.card-style-shadow .card,
+        body.card-style-shadow .dash-card,
+        body.card-style-shadow .pet-chip,
+        body.card-style-shadow .collapsible-section {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05) !important;
+        }
+        body.card-style-3d .card,
+        body.card-style-3d .dash-card,
+        body.card-style-3d .pet-chip,
+        body.card-style-3d .collapsible-section {
+            box-shadow: 0 10px 0 var(--border), 0 15px 30px rgba(0, 0, 0, 0.08) !important;
+            transform: translateY(-4px);
+            transition: transform var(--transition), box-shadow var(--transition);
+        }
+        @media (hover: hover) {
+            body.card-style-3d .card:hover,
+            body.card-style-3d .dash-card:hover,
+            body.card-style-3d .pet-chip:hover {
+                transform: translateY(-6px);
+                box-shadow: 0 12px 0 var(--border), 0 18px 36px rgba(0, 0, 0, 0.12) !important;
+            }
+        }
+
+        .pet-chips-container.pet-view-list {
+            flex-direction: column;
+            gap: 8px;
+        }
+        .pet-chips-container.pet-view-list .pet-chip {
+            width: 100%;
+            max-width: 100%;
+            border-radius: 12px;
+            padding: 8px 16px;
+        }
+
+        .collapsible-section {
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 12px;
+            background: var(--input-bg);
+            overflow: hidden;
+            transition: border-color var(--transition), background var(--transition);
+        }
+        .collapsible-trigger {
+            width: 100%;
+            background: transparent;
+            border: none;
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: var(--font);
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text);
+            cursor: pointer;
+            text-align: left;
+            transition: background var(--transition);
+        }
+        .collapsible-trigger:hover {
+            background: var(--tab-bg);
+        }
+        .collapsible-content {
+            display: none;
+            padding: 16px 20px;
+            border-top: 2px solid var(--border);
+            background: var(--card-bg);
+            animation: slideDownSettings 0.25s ease-out;
+        }
+        .collapsible-section.open .collapsible-content {
+            display: block;
+        }
+        .collapsible-section.open .chevron {
+            transform: rotate(180deg);
+        }
+        .chevron {
+            transition: transform var(--transition);
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        @keyframes slideDownSettings {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Footer links styling */
+        .app-footer-content {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .footer-links {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .footer-links a {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            font-weight: 700;
+            transition: color var(--transition);
+        }
+        .footer-links a:hover {
+            color: var(--accent);
+        }
         /* === END FLAT UI & FLOATING PET STYLES === */
     </style>
 </head>
@@ -1432,6 +1579,52 @@
                 </select>
             </div>
             <button class="btn btn-block btn-lg" id="setupSaveBtn">🐾 Start Tracking!</button>
+        </div>
+    </div>
+
+    <!-- ===================== MODAL (Terms of Service) ===================== -->
+    <div class="modal-overlay hidden" id="tosModal">
+        <div class="modal-box">
+            <span class="emoji-big">📜</span>
+            <h2>Terms of Service</h2>
+            <div style="max-height: 250px; overflow-y: auto; margin: 15px 0; font-size: 0.9rem; line-height: 1.6; text-align: left;" class="text-secondary">
+                <p><strong>1. Acceptance of Terms</strong><br>By using PawTrack, you agree to these terms. PawTrack is a client-side utility storing data locally in your browser's localStorage.</p>
+                <p style="margin-top: 10px;"><strong>2. Privacy & Data</strong><br>Your data never leaves your device. We do not transmit, collect, or sell any of your personal pet data.</p>
+                <p style="margin-top: 10px;"><strong>3. Liability</strong><br>PawTrack is provided "as is". We are not responsible for any data loss or incorrect vaccine reminders.</p>
+            </div>
+            <button class="btn btn-block" id="tosModalCloseBtn">Close</button>
+        </div>
+    </div>
+
+    <!-- ===================== MODAL (About Us) ===================== -->
+    <div class="modal-overlay hidden" id="aboutModal">
+        <div class="modal-box">
+            <span class="emoji-big">🐾</span>
+            <h2>About PawTrack</h2>
+            <div style="margin: 15px 0; font-size: 0.95rem; line-height: 1.6; text-align: center;" class="text-secondary">
+                <p><strong>PawTrack</strong> is a premium, client-side tracking platform designed to help pet owners track their pets' daily schedules, medical history, walks, and expenses.</p>
+                <p style="margin-top: 10px;">Keep your best friend healthy, happy, and on schedule with smart logging, trend charts, and customizable settings.</p>
+            </div>
+            <button class="btn btn-block" id="aboutModalCloseBtn">Close</button>
+        </div>
+    </div>
+
+    <!-- ===================== MODAL (Contact Us) ===================== -->
+    <div class="modal-overlay hidden" id="contactModal">
+        <div class="modal-box">
+            <span class="emoji-big">✉️</span>
+            <h2>Contact Us</h2>
+            <div style="margin: 15px 0; font-size: 0.95rem; line-height: 1.6; text-align: left;" class="text-secondary">
+                <p style="text-align: center; margin-bottom: 15px;">Email: <a href="mailto:dongshancai642@gmail.com" class="text-accent" style="font-weight: 700;">dongshancai642@gmail.com</a></p>
+                <div class="form-group">
+                    <label for="contactMessage">Send us a message:</label>
+                    <textarea id="contactMessage" placeholder="Type your message here..." style="width: 100%; height: 100px;"></textarea>
+                </div>
+            </div>
+            <div class="form-row">
+                <button class="btn btn-outline" style="flex: 1;" id="contactModalCancelBtn">Cancel</button>
+                <button class="btn" style="flex: 1;" id="sendContactBtn">📧 Send Email</button>
+            </div>
         </div>
     </div>
 
@@ -1476,6 +1669,7 @@
                     <a href="#appointments" class="nav-item"><span class="nav-icon">🏥</span> Vet Visits</a>
                     <a href="#documents" class="nav-item"><span class="nav-icon">📄</span> Documents</a>
                     <a href="#chat" class="nav-item"><span class="nav-icon">🤖</span> AI Helper</a>
+                    <a href="#settings" class="nav-item"><span class="nav-icon">⚙️</span> Settings</a>
                     <div class="menu-theme-row">
                         <span class="theme-label">Theme</span>
                         <div class="theme-picker">
@@ -1894,7 +2088,7 @@
                                             <option value="Other">Other</option>
                                         </select>
                                     </div>
-                                    <div class="form-group"><label>Amount ($)</label><input type="number" step="0.01" id="expenseAmount" placeholder="0.00" /></div>
+                                    <div class="form-group"><label id="expenseAmountLabel">Amount ($)</label><input type="number" step="0.01" id="expenseAmount" placeholder="0.00" /></div>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group"><label>Date</label><input type="date" id="expenseDate" /></div>
@@ -2010,6 +2204,201 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Page: Settings -->
+                <div class="page-view" id="page-settings">
+                    <div class="card">
+                        <div class="card-title"><span class="icon">⚙️</span> Settings</div>
+                        
+                        <!-- Collapsible Section: App Settings -->
+                        <div class="collapsible-section">
+                            <button class="collapsible-trigger">
+                                <span>📱 App Settings</span>
+                                <span class="chevron">▼</span>
+                            </button>
+                            <div class="collapsible-content">
+                                <div class="form-group">
+                                    <label for="settingsLanguage">Language</label>
+                                    <select id="settingsLanguage">
+                                        <option value="en">English (EN)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="settingsCurrency">Currency</label>
+                                    <select id="settingsCurrency">
+                                        <option value="USD">USD Dollar ($)</option>
+                                        <option value="PKR">PKR (Rs)</option>
+                                        <option value="SR">SR (SR)</option>
+                                        <option value="WON">WON (₩)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group flex-between" style="margin-bottom:14px;">
+                                    <label for="settingsNotifications">Enable Browser Notifications</label>
+                                    <input type="checkbox" id="settingsNotifications" style="width:24px; height:24px;" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="settingsDefaultPetView">Default Pet View (Dashboard)</label>
+                                    <select id="settingsDefaultPetView">
+                                        <option value="cards">Cards (Grid)</option>
+                                        <option value="list">List (Rows)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Collapsible Section: Theme & Appearance -->
+                        <div class="collapsible-section">
+                            <button class="collapsible-trigger">
+                                <span>🎨 Theme &amp; Appearance</span>
+                                <span class="chevron">▼</span>
+                            </button>
+                            <div class="collapsible-content">
+                                <div class="form-group">
+                                    <label>Theme Picker</label>
+                                    <div class="theme-picker" style="justify-content:flex-start; margin-top:6px; margin-bottom:12px;">
+                                        <button class="th-warm active" data-theme="warm" title="Baby Pink">🌸</button>
+                                        <button class="th-midnight" data-theme="midnight" title="Light Blue">💧</button>
+                                        <button class="th-forest" data-theme="forest" title="Light Yellow">🌼</button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="settingsFontSize">Font Size</label>
+                                    <select id="settingsFontSize">
+                                        <option value="small">Small</option>
+                                        <option value="medium" selected>Medium</option>
+                                        <option value="large">Large</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="settingsCardStyle">Card Style</label>
+                                    <select id="settingsCardStyle">
+                                        <option value="flat">Flat</option>
+                                        <option value="shadow">Shadow</option>
+                                        <option value="3d">3D Depth</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Collapsible Section: Data Management -->
+                        <div class="collapsible-section">
+                            <button class="collapsible-trigger">
+                                <span>💾 Data Management</span>
+                                <span class="chevron">▼</span>
+                            </button>
+                            <div class="collapsible-content">
+                                <div style="display:flex; flex-direction:column; gap:12px;">
+                                    <div class="flex-between">
+                                        <span>Export Backup Data</span>
+                                        <button class="btn btn-sm btn-outline" id="settingsExportBtn">📤 Export JSON</button>
+                                    </div>
+                                    <div class="flex-between">
+                                        <span>Import Backup Data</span>
+                                        <div>
+                                            <input type="file" id="settingsImportFile" accept=".json" style="display:none;" />
+                                            <button class="btn btn-sm btn-outline" id="settingsImportBtn">📥 Import JSON</button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group flex-between" style="margin:8px 0 0 0;">
+                                        <label for="settingsBackupReminder">Monthly Backup Reminder</label>
+                                        <input type="checkbox" id="settingsBackupReminder" style="width:24px; height:24px;" />
+                                    </div>
+                                    <hr style="border:0; border-top:1px solid var(--border); margin:6px 0;" />
+                                    <div class="flex-between">
+                                        <span class="text-secondary">Clear All Data (Delete everything)</span>
+                                        <button class="btn btn-sm btn-danger" id="settingsResetBtn">🗑️ Clear All Data</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Collapsible Section: Privacy -->
+                        <div class="collapsible-section">
+                            <button class="collapsible-trigger">
+                                <span>🔒 Privacy Settings</span>
+                                <span class="chevron">▼</span>
+                            </button>
+                            <div class="collapsible-content">
+                                <div class="form-group flex-between" style="margin-bottom:14px;">
+                                    <label for="settingsDataSharing">Data Sharing (Placeholder)</label>
+                                    <input type="checkbox" id="settingsDataSharing" style="width:24px; height:24px;" />
+                                </div>
+                                <div class="form-group flex-between" style="margin-bottom:0;">
+                                    <label for="settingsUsageAnalytics">Usage Analytics (Placeholder)</label>
+                                    <input type="checkbox" id="settingsUsageAnalytics" style="width:24px; height:24px;" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Collapsible Section: History -->
+                        <div class="collapsible-section">
+                            <button class="collapsible-trigger">
+                                <span>📜 Activity Logs &amp; History</span>
+                                <span class="chevron">▼</span>
+                            </button>
+                            <div class="collapsible-content">
+                                <div class="form-row mb-12">
+                                    <div style="flex:1;">
+                                        <label for="historyFilterDate">Filter by Date</label>
+                                        <input type="date" id="historyFilterDate" />
+                                    </div>
+                                    <div style="flex:0 0 auto; align-self:flex-end;">
+                                        <button class="btn btn-sm btn-outline" id="historyClearFilterBtn">Show All</button>
+                                    </div>
+                                </div>
+                                <div class="timeline" id="settingsHistoryTimeline" style="max-height:280px; min-height:80px; border:1px solid var(--border); border-radius:8px; padding:10px; background:var(--input-bg);">
+                                    <div class="text-secondary text-sm text-center">No activity history logs yet.</div>
+                                </div>
+                                <div class="flex-between mt-12">
+                                    <span class="text-secondary">Clear all activity logs</span>
+                                    <button class="btn btn-sm btn-danger" id="settingsClearHistoryBtn">🗑️ Clear History</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Collapsible Section: Help & Support -->
+                        <div class="collapsible-section">
+                            <button class="collapsible-trigger">
+                                <span>❓ Help &amp; Support</span>
+                                <span class="chevron">▼</span>
+                            </button>
+                            <div class="collapsible-content">
+                                <div class="faq-container">
+                                    <div style="margin-bottom:12px;">
+                                        <strong>Q: How do I add a pet?</strong>
+                                        <p class="text-secondary text-sm">A: Click the "➕ Add" button in the top header or click the "Add Pet" chip on the setup screen to enter pet details.</p>
+                                    </div>
+                                    <div style="margin-bottom:12px;">
+                                        <strong>Q: Where is my data stored?</strong>
+                                        <p class="text-secondary text-sm">A: All your pet logs are stored securely in your web browser's local storage (localStorage). Export your data regularily using the Data Management section to backup.</p>
+                                    </div>
+                                </div>
+                                <hr style="border:0; border-top: 1px solid var(--border); margin:12px 0;" />
+                                <form id="bugReportForm">
+                                    <div class="form-group">
+                                        <label for="bugDescription">Report a Bug / Request a Feature</label>
+                                        <textarea id="bugDescription" placeholder="Describe the issue you encountered..." required></textarea>
+                                    </div>
+                                    <button class="btn btn-sm btn-block" type="submit">🐛 Report Bug</button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Collapsible Section: About -->
+                        <div class="collapsible-section">
+                            <button class="collapsible-trigger">
+                                <span>ℹ️ About PawTrack</span>
+                                <span class="chevron">▼</span>
+                            </button>
+                            <div class="collapsible-content text-center">
+                                <p><strong>PawTrack</strong> v1.2.0</p>
+                                <p class="text-secondary text-sm">A premium offline tracking platform for pet owners.</p>
+                                <p class="mt-8"><a href="https://github.com" target="_blank" class="text-accent" style="font-weight:700;">🐾 Visit GitHub Repository</a></p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
                 <!-- Floating 3D Pet Image Widget -->
                 <div class="floating-pet-widget" id="floatingPetWidget" style="display: none;">
                     <img id="floatingPetImage" src="" alt="Active Pet" />
@@ -2017,10 +2406,16 @@
             </main>
         </div>
 
-        <!-- Footer -->
         <footer class="app-footer">
-            <span>🐾 PawTrack &bull; Multi-Pet</span>
-            <button class="reset-btn" id="resetAllBtn">🗑️ Reset All Data</button>
+            <div class="app-footer-content">
+                <span>🐾 PawTrack &bull; Multi-Pet</span>
+                <div class="footer-links">
+                    <a href="#" id="footerTosLink">Terms of Service</a>
+                    <a href="#" id="footerAboutLink">About Us</a>
+                    <a href="#" id="footerContactLink">Contact Us</a>
+                    <a href="#settings" id="footerSettingsLink">⚙️ Settings</a>
+                </div>
+            </div>
         </footer>
     </div>
 
@@ -2171,8 +2566,53 @@
         // ========================================================================
         //  STORAGE HELPERS
         // ========================================================================
+        function getCurrencySymbol() {
+            if (!data || !data.settings) return '$';
+            const currency = data.settings.currency || 'USD';
+            if (currency === 'PKR') return 'Rs';
+            if (currency === 'SR') return 'SR';
+            if (currency === 'WON') return '₩';
+            return '$';
+        }
+
+        function applySettings() {
+            if (!data || !data.settings) return;
+            const s = data.settings;
+            
+            // 0. Currency Label
+            const expLabel = document.getElementById('expenseAmountLabel');
+            if (expLabel) {
+                expLabel.textContent = `Amount (${getCurrencySymbol()})`;
+            }
+
+            // 1. Theme
+            const currentTheme = s.theme || data.theme || 'warm';
+            setTheme(currentTheme);
+            
+            // 2. Font Size
+            let px = '16px';
+            if (s.fontSize === 'small') px = '14px';
+            else if (s.fontSize === 'large') px = '18px';
+            document.documentElement.style.fontSize = px;
+            
+            // 3. Card Style
+            document.body.classList.remove('card-style-flat', 'card-style-shadow', 'card-style-3d');
+            document.body.classList.add(`card-style-${s.cardStyle || 'flat'}`);
+            
+            // 4. Default Pet View
+            const container = document.getElementById('pet-chips-list-container');
+            if (container) {
+                container.className = 'pet-chips-container' + (s.defaultPetView === 'list' ? ' pet-view-list' : '');
+            }
+        }
+
         function loadData() {
-            const raw = localStorage.getItem('pawtrack_data');
+            let raw = null;
+            try {
+                raw = localStorage.getItem('pawtrack_data');
+            } catch (e) {
+                console.error("localStorage reading failed:", e);
+            }
             if (raw) {
                 try {
                     const parsed = JSON.parse(raw);
@@ -2202,10 +2642,7 @@
                             currentPetId: 'pet1',
                             theme: parsed.theme || 'warm'
                         };
-                        saveData();
-                        return;
-                    }
-                    if (parsed.pets && Array.isArray(parsed.pets)) {
+                    } else if (parsed.pets && Array.isArray(parsed.pets)) {
                         data = parsed;
                         // Ensure each pet has a bath property
                         data.pets.forEach(p => {
@@ -2222,26 +2659,50 @@
                         if (!data.currentPetId || !data.pets.find(p => p.id === data.currentPetId)) {
                             data.currentPetId = data.pets[0]?.id || '';
                         }
-                        return;
                     }
-                } catch (e) {}
+                } catch (e) {
+                    console.error("Failed to parse data:", e);
+                }
             }
-            // Default: no pets
-            data = {
-                pets: [],
-                currentPetId: '',
-                theme: 'warm',
-                weightLogs: [],
-                tasks: [],
-                expenses: [],
-                vetAppointments: [],
-                documents: []
+
+            if (!data) {
+                // Default: no pets
+                data = {
+                    pets: [],
+                    currentPetId: '',
+                    theme: 'warm',
+                    weightLogs: [],
+                    tasks: [],
+                    expenses: [],
+                    vetAppointments: [],
+                    documents: []
+                };
+            }
+
+            // Ensure settings exists
+            data.settings = data.settings || {
+                language: 'en',
+                currency: 'USD',
+                notifications: false,
+                defaultPetView: 'cards',
+                theme: data.theme || 'warm',
+                fontSize: 'medium',
+                cardStyle: 'flat',
+                backupReminder: true,
+                dataSharing: false,
+                usageAnalytics: false
             };
+
             saveData();
+            applySettings();
         }
 
         function saveData() {
-            localStorage.setItem('pawtrack_data', JSON.stringify(data));
+            try {
+                localStorage.setItem('pawtrack_data', JSON.stringify(data));
+            } catch (e) {
+                console.error("localStorage writing failed:", e);
+            }
         }
 
         function getCurrentPet() {
@@ -2300,6 +2761,9 @@
         function setTheme(theme) {
             document.documentElement.setAttribute('data-theme', theme);
             data.theme = theme;
+            if (data.settings) {
+                data.settings.theme = theme;
+            }
             saveData();
             document.querySelectorAll('.theme-picker button').forEach(b => {
                 b.classList.toggle('active', b.dataset.theme === theme);
@@ -3415,39 +3879,6 @@
             });
         });
 
-        // ========================================================================
-        //  RESET ALL DATA - Clears everything and resets to empty
-        // ========================================================================
-        document.getElementById('resetAllBtn').addEventListener('click', function() {
-            if (confirm('⚠️ Are you sure you want to delete ALL data for ALL pets? This cannot be undone.')) {
-                if (confirm('This will remove all pets and their data. Continue?')) {
-                    localStorage.removeItem('pawtrack_data');
-                    data = {
-                        pets: [],
-                        currentPetId: '',
-                        theme: 'warm',
-                        weightLogs: [],
-                        tasks: [],
-                        expenses: [],
-                        vetAppointments: [],
-                        documents: []
-                    };
-                    saveData();
-                    // Reset walk timer
-                    walkRunning = false;
-                    walkSeconds = 0;
-                    if (walkTimerInterval) clearInterval(walkTimerInterval);
-                    walkTimerInterval = null;
-                    document.getElementById('walkStartBtn').disabled = false;
-                    document.getElementById('walkStopBtn').disabled = true;
-                    document.getElementById('walkTimerDisplay').textContent = '00:00:00';
-                    showSetupModal();
-                    populatePetSelector();
-                    updateUI();
-                    alert('✅ All data cleared. You can start fresh.');
-                }
-            }
-        });
 
         // ========================================================================
         //  THEME PICKER
@@ -3493,7 +3924,7 @@
         // ========================================================================
         function handleRouting() {
             const hash = window.location.hash || '#dashboard';
-            const pages = ['dashboard', 'tracker', 'weight', 'tasks', 'expenses', 'appointments', 'documents', 'chat'];
+            const pages = ['dashboard', 'tracker', 'weight', 'tasks', 'expenses', 'appointments', 'documents', 'chat', 'settings'];
             const activePage = hash.substring(1);
             const pageToShow = pages.includes(activePage) ? activePage : 'dashboard';
 
@@ -3525,6 +3956,8 @@
                     renderWeightChart(pet);
                 } else if (pageToShow === 'expenses') {
                     renderExpensesChart(pet);
+                } else if (pageToShow === 'settings') {
+                    updateSettingsUI(pet);
                 }
             }
         }
@@ -3541,6 +3974,7 @@
             updateExpensesUI(pet);
             updateAppointmentsUI(pet);
             updateDocumentsUI(pet);
+            updateSettingsUI(pet);
         }
 
         // ========================================================================
@@ -3611,7 +4045,7 @@
                 return ed.getMonth() === now.getMonth() && ed.getFullYear() === now.getFullYear();
             });
             const totalThisMonth = thisMonthExpenses.reduce((sum, e) => sum + parseFloat(e.amount), 0);
-            document.getElementById('dash-expenses-val').textContent = `$${totalThisMonth.toFixed(2)}`;
+            document.getElementById('dash-expenses-val').textContent = `${getCurrencySymbol()}${totalThisMonth.toFixed(2)}`;
 
             // 5. Dashboard Alert Checker
             const alertListEl = document.getElementById('dash-alerts-list');
@@ -3656,6 +4090,16 @@
                     alerts.push(`💊 Med <strong>${m.name}</strong> dose is overdue`);
                 }
             });
+
+            // Check Backup Reminder alert
+            if (data.settings && data.settings.backupReminder) {
+                const lastBackup = data.lastBackupDate ? new Date(data.lastBackupDate) : null;
+                const oneMonthAgo = new Date();
+                oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+                if (!lastBackup || lastBackup < oneMonthAgo) {
+                    alerts.push(`💾 <strong>Backup Warning</strong>: It has been over a month since your last backup.`);
+                }
+            }
 
             if (alerts.length === 0) {
                 alertListEl.innerHTML = '<div class="text-secondary text-sm">✅ All metrics are up to date!</div>';
@@ -4079,7 +4523,7 @@
                 list.innerHTML = petExpenses.map(e => `
                     <div class="timeline-item">
                         <span class="time">${formatDate(e.date)}</span>
-                        <span><strong>${e.category}</strong>: $${parseFloat(e.amount).toFixed(2)}</span>
+                        <span><strong>${e.category}</strong>: ${getCurrencySymbol()}${parseFloat(e.amount).toFixed(2)}</span>
                         ${e.description ? `<span class="note">📝 ${e.description}</span>` : ''}
                         <button class="btn btn-sm btn-danger expense-del-btn" data-id="${e.id}" style="margin-left:auto; padding: 2px 8px; font-size: 0.75rem;">🗑</button>
                     </div>
@@ -4534,85 +4978,156 @@
             
             try {
                 const ctx = new AudioContext();
+                if (ctx.state === 'suspended') {
+                    ctx.resume();
+                }
                 const t = ctx.currentTime;
                 
                 if (petType === 'cat') {
-                    // Meow: triangle wave sweeping up then sliding down
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    
-                    osc.type = 'triangle';
-                    
-                    osc.frequency.setValueAtTime(380, t);
-                    osc.frequency.exponentialRampToValueAtTime(540, t + 0.12);
-                    osc.frequency.exponentialRampToValueAtTime(570, t + 0.28);
-                    osc.frequency.exponentialRampToValueAtTime(400, t + 0.6);
-                    
-                    gain.gain.setValueAtTime(0, t);
-                    gain.gain.linearRampToValueAtTime(0.15, t + 0.08);
-                    gain.gain.exponentialRampToValueAtTime(0.08, t + 0.3);
-                    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.65);
-                    
-                    osc.connect(gain);
-                    gain.connect(ctx.destination);
-                    
-                    osc.start(t);
-                    osc.stop(t + 0.65);
+                    // Proper Cat Meow: double meow meow sequence using formant filter sweep and LFO vibrato
+                    const playSingleMeow = (startTime, pitch, duration) => {
+                        const osc1 = ctx.createOscillator();
+                        const osc2 = ctx.createOscillator();
+                        const lfo = ctx.createOscillator();
+                        const lfoGain = ctx.createGain();
+                        const gainNode = ctx.createGain();
+                        const formantFilter = ctx.createBiquadFilter();
+                        const lowpassFilter = ctx.createBiquadFilter();
+                        
+                        osc1.type = 'triangle';
+                        osc2.type = 'sine';
+                        
+                        // LFO for natural, organic voice vibrato
+                        lfo.frequency.setValueAtTime(6.5, startTime);
+                        lfoGain.gain.setValueAtTime(8, startTime);
+                        lfo.connect(lfoGain);
+                        lfoGain.connect(osc1.frequency);
+                        lfoGain.connect(osc2.frequency);
+                        
+                        // Pitch curve modeling a natural meow vocalization (rise and then slide down)
+                        osc1.frequency.setValueAtTime(pitch, startTime);
+                        osc1.frequency.exponentialRampToValueAtTime(pitch * 1.35, startTime + duration * 0.3);
+                        osc1.frequency.exponentialRampToValueAtTime(pitch * 1.45, startTime + duration * 0.5);
+                        osc1.frequency.exponentialRampToValueAtTime(pitch * 0.95, startTime + duration * 0.95);
+                        
+                        osc2.frequency.setValueAtTime(pitch * 2, startTime);
+                        osc2.frequency.exponentialRampToValueAtTime(pitch * 2.7, startTime + duration * 0.3);
+                        osc2.frequency.exponentialRampToValueAtTime(pitch * 2.9, startTime + duration * 0.5);
+                        osc2.frequency.exponentialRampToValueAtTime(pitch * 1.9, startTime + duration * 0.95);
+                        
+                        // Formant filter: sweeps to mimic vocal tract vowel changes ("m" -> "ee" -> "ow")
+                        formantFilter.type = 'bandpass';
+                        formantFilter.frequency.setValueAtTime(600, startTime);
+                        formantFilter.frequency.exponentialRampToValueAtTime(2200, startTime + duration * 0.35); // "ee" formant
+                        formantFilter.frequency.exponentialRampToValueAtTime(900, startTime + duration * 0.75);   // "ow" formant
+                        formantFilter.frequency.exponentialRampToValueAtTime(500, startTime + duration);
+                        formantFilter.Q.setValueAtTime(3.5, startTime);
+                        
+                        // Warm lowpass filter to remove excessive high buzz/metallic harshness
+                        lowpassFilter.type = 'lowpass';
+                        lowpassFilter.frequency.setValueAtTime(3000, startTime);
+                        
+                        // Volume envelope (gentle attack, sustain, decay)
+                        gainNode.gain.setValueAtTime(0.001, startTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.12, startTime + duration * 0.25);
+                        gainNode.gain.setValueAtTime(0.12, startTime + duration * 0.45);
+                        gainNode.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+                        
+                        const osc2Gain = ctx.createGain();
+                        osc2Gain.gain.setValueAtTime(0.04, startTime); // soft harmonic volume
+                        
+                        osc1.connect(formantFilter);
+                        osc2.connect(osc2Gain);
+                        osc2Gain.connect(formantFilter);
+                        
+                        formantFilter.connect(lowpassFilter);
+                        lowpassFilter.connect(gainNode);
+                        gainNode.connect(ctx.destination);
+                        
+                        lfo.start(startTime);
+                        osc1.start(startTime);
+                        osc2.start(startTime);
+                        
+                        lfo.stop(startTime + duration);
+                        osc1.stop(startTime + duration);
+                        osc2.stop(startTime + duration);
+                    };
+
+                    // Play proper double meow meow sequence
+                    playSingleMeow(t, 390, 0.48);
+                    playSingleMeow(t + 0.62, 430, 0.42);
                     
                 } else if (petType === 'dog') {
-                    // Bark: sawtooth wave, fast pitch sweep down, bandpass filtered, double bark!
-                    const playSingleBark = (startTime) => {
-                        const osc = ctx.createOscillator();
-                        const gain = ctx.createGain();
-                        const filter = ctx.createBiquadFilter();
+                    // Proper Dog Bark: dual explosive woof sequence with raspy breath noise and low tone pitch drop
+                    const playSingleBark = (startTime, pitch, duration) => {
+                        const osc1 = ctx.createOscillator();
+                        const osc2 = ctx.createOscillator();
+                        const voiceGain = ctx.createGain();
                         
-                        osc.type = 'sawtooth';
+                        osc1.type = 'sawtooth';
+                        osc1.frequency.setValueAtTime(pitch, startTime);
+                        osc1.frequency.exponentialRampToValueAtTime(pitch * 0.45, startTime + duration);
                         
-                        osc.frequency.setValueAtTime(240, startTime);
-                        osc.frequency.exponentialRampToValueAtTime(75, startTime + 0.11);
+                        osc2.type = 'triangle';
+                        osc2.frequency.setValueAtTime(pitch * 0.5, startTime);
+                        osc2.frequency.exponentialRampToValueAtTime(pitch * 0.25, startTime + duration);
                         
-                        filter.type = 'bandpass';
-                        filter.frequency.setValueAtTime(260, startTime);
-                        filter.frequency.exponentialRampToValueAtTime(140, startTime + 0.11);
-                        filter.Q.setValueAtTime(1.5, startTime);
+                        voiceGain.gain.setValueAtTime(0.12, startTime);
+                        voiceGain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
                         
-                        gain.gain.setValueAtTime(0.18, startTime);
-                        gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.11);
+                        // Noise source for the breathy, raspy character of the bark
+                        const bufferSize = ctx.sampleRate * duration;
+                        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+                        const channelData = buffer.getChannelData(0);
+                        for (let i = 0; i < bufferSize; i++) {
+                            channelData[i] = Math.random() * 2 - 1;
+                        }
+                        const noise = ctx.createBufferSource();
+                        noise.buffer = buffer;
                         
-                        osc.connect(filter);
-                        filter.connect(gain);
-                        gain.connect(ctx.destination);
+                        const noiseGain = ctx.createGain();
+                        // Noise peaks immediately for the bark breath explosion and decays rapidly
+                        noiseGain.gain.setValueAtTime(0.18, startTime);
+                        noiseGain.gain.exponentialRampToValueAtTime(0.001, startTime + duration * 0.55);
                         
-                        osc.start(startTime);
-                        osc.stop(startTime + 0.12);
+                        // Resonant lowpass filter representing the shape of the dog's throat/mouth
+                        const throatFilter = ctx.createBiquadFilter();
+                        throatFilter.type = 'lowpass';
+                        throatFilter.frequency.setValueAtTime(1000, startTime);
+                        throatFilter.frequency.exponentialRampToValueAtTime(250, startTime + duration);
+                        throatFilter.Q.setValueAtTime(2.2, startTime);
+                        
+                        // Noise bandpass filter to shape the raspy breath burst
+                        const noiseFilter = ctx.createBiquadFilter();
+                        noiseFilter.type = 'bandpass';
+                        noiseFilter.frequency.setValueAtTime(800, startTime);
+                        noiseFilter.frequency.exponentialRampToValueAtTime(350, startTime + duration * 0.6);
+                        noiseFilter.Q.setValueAtTime(1.5, startTime);
+                        
+                        // Connect signals
+                        osc1.connect(throatFilter);
+                        osc2.connect(throatFilter);
+                        throatFilter.connect(voiceGain);
+                        
+                        noise.connect(noiseFilter);
+                        noiseFilter.connect(noiseGain);
+                        
+                        // Mix voice and noise
+                        voiceGain.connect(ctx.destination);
+                        noiseGain.connect(ctx.destination);
+                        
+                        osc1.start(startTime);
+                        osc2.start(startTime);
+                        noise.start(startTime);
+                        
+                        osc1.stop(startTime + duration);
+                        osc2.stop(startTime + duration);
+                        noise.stop(startTime + duration);
                     };
                     
-                    playSingleBark(t);
-                    
-                    // Second bark slightly delayed and slightly pitch shifted
-                    setTimeout(() => {
-                        try {
-                            const ctx2 = new AudioContext();
-                            const osc2 = ctx2.createOscillator();
-                            const gain2 = ctx2.createGain();
-                            const filter2 = ctx2.createBiquadFilter();
-                            osc2.type = 'sawtooth';
-                            const t2 = ctx2.currentTime;
-                            osc2.frequency.setValueAtTime(210, t2);
-                            osc2.frequency.exponentialRampToValueAtTime(65, t2 + 0.1);
-                            filter2.type = 'bandpass';
-                            filter2.frequency.setValueAtTime(230, t2);
-                            filter2.frequency.exponentialRampToValueAtTime(130, t2 + 0.1);
-                            filter2.Q.setValueAtTime(1.5, t2);
-                            gain2.gain.setValueAtTime(0.15, t2);
-                            gain2.gain.exponentialRampToValueAtTime(0.001, t2 + 0.1);
-                            osc2.connect(filter2);
-                            filter2.connect(gain2);
-                            gain2.connect(ctx2.destination);
-                            osc2.start(t2);
-                            osc2.stop(t2 + 0.11);
-                        } catch(e){}
-                    }, 180);
+                    // Play double bark (woof-woof) barking sequence
+                    playSingleBark(t, 220, 0.18);
+                    playSingleBark(t + 0.28, 190, 0.15);
                     
                 } else if (petType === 'bird') {
                     // Bird Chirp: High frequency sinewave sweeping up and down very fast three times
@@ -4707,6 +5222,7 @@
             });
             
             el.addEventListener('mousemove', (e) => {
+                if (!window.matchMedia('(hover: hover)').matches) return;
                 const rect = el.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
@@ -4788,9 +5304,550 @@
             });
         }
 
+        // ========================================================================
+        //  SETTINGS PAGE CORE MODULE
+        // ========================================================================
+        function updateSettingsUI(pet) {
+            const s = data.settings;
+            if (!s) return;
+
+            // App Settings
+            document.getElementById('settingsLanguage').value = s.language || 'en';
+            document.getElementById('settingsCurrency').value = s.currency || 'USD';
+            document.getElementById('settingsNotifications').checked = !!s.notifications;
+            document.getElementById('settingsDefaultPetView').value = s.defaultPetView || 'cards';
+
+            // Theme (sync active class on Settings page theme picker)
+            document.querySelectorAll('#page-settings .theme-picker button').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.theme === (s.theme || data.theme));
+            });
+
+            // Appearance
+            document.getElementById('settingsFontSize').value = s.fontSize || 'medium';
+            document.getElementById('settingsCardStyle').value = s.cardStyle || 'flat';
+
+            // Data Management
+            document.getElementById('settingsBackupReminder').checked = !!s.backupReminder;
+
+            // Privacy
+            document.getElementById('settingsDataSharing').checked = !!s.dataSharing;
+            document.getElementById('settingsUsageAnalytics').checked = !!s.usageAnalytics;
+
+            // Populate History
+            populateHistoryTimeline(pet);
+        }
+
+        function populateHistoryTimeline(pet) {
+            const timelineEl = document.getElementById('settingsHistoryTimeline');
+            if (!timelineEl) return;
+            if (!pet) {
+                timelineEl.innerHTML = '<div class="text-secondary text-sm text-center">No active pet. Please add a pet first.</div>';
+                return;
+            }
+
+            const filterDate = document.getElementById('historyFilterDate').value;
+            const history = getCombinedHistory(pet);
+            
+            // Filter by date if specified
+            const filtered = filterDate 
+                ? history.filter(item => item.date === filterDate)
+                : history;
+
+            if (filtered.length === 0) {
+                timelineEl.innerHTML = `<div class="text-secondary text-sm text-center">No activity history logs found${filterDate ? ' for ' + formatDate(filterDate) : ''}.</div>`;
+                return;
+            }
+
+            timelineEl.innerHTML = filtered.map(item => `
+                <div class="timeline-item">
+                    <span class="icon-badge">${item.type.split(' ')[0]}</span>
+                    <div style="flex:1;">
+                        <div class="fw-bold">${item.type.substring(item.type.indexOf(' ') + 1)} - ${item.description}</div>
+                        ${item.note ? `<div class="note">${item.note}</div>` : ''}
+                    </div>
+                    <span class="time" style="font-size:0.75rem; text-align:right;">
+                        ${formatDate(item.date)}<br>${item.time ? formatTime(item.time) : ''}
+                    </span>
+                </div>
+            `).join('');
+        }
+
+        function getCombinedHistory(pet) {
+            if (!pet) return [];
+            const history = [];
+
+            // 1. Feeding history
+            if (pet.feeding && Array.isArray(pet.feeding.history)) {
+                pet.feeding.history.forEach(item => {
+                    history.push({
+                        type: '🍽️ Feeding',
+                        description: `Meal: ${item.meal.charAt(0).toUpperCase() + item.meal.slice(1)}`,
+                        date: item.date || (item.time ? item.time.split('T')[0] : getTodayStr()),
+                        time: item.time,
+                        note: item.note || ''
+                    });
+                });
+            }
+
+            // 2. Medications history
+            if (Array.isArray(pet.medications)) {
+                pet.medications.forEach(med => {
+                    if (Array.isArray(med.history)) {
+                        med.history.forEach(time => {
+                            history.push({
+                                type: '💊 Medication',
+                                description: `Given medication: ${med.name}`,
+                                date: time.split('T')[0],
+                                time: time,
+                                note: med.notes || ''
+                            });
+                        });
+                    }
+                });
+            }
+
+            // 3. Poop/Pee history
+            if (pet.poopPee && Array.isArray(pet.poopPee.logs)) {
+                pet.poopPee.logs.forEach(item => {
+                    history.push({
+                        type: item.type === 'poop' ? '💩 Poop' : '💦 Pee',
+                        description: `${item.type.charAt(0).toUpperCase() + item.type.slice(1)} logged`,
+                        date: item.date || (item.time ? item.time.split('T')[0] : getTodayStr()),
+                        time: item.time,
+                        note: item.location ? `Location: ${item.location}` : ''
+                    });
+                });
+            }
+
+            // 4. Walks history
+            if (Array.isArray(pet.walks)) {
+                pet.walks.forEach(item => {
+                    history.push({
+                        type: '🚶 Walk',
+                        description: `Walked: ${formatDuration(item.duration)} (${item.distance || 0} km)`,
+                        date: item.date.split('T')[0],
+                        time: item.date,
+                        note: item.note || ''
+                    });
+                });
+            }
+
+            // 5. Bath/Trim history
+            if (pet.bath) {
+                if (Array.isArray(pet.bath.baths)) {
+                    pet.bath.baths.forEach(item => {
+                        history.push({
+                            type: '🛁 Bath',
+                            description: 'Bathing logged',
+                            date: item.date || (item.time ? item.time.split('T')[0] : getTodayStr()),
+                            time: item.time,
+                            note: item.note || ''
+                        });
+                    });
+                }
+                if (Array.isArray(pet.bath.trims)) {
+                    pet.bath.trims.forEach(item => {
+                        history.push({
+                            type: '✂️ Grooming',
+                            description: 'Trimming logged',
+                            date: item.date || (item.time ? item.time.split('T')[0] : getTodayStr()),
+                            time: item.time,
+                            note: item.note || ''
+                        });
+                    });
+                }
+            }
+
+            // 6. Weight logs
+            if (Array.isArray(data.weightLogs)) {
+                data.weightLogs.filter(w => w.petId === pet.id).forEach(w => {
+                    history.push({
+                        type: '⚖️ Weight',
+                        description: `Weight logged: ${w.weight} kg`,
+                        date: w.date,
+                        time: `${w.date}T12:00:00.000Z`,
+                        note: w.notes || ''
+                    });
+                });
+            }
+
+            // 7. Completed tasks
+            if (Array.isArray(data.tasks)) {
+                data.tasks.filter(t => t.petId === pet.id && t.completed).forEach(t => {
+                    history.push({
+                        type: '📋 Task',
+                        description: `Completed task: ${t.title}`,
+                        date: t.completedAt ? t.completedAt.split('T')[0] : (t.dueDate || ''),
+                        time: t.completedAt || '',
+                        note: t.description || ''
+                    });
+                });
+            }
+
+            // 8. Expenses
+            if (Array.isArray(data.expenses)) {
+                data.expenses.filter(e => e.petId === pet.id).forEach(e => {
+                    history.push({
+                        type: '💰 Expense',
+                        description: `Recorded expense: ${getCurrencySymbol()}${parseFloat(e.amount).toFixed(2)} (${e.category})`,
+                        date: e.date,
+                        time: `${e.date}T12:00:00.000Z`,
+                        note: e.description || ''
+                    });
+                });
+            }
+
+            // 9. Vet appointments
+            if (Array.isArray(data.vetAppointments)) {
+                data.vetAppointments.filter(v => v.petId === pet.id).forEach(v => {
+                    history.push({
+                        type: '🏥 Vet Visit',
+                        description: `Vet appointment: ${v.vetName} (${v.reason})`,
+                        date: v.date,
+                        time: `${v.date}T${v.time || '12:00'}:00.000Z`,
+                        note: v.notes || ''
+                    });
+                });
+            }
+
+            return history.sort((a, b) => {
+                const timeA = new Date(a.time || a.date);
+                const timeB = new Date(b.time || b.date);
+                return timeB - timeA;
+            });
+        }
+
+        function setFontSize(size) {
+            let px = '16px';
+            if (size === 'small') px = '14px';
+            else if (size === 'large') px = '18px';
+            
+            document.documentElement.style.fontSize = px;
+            data.settings.fontSize = size;
+            saveData();
+        }
+
+        function setCardStyle(style) {
+            document.body.classList.remove('card-style-flat', 'card-style-shadow', 'card-style-3d');
+            document.body.classList.add(`card-style-${style}`);
+            
+            data.settings.cardStyle = style;
+            saveData();
+        }
+
+        function initSettingsEvents() {
+            // Collapsible Sections Toggles
+            document.querySelectorAll('#page-settings .collapsible-trigger').forEach(trigger => {
+                trigger.addEventListener('click', function() {
+                    const section = this.parentElement;
+                    const isOpen = section.classList.contains('open');
+                    section.classList.toggle('open', !isOpen);
+                });
+            });
+
+            // App Settings change handlers
+            document.getElementById('settingsLanguage').addEventListener('change', function() {
+                data.settings.language = this.value;
+                saveData();
+            });
+
+            document.getElementById('settingsCurrency').addEventListener('change', function() {
+                data.settings.currency = this.value;
+                saveData();
+                applySettings();
+                const pet = getCurrentPet();
+                if (pet) {
+                    updateNewPagesUI(pet);
+                }
+            });
+
+            document.getElementById('settingsNotifications').addEventListener('change', function() {
+                data.settings.notifications = this.checked;
+                saveData();
+                if (this.checked && Notification.permission === 'default') {
+                    Notification.requestPermission();
+                }
+            });
+
+            document.getElementById('settingsDefaultPetView').addEventListener('change', function() {
+                data.settings.defaultPetView = this.value;
+                saveData();
+                applySettings();
+            });
+
+            // Settings theme picker
+            document.querySelectorAll('#page-settings .theme-picker button').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const theme = this.dataset.theme;
+                    setTheme(theme);
+                });
+            });
+
+            // Appearance settings change handlers
+            document.getElementById('settingsFontSize').addEventListener('change', function() {
+                setFontSize(this.value);
+            });
+
+            document.getElementById('settingsCardStyle').addEventListener('change', function() {
+                setCardStyle(this.value);
+            });
+
+            // Export Backup
+            document.getElementById('settingsExportBtn').addEventListener('click', function() {
+                data.lastBackupDate = new Date().toISOString();
+                saveData();
+                
+                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data, null, 2));
+                const downloadAnchor = document.createElement('a');
+                downloadAnchor.setAttribute("href", dataStr);
+                downloadAnchor.setAttribute("download", `pawtrack_backup_${getTodayStr()}.json`);
+                document.body.appendChild(downloadAnchor);
+                downloadAnchor.click();
+                downloadAnchor.remove();
+                
+                alert("🎉 Backup exported successfully! Last backup date updated.");
+                
+                const pet = getCurrentPet();
+                if (pet) {
+                    updateNewPagesUI(pet);
+                }
+            });
+
+            // Import Backup
+            const importFileEl = document.getElementById('settingsImportFile');
+            document.getElementById('settingsImportBtn').addEventListener('click', function() {
+                importFileEl.click();
+            });
+
+            importFileEl.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    try {
+                        const imported = JSON.parse(evt.target.result);
+                        if (imported && (imported.pets || imported.currentPetId)) {
+                            if (confirm("⚠️ Importing this file will overwrite all existing data. Are you sure you want to proceed?")) {
+                                data = imported;
+                                // Migrate
+                                data.settings = data.settings || {
+                                    language: 'en',
+                                    currency: 'USD',
+                                    notifications: false,
+                                    defaultPetView: 'cards',
+                                    theme: data.theme || 'warm',
+                                    fontSize: 'medium',
+                                    cardStyle: 'flat',
+                                    backupReminder: true,
+                                    dataSharing: false,
+                                    usageAnalytics: false
+                                };
+                                saveData();
+                                applySettings();
+                                
+                                // Refresh UI
+                                const pet = getCurrentPet();
+                                if (pet) {
+                                    updateNewPagesUI(pet);
+                                    hideSetupModal();
+                                } else {
+                                    showSetupModal();
+                                }
+                                populatePetSelector();
+                                
+                                alert("🎉 Data imported successfully!");
+                            }
+                        } else {
+                            alert("❌ Invalid backup file format.");
+                        }
+                    } catch (err) {
+                        alert("❌ Failed to parse JSON file.");
+                    }
+                };
+                reader.readAsText(file);
+            });
+
+            // Clear All Data
+            document.getElementById('settingsResetBtn').addEventListener('click', function() {
+                if (confirm('⚠️ Are you sure you want to delete ALL data for ALL pets? This cannot be undone.')) {
+                    if (confirm('This will remove all pets and their data. Continue?')) {
+                        try {
+                            localStorage.removeItem('pawtrack_data');
+                        } catch (e) {
+                            console.error("localStorage clear failed:", e);
+                        }
+                        data = {
+                            pets: [],
+                            currentPetId: '',
+                            theme: 'warm',
+                            weightLogs: [],
+                            tasks: [],
+                            expenses: [],
+                            vetAppointments: [],
+                            documents: []
+                        };
+                        data.settings = {
+                            language: 'en',
+                            notifications: false,
+                            defaultPetView: 'cards',
+                            theme: 'warm',
+                            fontSize: 'medium',
+                            cardStyle: 'flat',
+                            backupReminder: true,
+                            dataSharing: false,
+                            usageAnalytics: false
+                        };
+                        saveData();
+                        applySettings();
+                        
+                        // Reset walk timer
+                        walkRunning = false;
+                        walkSeconds = 0;
+                        if (walkTimerInterval) clearInterval(walkTimerInterval);
+                        walkTimerInterval = null;
+                        
+                        const walkStartBtn = document.getElementById('walkStartBtn');
+                        const walkStopBtn = document.getElementById('walkStopBtn');
+                        const walkTimerDisplay = document.getElementById('walkTimerDisplay');
+                        if (walkStartBtn) walkStartBtn.disabled = false;
+                        if (walkStopBtn) walkStopBtn.disabled = true;
+                        if (walkTimerDisplay) walkTimerDisplay.textContent = '00:00:00';
+                        
+                        showSetupModal();
+                        populatePetSelector();
+                        updateNewPagesUI(null);
+                        
+                        alert("🗑️ All data has been cleared.");
+                    }
+                }
+            });
+
+            // Backup Frequency Toggle
+            document.getElementById('settingsBackupReminder').addEventListener('change', function() {
+                data.settings.backupReminder = this.checked;
+                saveData();
+                const pet = getCurrentPet();
+                if (pet) {
+                    updateDashboardUI(pet);
+                }
+            });
+
+            // Privacy toggles
+            document.getElementById('settingsDataSharing').addEventListener('change', function() {
+                data.settings.dataSharing = this.checked;
+                saveData();
+            });
+            document.getElementById('settingsUsageAnalytics').addEventListener('change', function() {
+                data.settings.usageAnalytics = this.checked;
+                saveData();
+            });
+
+            // History Filters & Clean
+            document.getElementById('historyFilterDate').addEventListener('change', function() {
+                const pet = getCurrentPet();
+                populateHistoryTimeline(pet);
+            });
+
+            document.getElementById('historyClearFilterBtn').addEventListener('click', function() {
+                document.getElementById('historyFilterDate').value = '';
+                const pet = getCurrentPet();
+                populateHistoryTimeline(pet);
+            });
+
+            document.getElementById('settingsClearHistoryBtn').addEventListener('click', function() {
+                const pet = getCurrentPet();
+                if (!pet) return;
+                if (confirm(`⚠️ Are you sure you want to clear all history logs for ${pet.name}?`)) {
+                    if (pet.feeding) pet.feeding.history = [];
+                    if (Array.isArray(pet.medications)) {
+                        pet.medications.forEach(m => {
+                            m.history = [];
+                            m.lastGiven = null;
+                        });
+                    }
+                    if (pet.poopPee) pet.poopPee.logs = [];
+                    if (pet.walks) pet.walks = [];
+                    if (pet.bath) pet.bath = { baths: [], trims: [] };
+
+                    data.weightLogs = data.weightLogs.filter(w => w.petId !== pet.id);
+                    data.expenses = data.expenses.filter(e => e.petId !== pet.id);
+                    data.vetAppointments = data.vetAppointments.filter(v => v.petId !== pet.id);
+                    data.tasks = data.tasks.filter(t => t.petId !== pet.id);
+
+                    saveData();
+                    updateNewPagesUI(pet);
+                    alert("🗑️ Active pet history cleared successfully!");
+                }
+            });
+
+            // Bug report form
+            document.getElementById('bugReportForm')?.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const desc = document.getElementById('bugDescription').value.trim();
+                if (!desc) return;
+                const email = 'dongshancai642@gmail.com';
+                const subject = encodeURIComponent('PawTrack Bug Report / Feature Request');
+                const body = encodeURIComponent(desc);
+                window.open(`mailto:${email}?subject=${subject}&body=${body}`);
+                document.getElementById('bugDescription').value = '';
+                alert('📨 Opening email client to send the bug report.');
+            });
+
+            // Footer modal handlers
+            const tosModal = document.getElementById('tosModal');
+            const aboutModal = document.getElementById('aboutModal');
+            const contactModal = document.getElementById('contactModal');
+
+            document.getElementById('footerTosLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                tosModal.classList.remove('hidden');
+            });
+            document.getElementById('tosModalCloseBtn').addEventListener('click', function() {
+                tosModal.classList.add('hidden');
+            });
+
+            document.getElementById('footerAboutLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                aboutModal.classList.remove('hidden');
+            });
+            document.getElementById('aboutModalCloseBtn').addEventListener('click', function() {
+                aboutModal.classList.add('hidden');
+            });
+
+            document.getElementById('footerContactLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                contactModal.classList.remove('hidden');
+            });
+            document.getElementById('contactModalCancelBtn').addEventListener('click', function() {
+                contactModal.classList.add('hidden');
+            });
+
+            document.getElementById('sendContactBtn').addEventListener('click', function() {
+                const msg = document.getElementById('contactMessage').value.trim();
+                if (!msg) {
+                    alert("Please write a message first.");
+                    return;
+                }
+                const email = 'dongshancai642@gmail.com';
+                const subject = encodeURIComponent('PawTrack Feedback');
+                const body = encodeURIComponent(msg);
+                window.open(`mailto:${email}?subject=${subject}&body=${body}`);
+                contactModal.classList.add('hidden');
+                document.getElementById('contactMessage').value = '';
+            });
+
+            // Close modal when clicking overlay background
+            window.addEventListener('click', function(e) {
+                if (e.target === tosModal) tosModal.classList.add('hidden');
+                if (e.target === aboutModal) aboutModal.classList.add('hidden');
+                if (e.target === contactModal) contactModal.classList.add('hidden');
+            });
+        }
+
         initStaticBackground();
         initFloatingPetTilt();
         initMobileMenuToggles();
+        initSettingsEvents();
 
         // === END FLAT UI & CORNER FLOATING PETS ===
     </script>
