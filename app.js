@@ -306,6 +306,16 @@ function loadData() {
 function saveData() {
     try {
         localStorage.setItem('pawtrack_data', JSON.stringify(data));
+        // Async update to server database
+        fetch('/api/pawtrack-data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).catch(err => {
+            console.error("Failed to sync to database:", err);
+        });
     } catch (e) {
         console.error("localStorage writing failed:", e);
     }
@@ -1504,7 +1514,39 @@ document.querySelectorAll('.theme-picker button').forEach(btn => {
 // ========================================================================
 //  INIT
 // ========================================================================
+async function syncDataFromServer() {
+    try {
+        const response = await fetch('/api/pawtrack-data');
+        if (response.ok) {
+            const serverData = await response.json();
+            if (serverData && serverData.pets) {
+                data = serverData;
+                localStorage.setItem('pawtrack_data', JSON.stringify(data));
+                
+                if (data.pets.length === 0) {
+                    showSetupModal();
+                } else {
+                    hideSetupModal();
+                    if (!data.currentPetId || !data.pets.find(p => p.id === data.currentPetId)) {
+                        data.currentPetId = data.pets[0].id;
+                        saveData();
+                    }
+                    populatePetSelector();
+                    updateUI();
+                    if (window.updateOwnerProfileUI) {
+                        window.updateOwnerProfileUI();
+                    }
+                }
+            }
+        }
+    } catch (e) {
+        console.error("Failed to sync data from server:", e);
+    }
+}
+
 loadData();
+syncDataFromServer();
+handleRouting();
 
 if (data.pets.length === 0) {
     showSetupModal();
