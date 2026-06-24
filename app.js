@@ -257,6 +257,18 @@ function loadData() {
         };
     }
 
+    // Ensure all sub-collections and properties exist
+    data.pets = data.pets || [];
+    data.weightLogs = data.weightLogs || [];
+    data.tasks = data.tasks || [];
+    data.expenses = data.expenses || [];
+    data.vetAppointments = data.vetAppointments || [];
+    data.documents = data.documents || [];
+
+    data.pets.forEach(p => {
+        if (!p.bath) p.bath = { baths: [], trims: [] };
+    });
+
     // Ensure settings exists
     data.settings = data.settings || {
         language: 'en',
