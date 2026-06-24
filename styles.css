@@ -157,6 +157,7 @@ a { color: var(--accent); text-decoration: none; }
     transition: background var(--transition), box-shadow var(--transition);
     border: 2px solid var(--border);
     gap: 12px;
+    position: relative; /* Ensure relative positioning for absolute children on all screen sizes */
 }
 .app-header .logo {
     display: flex;
@@ -1218,8 +1219,14 @@ label {
         background: var(--tab-bg);
         color: var(--text);
     }
-    .tab-menu-toggle .hamburger-icon {
+    .tab-menu-toggle .tab-menu-paw-icon {
+        display: inline-block;
         font-size: 1.3rem;
+        transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        transform-style: preserve-3d;
+    }
+    .tab-menu-toggle.open .tab-menu-paw-icon {
+        transform: rotateY(180deg) scale(1.2);
     }
     .tab-items-container {
         display: none;
@@ -1599,3 +1606,200 @@ body.card-style-3d .collapsible-section {
     }
 }
 /* === END FLAT UI & FLOATING PET STYLES === */
+
+/* --- START: Paw Icon Menu & Corner Buttons --- */
+.paw-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    font-size: 1.6rem;
+    cursor: pointer;
+    padding: 6px;
+    width: 38px;
+    height: 38px;
+    box-sizing: border-box;
+    border-radius: var(--radius);
+    transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), background var(--transition);
+    perspective: 1000px;
+    will-change: transform;
+}
+.paw-menu:hover {
+    background: var(--tab-bg);
+}
+.paw-menu-icon {
+    display: inline-block;
+    transition: transform 0.6s ease;
+    transform-style: preserve-3d;
+}
+.paw-menu.open {
+    transform: rotateY(180deg) scale(1.15);
+}
+
+/* Paw corner decoration styles */
+.paw-corner {
+    position: relative;
+    overflow: visible !important;
+}
+.paw-corner::after {
+    content: "🐾";
+    position: absolute;
+    font-size: 0.95rem;
+    color: var(--accent);
+    pointer-events: none;
+    transition: all 0.3s ease;
+    transform-style: preserve-3d;
+    perspective: 500px;
+    animation: pawPulseGently 3s ease-in-out infinite;
+    z-index: 10;
+}
+.paw-corner-tr::after {
+    top: -6px;
+    right: -6px;
+}
+.paw-corner-br::after {
+    bottom: -6px;
+    right: 2px;
+}
+
+@keyframes pawPulseGently {
+    0%, 100% {
+        transform: scale(1) translateZ(0);
+        opacity: 0.7;
+        color: var(--accent);
+    }
+    50% {
+        transform: scale(1.25) translateZ(5px);
+        opacity: 0.95;
+        color: #ffaa66; /* shifts color gently */
+    }
+}
+
+.paw-corner:hover::after {
+    animation: paw3DAccentHover 1.2s ease-in-out infinite;
+    opacity: 1;
+}
+
+@keyframes paw3DAccentHover {
+    0%, 100% {
+        transform: scale(1.25) rotate(0deg) translateZ(5px);
+        color: #ff758c; /* beautiful warm pastel pink */
+    }
+    50% {
+        transform: scale(1.65) rotate(15deg) translate3d(2px, -2px, 15px);
+        color: #ff3b30; /* prominent bold red-orange */
+        filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+    }
+}
+.pet-chip.active-pet {
+    position: relative;
+}
+.pet-chip.active-pet::after {
+    content: "🐾";
+    position: absolute;
+    top: 6px;
+    right: 10px;
+    font-size: 0.95rem;
+    opacity: 0.75;
+    pointer-events: none;
+}
+/* --- END: Paw Icon Menu & Corner Buttons --- */
+
+/* Typing Indicator & Chat Adjustments */
+.typing-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 16px;
+}
+.typing-indicator span {
+    width: 6px;
+    height: 6px;
+    background-color: var(--text);
+    border-radius: 50%;
+    display: inline-block;
+    animation: typingBlink 1.4s infinite both;
+    opacity: 0.7;
+}
+.typing-indicator span:nth-child(2) {
+    animation-delay: .2s;
+}
+.typing-indicator span:nth-child(3) {
+    animation-delay: .4s;
+}
+@keyframes typingBlink {
+    0% { opacity: .2; }
+    20% { opacity: 1; }
+    100% { opacity: .2; }
+}
+
+.ai-suggestion-chip {
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+.ai-suggestion-chip:hover {
+    transform: translateY(-2px);
+    background-color: var(--border) !important;
+}
+
+/* Pet Owner Profile Button & View Styles */
+.owner-profile-btn {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--tab-bg);
+    border: 2px solid var(--border);
+    cursor: pointer;
+    font-size: 1.15rem;
+    overflow: hidden;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+    will-change: transform;
+    color: var(--text-secondary);
+    
+    /* Absolute position by default for mobile top-right corner */
+    position: absolute;
+    top: 11px;
+    right: 16px;
+    z-index: 100;
+}
+.owner-profile-btn:hover {
+    transform: scale(1.08);
+    border-color: var(--accent);
+}
+.owner-profile-btn img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+#ownerAvatarPreview img, #ownerAvatarDisplay img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Responsive Overrides for Hamburger and Profile */
+@media (min-width: 769px) {
+    .app-header {
+        position: relative;
+        padding-right: 80px !important; /* Make room for profile button */
+    }
+    .owner-profile-btn {
+        position: absolute;
+        top: 50%;
+        right: 20px;
+        transform: translateY(-50%);
+    }
+    .owner-profile-btn:hover {
+        transform: translateY(-50%) scale(1.08);
+    }
+    .paw-menu {
+        display: none !important;
+    }
+}
+
+
+

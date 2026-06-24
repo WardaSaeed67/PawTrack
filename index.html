@@ -44,7 +44,7 @@
                     <option value="large">Large</option>
                 </select>
             </div>
-            <button class="btn btn-block btn-lg" id="setupSaveBtn">🐾 Start Tracking!</button>
+            <button class="btn btn-block btn-lg paw-corner paw-corner-br" id="setupSaveBtn">🐾 Start Tracking!</button>
         </div>
     </div>
 
@@ -100,17 +100,20 @@
         <!-- Header -->
         <header class="app-header">
             <div class="header-top-row">
-                <button class="menu-toggle" id="menuToggle" aria-label="Toggle Navigation Menu">
-                    <span class="hamburger-icon">☰</span>
+                <button class="paw-menu" id="menuToggle" aria-label="Toggle Navigation Menu">
+                    <span class="paw-menu-icon">☰</span>
                 </button>
                 <div class="logo">🐾 PawTrack</div>
-                <div class="theme-picker desktop-only">
-                    <button class="th-warm active" data-theme="warm" title="Baby Pink">🌸</button>
-                    <button class="th-midnight" data-theme="midnight" title="Light Blue">💧</button>
-                    <button class="th-forest" data-theme="forest" title="Light Yellow">🌼</button>
-                </div>
                 <div class="menu-spacer" style="width: 32px; display: none;"></div>
             </div>
+            <div class="theme-picker">
+                <button class="th-warm active" data-theme="warm" title="Baby Pink">🌸</button>
+                <button class="th-midnight" data-theme="midnight" title="Light Blue">💧</button>
+                <button class="th-forest" data-theme="forest" title="Light Yellow">🌼</button>
+            </div>
+            <a href="#profile" class="owner-profile-btn" id="ownerProfileBtn" title="Owner Profile">
+                👤
+            </a>
             <div class="pet-selector">
                 <select id="petSelector"></select>
                 <button class="btn btn-sm btn-outline" id="addPetBtn">➕ Add</button>
@@ -134,7 +137,8 @@
                     <a href="#expenses" class="nav-item"><span class="nav-icon">💰</span> Expenses</a>
                     <a href="#appointments" class="nav-item"><span class="nav-icon">🏥</span> Vet Visits</a>
                     <a href="#documents" class="nav-item"><span class="nav-icon">📄</span> Documents</a>
-                    <a href="#chat" class="nav-item"><span class="nav-icon">🤖</span> AI Helper</a>
+                    <a href="#chat" class="nav-item"><span class="nav-icon">🤖</span> AI Disease Tracker</a>
+                    <a href="#prevention" class="nav-item"><span class="nav-icon">🛡️</span> Disease Prevention</a>
                     <a href="#settings" class="nav-item"><span class="nav-icon">⚙️</span> Settings</a>
                     <div class="menu-theme-row">
                         <span class="theme-label">Theme</span>
@@ -205,7 +209,7 @@
                     <nav class="tab-nav" id="tabNav">
                         <button class="tab-menu-toggle" id="tabMenuToggle" aria-label="Toggle Tracker Tabs">
                             <span id="activeTabLabel">🍽 Who Fed?</span>
-                            <span class="hamburger-icon">☰</span>
+                            <span class="tab-menu-paw-icon">🐾 ▾</span>
                         </button>
                         <div class="tab-items-container" id="tabItemsContainer">
                             <button class="tab-prominent active" data-tab="feeding">🍽 Who Fed?</button>
@@ -226,9 +230,9 @@
                         <div class="card">
                             <div class="card-title"><span class="icon">🍽</span> Who Fed?</div>
                             <div class="grid-3">
-                                <button class="toggle-btn" data-meal="breakfast">🌅 Breakfast<span class="sub" id="breakfast-status">Not fed</span></button>
-                                <button class="toggle-btn" data-meal="lunch">☀️ Lunch<span class="sub" id="lunch-status">Not fed</span></button>
-                                <button class="toggle-btn" data-meal="dinner">🌙 Dinner<span class="sub" id="dinner-status">Not fed</span></button>
+                                <button class="toggle-btn paw-corner paw-corner-tr" data-meal="breakfast">🌅 Breakfast<span class="sub" id="breakfast-status">Not fed</span></button>
+                                <button class="toggle-btn paw-corner paw-corner-tr" data-meal="lunch">☀️ Lunch<span class="sub" id="lunch-status">Not fed</span></button>
+                                <button class="toggle-btn paw-corner paw-corner-tr" data-meal="dinner">🌙 Dinner<span class="sub" id="dinner-status">Not fed</span></button>
                             </div>
                             <div class="form-row mt-8">
                                 <div class="form-group" style="flex:2;">
@@ -236,7 +240,7 @@
                                     <input type="text" id="mealNoteInput" placeholder="Optional note..." />
                                 </div>
                                 <div class="form-group" style="flex:0 0 auto; align-self:flex-end;">
-                                    <button class="btn btn-sm" id="mealNoteAddBtn">✏️ Add Note</button>
+                                    <button class="btn btn-sm paw-corner paw-corner-br" id="mealNoteAddBtn">✏️ Add Note</button>
                                 </div>
                             </div>
                             <div class="mt-12">
@@ -294,7 +298,7 @@
                                 <div class="form-group"><label>Start Date</label><input type="date" id="medStartDate" /></div>
                                 <div class="form-group"><label>End Date (optional)</label><input type="date" id="medEndDate" /></div>
                             </div>
-                            <button class="btn" id="medAddBtn">➕ Add Medication</button>
+                            <button class="btn paw-corner paw-corner-br" id="medAddBtn">➕ Add Medication</button>
                             <div class="mt-12" id="medList"></div>
                         </div>
                     </div>
@@ -352,8 +356,8 @@
                         <div class="card">
                             <div class="card-title"><span class="icon">🚶</span> Dog Walk Timer &amp; Log</div>
                             <div class="flex-center gap-md">
-                                <button class="btn btn-lg btn-success" id="walkStartBtn">▶️ Start Walk</button>
-                                <button class="btn btn-lg btn-danger" id="walkStopBtn" disabled>⏹ Stop</button>
+                                <button class="btn btn-lg btn-success paw-corner paw-corner-br" id="walkStartBtn">▶️ Start Walk</button>
+                                <button class="btn btn-lg btn-danger paw-corner paw-corner-br" id="walkStopBtn" disabled>⏹ Stop</button>
                                 <span style="font-size:1.6rem;font-weight:900;font-variant-numeric:tabular-nums;" id="walkTimerDisplay">00:00:00</span>
                             </div>
                             <div class="form-row mt-8">
@@ -472,7 +476,7 @@
                                     <label for="weightNotes">Notes</label>
                                     <input type="text" id="weightNotes" placeholder="e.g. After vet visit" />
                                 </div>
-                                <button class="btn" id="weightSaveBtn">💾 Log Weight</button>
+                                <button class="btn paw-corner paw-corner-br" id="weightSaveBtn">💾 Log Weight</button>
                             </div>
                             <div>
                                 <h4>📈 Weight Trend</h4>
@@ -522,7 +526,7 @@
                             <label>Description (optional)</label>
                             <input type="text" id="taskDescription" placeholder="Notes for the task..." />
                         </div>
-                        <button class="btn" id="taskAddBtn">➕ Schedule Task</button>
+                        <button class="btn paw-corner paw-corner-br" id="taskAddBtn">➕ Schedule Task</button>
 
                         <div class="grid-2 mt-12">
                             <div>
@@ -560,7 +564,7 @@
                                     <div class="form-group"><label>Date</label><input type="date" id="expenseDate" /></div>
                                     <div class="form-group"><label>Description</label><input type="text" id="expenseDescription" placeholder="e.g. Royal Canin 10kg" /></div>
                                 </div>
-                                <button class="btn" id="expenseAddBtn">➕ Log Expense</button>
+                                <button class="btn paw-corner paw-corner-br" id="expenseAddBtn">➕ Log Expense</button>
                             </div>
                             <div>
                                 <h4>📊 Category Breakdown</h4>
@@ -597,7 +601,7 @@
                             <label>Notes</label>
                             <input type="text" id="apptNotes" placeholder="e.g. Fast 12 hours before" />
                         </div>
-                        <button class="btn" id="apptAddBtn">🏥 Schedule Appointment</button>
+                        <button class="btn paw-corner paw-corner-br" id="apptAddBtn">🏥 Schedule Appointment</button>
 
                         <div class="mt-12">
                             <h4>📋 Appointment List</h4>
@@ -636,7 +640,7 @@
                                     <label>Description</label>
                                     <input type="text" id="docDescription" placeholder="Optional notes about this document..." />
                                 </div>
-                                <button class="btn" id="docAddBtn">➕ Save Document</button>
+                                <button class="btn paw-corner paw-corner-br" id="docAddBtn">➕ Save Document</button>
                             </div>
                             <div>
                                 <h4>📋 Documents Catalog</h4>
@@ -649,24 +653,178 @@
                 <!-- Page: AI Assistant -->
                 <div class="page-view" id="page-chat">
                     <div class="card">
-                        <div class="card-title"><span class="icon">🤖</span> AI Health Assistant</div>
-                        <div class="chat-container">
-                            <div class="chat-messages" id="chatMessages">
-                                <div class="chat-bubble bot">
-                                    🐾 Hello! I am your rule-based AI Health Assistant. I can answer common veterinary questions. Choose a topic below or type your question.
+                        <div class="card-title paw-corner paw-corner-br"><span class="icon">🤖</span> AI Disease Tracker</div>
+                        
+                        <!-- Disclaimer -->
+                        <div class="doc-alert" style="background: var(--danger)15; border-color: var(--danger); color: var(--text); margin-bottom: 20px;">
+                            <span>⚠️</span>
+                            <div><strong>Disclaimer:</strong> This is a mock AI tool and not a substitute for professional veterinary advice. Always consult your vet for an accurate medical diagnosis.</div>
+                        </div>
+
+                        <!-- Inner Page Navigation Tabs -->
+                        <div style="display:flex; gap:10px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">
+                            <button class="btn btn-primary btn-sm" id="aiTabTrackerBtn" style="border-radius: 20px; padding: 6px 14px; font-weight:700;">🔍 Symptom Tracker</button>
+                            <button class="btn btn-outline btn-sm" id="aiTabConsultBtn" style="border-radius: 20px; padding: 6px 14px; font-weight:700; background: transparent; border-color: transparent;">💬 Ask Pet AI Consult</button>
+                        </div>
+
+                        <!-- Section 1: Symptom Tracker -->
+                        <div id="aiSectionTracker" style="display:block;">
+                            <div class="grid-2">
+                                <!-- Left Panel: Checkboxes and Upload -->
+                                <div class="card" style="margin-bottom:0; padding:16px;">
+                                    <h3 class="mb-12">🔍 Select Symptoms</h3>
+                                    <div style="display:flex; flex-direction:column; gap:10px;" id="symptomChecklist">
+                                        <label style="display:flex; align-items:center; gap:8px; font-weight:600; cursor:pointer;">
+                                            <input type="checkbox" value="Lethargy" class="symptom-checkbox" style="width:20px; height:20px; cursor:pointer;" />
+                                            Lethargy (Lack of Energy)
+                                        </label>
+                                        <label style="display:flex; align-items:center; gap:8px; font-weight:600; cursor:pointer;">
+                                            <input type="checkbox" value="Vomiting" class="symptom-checkbox" style="width:20px; height:20px; cursor:pointer;" />
+                                            Vomiting
+                                        </label>
+                                        <label style="display:flex; align-items:center; gap:8px; font-weight:600; cursor:pointer;">
+                                            <input type="checkbox" value="Diarrhea" class="symptom-checkbox" style="width:20px; height:20px; cursor:pointer;" />
+                                            Diarrhea
+                                        </label>
+                                        <label style="display:flex; align-items:center; gap:8px; font-weight:600; cursor:pointer;">
+                                            <input type="checkbox" value="Coughing" class="symptom-checkbox" style="width:20px; height:20px; cursor:pointer;" />
+                                            Coughing
+                                        </label>
+                                        <label style="display:flex; align-items:center; gap:8px; font-weight:600; cursor:pointer;">
+                                            <input type="checkbox" value="Loss of Appetite" class="symptom-checkbox" style="width:20px; height:20px; cursor:pointer;" />
+                                            Loss of Appetite
+                                        </label>
+                                        <label style="display:flex; align-items:center; gap:8px; font-weight:600; cursor:pointer;">
+                                            <input type="checkbox" value="Fever" class="symptom-checkbox" style="width:20px; height:20px; cursor:pointer;" />
+                                            Fever
+                                        </label>
+                                    </div>
+
+                                    <h3 class="mt-12 mb-8">📸 Photo Observation</h3>
+                                    <div class="form-group">
+                                        <label for="aiPhotoUpload">Upload Photo (Eye, Skin, Stool, etc.)</label>
+                                        <input type="file" id="aiPhotoUpload" accept="image/*" />
+                                    </div>
+                                    <button class="btn paw-corner paw-corner-br btn-block" id="aiLogSymptomBtn">💾 Save Diagnosis Log</button>
+                                </div>
+
+                                <!-- Right Panel: Live AI Suggestions -->
+                                <div class="card" style="margin-bottom:0; padding:16px; background: var(--input-bg);">
+                                    <h3 class="mb-12">🤖 Live AI Assessment</h3>
+                                    <div id="aiLiveAssessment" style="line-height:1.6; font-size:0.95rem;">
+                                        <p class="text-secondary">Please select one or more symptoms to start the real-time AI disease tracker analysis.</p>
+                                    </div>
+                                    <div id="aiPhotoAnalysisResult" class="mt-12" style="display:none; border-top:1px dashed var(--border); padding-top:10px;">
+                                        <!-- Photo analysis goes here -->
+                                    </div>
                                 </div>
                             </div>
-                            <div class="chat-quick-actions">
-                                <button class="chat-quick-btn" data-query="chocolate">🍫 Chocolate Poisoning</button>
-                                <button class="chat-quick-btn" data-query="vaccines">💉 Puppy Vaccine Schedule</button>
-                                <button class="chat-quick-btn" data-query="fever">🔥 Dog Fever Signs</button>
-                                <button class="chat-quick-btn" data-query="ticks">🕷️ Tick Removal</button>
-                                <button class="chat-quick-btn" data-query="cat_food">🐈 Dog eating Cat food</button>
+
+                            <!-- Diagnostic Logs History -->
+                            <div class="card mt-12" style="padding:16px;">
+                                <h3>📋 Saved Diagnostic Logs</h3>
+                                <div class="timeline" id="aiHealthLogsList" style="max-height: 250px;">
+                                    <!-- Logs rendered dynamically -->
+                                </div>
                             </div>
-                            <div class="chat-input-area">
-                                <input type="text" id="chatInput" placeholder="Type your question..." />
-                                <button class="btn" id="chatSendBtn">Send</button>
+                        </div>
+
+                        <!-- Section 2: AI Consult Chatbot (Hidden by default) -->
+                        <div id="aiSectionConsult" style="display:none; flex-direction:column; gap:16px;">
+                            <div class="card" style="margin-bottom:0; padding:16px; background: var(--input-bg); border: 1px solid var(--border); border-radius: var(--radius);">
+                                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid var(--border); padding-bottom:10px; margin-bottom:12px;">
+                                    <h3 style="margin:0; display:flex; align-items:center; gap:8px;">
+                                        <span>💬</span> Pet AI Consult Assistant
+                                    </h3>
+                                    <span id="aiConnectionStatus" class="tag tag-success" style="font-size:0.75rem;">🤖 Offline Simulator</span>
+                                </div>
+                                <p class="text-secondary text-sm mb-12">Ask any questions about your pet's health, symptoms, behavior, training, or nutrition. The AI will reply in real-time and only answers pet‑related questions.</p>
+                                
+                                <!-- Chat Area -->
+                                <div id="aiChatWindow" style="height: 350px; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px; padding: 12px; background: var(--card-bg); display: flex; flex-direction: column; gap: 12px; margin-bottom:16px;">
+                                    <div class="chat-bubble bot">
+                                        🐾 Hello! I am your real-time Pet AI assistant. Ask me anything about your pet's wellness, nutrition, behavior, or health.
+                                    </div>
+                                </div>
+
+                                <!-- Quick Prompts Chips -->
+                                <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px;" id="aiChatSuggestions">
+                                    <button class="btn btn-sm btn-outline ai-suggestion-chip" data-prompt="What should I feed a puppy with stomach upset?">🤢 Puppy upset stomach food</button>
+                                    <button class="btn btn-sm btn-outline ai-suggestion-chip" data-prompt="Is chocolate dangerous for my cat or dog?">🍫 Chocolate toxicity</button>
+                                    <button class="btn btn-sm btn-outline ai-suggestion-chip" data-prompt="What vaccines does a new kitten need?">💉 Kitten vaccine schedule</button>
+                                    <button class="btn btn-sm btn-outline ai-suggestion-chip" data-prompt="How do I remove a tick from my dog?">🕷️ Tick removal steps</button>
+                                    <button class="btn btn-sm btn-outline ai-suggestion-chip" data-prompt="Why is my cat sleeping all day and not eating?">🐈 Lethargic cat help</button>
+                                </div>
+
+                                <!-- Input Bar -->
+                                <div style="display:flex; gap:8px;">
+                                    <input type="text" id="aiChatInput" placeholder="Ask a question about your pet..." style="flex:1; border-radius:24px; padding: 10px 18px; border: 2px solid var(--border); background: var(--card-bg); color: var(--text);" />
+                                    <button class="btn btn-primary paw-corner paw-corner-br" id="aiChatSendBtn" style="border-radius:24px; padding: 10px 24px; display:flex; align-items:center; gap:6px;">
+                                        Send 🐾
+                                    </button>
+                                </div>
                             </div>
+                        </div>
+
+                        <!-- Hidden container to keep old AI elements from throwing JS errors on page load -->
+                        <div class="no-print" style="display:none !important;" id="oldAiHelperElements">
+                            <div id="chatMessages"></div>
+                            <input type="text" id="chatInput" />
+                            <button id="chatSendBtn"></button>
+                            <button class="chat-quick-btn" data-query="chocolate"></button>
+                            <button class="chat-quick-btn" data-query="vaccines"></button>
+                            <button class="chat-quick-btn" data-query="fever"></button>
+                            <button class="chat-quick-btn" data-query="ticks"></button>
+                            <button class="chat-quick-btn" data-query="cat_food"></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page: Disease Prevention -->
+                <div class="page-view" id="page-prevention">
+                    <div class="card">
+                        <div class="card-title paw-corner paw-corner-br"><span class="icon">🛡️</span> Disease Prevention Notes</div>
+                        <p class="text-secondary text-sm mb-12">Log notes about vaccines, deworming, flea/tick schedules, and health tips.</p>
+                        
+                        <!-- Prevention Note Form -->
+                        <div class="card" style="background: var(--input-bg); border-style: dashed;">
+                            <h3 class="mb-8">➕ Add Prevention Note</h3>
+                            <input type="hidden" id="preventionNoteId" value="" />
+                            <div class="form-group">
+                                <label for="preventionTitle">Title</label>
+                                <input type="text" id="preventionTitle" placeholder="e.g., Flea & Tick Treatment" />
+                            </div>
+                            <div class="form-group">
+                                <label for="preventionDesc">Description</label>
+                                <textarea id="preventionDesc" placeholder="e.g., Applied Frontline Plus topical solution."></textarea>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="preventionDate">Date</label>
+                                    <input type="date" id="preventionDate" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="preventionPriority">Priority</label>
+                                    <select id="preventionPriority">
+                                        <option value="low">Low</option>
+                                        <option value="medium" selected>Medium</option>
+                                        <option value="high">High</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group flex-between" style="margin-bottom: 14px;">
+                                <label for="preventionReminder">Set Browser Notification Reminder</label>
+                                <input type="checkbox" id="preventionReminder" style="width:24px; height:24px;" />
+                            </div>
+                            <div style="display:flex; gap:10px;">
+                                <button class="btn paw-corner paw-corner-br" id="preventionSaveBtn">Save Note</button>
+                                <button class="btn btn-outline" id="preventionCancelBtn" style="display:none;">Cancel Edit</button>
+                            </div>
+                        </div>
+
+                        <!-- Prevention Notes List -->
+                        <div class="timeline" id="preventionList" style="max-height: none;">
+                            <!-- Rendered dynamically -->
                         </div>
                     </div>
                 </div>
@@ -702,12 +860,35 @@
                                     <label for="settingsNotifications">Enable Browser Notifications</label>
                                     <input type="checkbox" id="settingsNotifications" style="width:24px; height:24px;" />
                                 </div>
+                                <div class="form-group flex-between" style="margin-bottom:14px;">
+                                    <label for="settingsPetSounds">Enable Pet Sounds (Voice)</label>
+                                    <input type="checkbox" id="settingsPetSounds" style="width:24px; height:24px;" />
+                                </div>
                                 <div class="form-group">
                                     <label for="settingsDefaultPetView">Default Pet View (Dashboard)</label>
                                     <select id="settingsDefaultPetView">
                                         <option value="cards">Cards (Grid)</option>
                                         <option value="list">List (Rows)</option>
                                     </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Collapsible Section: AI Assistant Integration -->
+                        <div class="collapsible-section">
+                            <button class="collapsible-trigger">
+                                <span>🤖 AI Assistant Integration</span>
+                                <span class="chevron">▼</span>
+                            </button>
+                            <div class="collapsible-content">
+                                <p class="text-secondary text-sm mb-12">Configure live LLM capabilities using the Google Gemini API. If no key is provided, a smart offline pet AI simulator is used.</p>
+                                <div class="form-group">
+                                    <label for="settingsGeminiKey">Google Gemini API Key</label>
+                                    <div style="display:flex; gap:8px;">
+                                        <input type="password" id="settingsGeminiKey" placeholder="AQ... or AIzaSy..." style="flex:1;" />
+                                        <button class="btn btn-outline btn-sm" id="toggleGeminiKeyVisibility" style="padding: 0 10px; font-weight: normal;">👁️</button>
+                                    </div>
+                                    <p class="text-xs text-secondary mt-4">Your key (usually starting with AQ... or AIzaSy...) is stored locally in your browser and is only sent directly to Google APIs.</p>
                                 </div>
                             </div>
                         </div>
@@ -862,9 +1043,83 @@
                                 <p class="mt-8"><a href="https://github.com" target="_blank" class="text-accent" style="font-weight:700;">🐾 Visit GitHub Repository</a></p>
                             </div>
                         </div>
-
                     </div>
                 </div>
+                
+                <!-- Page: Owner Profile -->
+                <div class="page-view" id="page-profile">
+                    <div class="card">
+                        <div class="card-title paw-corner paw-corner-br"><span class="icon">👤</span> Pet Owner Profile</div>
+                        <p class="text-secondary text-sm mb-12">Manage your owner profile, contact details, emergency settings, and view a summary of your pets.</p>
+                        
+                        <div class="grid-2">
+                            <!-- Left: Profile Edit Form -->
+                            <div class="card" style="margin-bottom:0; padding:16px;">
+                                <h3 class="mb-12">✍️ Edit Profile Details</h3>
+                                <div class="form-group" style="text-align: center; margin-bottom: 20px;">
+                                    <label style="font-weight: 700;">Profile Avatar</label>
+                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 8px;">
+                                        <div id="ownerAvatarPreview" style="width: 90px; height: 90px; border-radius: 50%; border: 3px solid var(--border); background: var(--input-bg); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; overflow: hidden; color: var(--text-secondary);">
+                                            👤
+                                        </div>
+                                        <input type="file" id="ownerAvatarUpload" accept="image/*" style="display:none;" />
+                                        <button class="btn btn-sm btn-outline" onclick="document.getElementById('ownerAvatarUpload').click()">📤 Upload Photo</button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ownerNameInput">Full Name</label>
+                                    <input type="text" id="ownerNameInput" placeholder="e.g., Jane Doe" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="ownerEmailInput">Email Address</label>
+                                    <input type="email" id="ownerEmailInput" placeholder="e.g., jane@example.com" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="ownerPhoneInput">Phone Number</label>
+                                    <input type="tel" id="ownerPhoneInput" placeholder="e.g., +1 234 567 890" />
+                                </div>
+                                
+                                <h3 class="mt-12 mb-8">🚨 Emergency Contact</h3>
+                                <div class="form-group">
+                                    <label for="ownerEmergencyNameInput">Contact Name</label>
+                                    <input type="text" id="ownerEmergencyNameInput" placeholder="e.g., John Doe" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="ownerEmergencyPhoneInput">Contact Phone</label>
+                                    <input type="tel" id="ownerEmergencyPhoneInput" placeholder="e.g., +1 098 765 432" />
+                                </div>
+                                <button class="btn btn-primary paw-corner paw-corner-br btn-block" id="saveOwnerProfileBtn" style="margin-top:12px;">💾 Save Profile</button>
+                            </div>
+                            
+                            <!-- Right: Profile Card & Pets Summary -->
+                            <div class="card" style="margin-bottom:0; padding:16px; background: var(--input-bg);">
+                                <h3 class="mb-12">📋 Profile Overview</h3>
+                                <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 16px;">
+                                    <div id="ownerAvatarDisplay" style="width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--border); background: var(--card-bg); display: flex; align-items: center; justify-content: center; font-size: 3rem; overflow: hidden; box-shadow: var(--shadow); color: var(--text-secondary);">
+                                        👤
+                                    </div>
+                                    <div style="text-align: center;">
+                                        <div id="ownerNameDisplayVal" class="fw-bold" style="font-size: 1.25rem;">Pet Owner</div>
+                                        <div id="ownerEmailDisplayVal" class="text-secondary text-sm">owner@example.com</div>
+                                        <div id="ownerPhoneDisplayVal" class="text-secondary text-sm mt-4">—</div>
+                                    </div>
+                                </div>
+                                
+                                <h4 class="mb-8">🚨 Emergency Contact Info</h4>
+                                <div style="background: var(--card-bg); border-radius: var(--radius); padding: 12px; border: 1px solid var(--border); margin-bottom: 16px;">
+                                    <div class="text-sm"><strong>Name:</strong> <span id="ownerEmergencyNameDisplayVal">—</span></div>
+                                    <div class="text-sm mt-4"><strong>Phone:</strong> <span id="ownerEmergencyPhoneDisplayVal">—</span></div>
+                                </div>
+
+                                <h4 class="mb-8">🐾 Registered Pets Summary</h4>
+                                <div id="ownerPetsListSummary" style="display:flex; flex-direction:column; gap:8px;">
+                                    <!-- List of owner's pets -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Floating 3D Pet Image Widget -->
                 <div class="floating-pet-widget" id="floatingPetWidget" style="display: none;">
                     <img id="floatingPetImage" src="" alt="Active Pet" />

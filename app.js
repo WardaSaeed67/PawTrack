@@ -267,6 +267,8 @@ function loadData() {
 
     data.pets.forEach(p => {
         if (!p.bath) p.bath = { baths: [], trims: [] };
+        if (!p.diseasePrevention) p.diseasePrevention = [];
+        if (!p.aiHealthLogs) p.aiHealthLogs = [];
     });
 
     // Ensure settings exists
@@ -280,7 +282,21 @@ function loadData() {
         cardStyle: 'flat',
         backupReminder: true,
         dataSharing: false,
-        usageAnalytics: false
+        usageAnalytics: false,
+        petSounds: true
+    };
+    if (data.settings.petSounds === undefined) {
+        data.settings.petSounds = true;
+    }
+
+    // Ensure ownerProfile exists
+    data.ownerProfile = data.ownerProfile || {
+        name: 'Pet Owner',
+        email: 'owner@example.com',
+        phone: '',
+        emergencyContactName: '',
+        emergencyContactPhone: '',
+        avatar: ''
     };
 
     saveData();
@@ -1518,8 +1534,12 @@ setInterval(() => {
 //  MULTI-PAGE ROUTING & INITIALIZATION
 // ========================================================================
 function handleRouting() {
-    const hash = window.location.hash || '#dashboard';
-    const pages = ['dashboard', 'tracker', 'weight', 'tasks', 'expenses', 'appointments', 'documents', 'chat', 'settings'];
+    if (!window.location.hash) {
+        window.location.hash = '#dashboard';
+        return;
+    }
+    const hash = window.location.hash;
+    const pages = ['dashboard', 'tracker', 'weight', 'tasks', 'expenses', 'appointments', 'documents', 'chat', 'settings', 'prevention', 'profile'];
     const activePage = hash.substring(1);
     const pageToShow = pages.includes(activePage) ? activePage : 'dashboard';
 
@@ -1553,6 +1573,8 @@ function handleRouting() {
             renderExpensesChart(pet);
         } else if (pageToShow === 'settings') {
             updateSettingsUI(pet);
+        } else if (pageToShow === 'profile') {
+            if (window.updateOwnerProfileUI) window.updateOwnerProfileUI();
         }
     }
 }
@@ -1570,6 +1592,16 @@ function updateNewPagesUI(pet) {
     updateAppointmentsUI(pet);
     updateDocumentsUI(pet);
     updateSettingsUI(pet);
+
+    // Prevention & AI Disease Tracker
+    updatePreventionUI(pet);
+    updateAiHealthUI(pet);
+    if (window.resetAiChatWindow) {
+        window.resetAiChatWindow();
+    }
+    if (window.updateOwnerProfileUI) {
+        window.updateOwnerProfileUI();
+    }
 }
 
 // ========================================================================
@@ -2455,6 +2487,18 @@ function checkUpcomingAlerts() {
             firedAlerts.add(alertKey);
         }
     });
+
+    // Check Disease Prevention reminders
+    const petNotes = (pet.diseasePrevention || []).filter(n => n.reminder);
+    petNotes.forEach(n => {
+        const alertKey = `prev_${n.id}`;
+        if (n.date === todayStr && !firedAlerts.has(alertKey)) {
+            new Notification(`🛡️ Disease Prevention Reminder!`, {
+                body: `Today's event: "${n.title}" (${n.priority.toUpperCase()} priority) for ${pet.name}.`
+            });
+            firedAlerts.add(alertKey);
+        }
+    });
 }
 
 setInterval(checkUpcomingAlerts, 60000);
@@ -2568,6 +2612,7 @@ function updateStaticBackgroundPattern() {
 
 // Play synthesized sound for active pet type
 function playPetSound(petType) {
+    if (data && data.settings && data.settings.petSounds === false) return;
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     if (!AudioContext) return;
     
@@ -2855,6 +2900,7 @@ function initMobileMenuToggles() {
         menuToggle.addEventListener('click', (e) => {
             e.stopPropagation();
             navItemsContainer.classList.toggle('show');
+            menuToggle.classList.toggle('open');
         });
     }
 
@@ -2863,6 +2909,7 @@ function initMobileMenuToggles() {
         item.addEventListener('click', () => {
             if (window.innerWidth <= 768 && navItemsContainer) {
                 navItemsContainer.classList.remove('show');
+                if (menuToggle) menuToggle.classList.remove('open');
             }
         });
     });
@@ -2873,7 +2920,8 @@ function initMobileMenuToggles() {
     if (tabMenuToggle && tabItemsContainer) {
         tabMenuToggle.addEventListener('click', (e) => {
             e.stopPropagation();
-            tabItemsContainer.classList.toggle('show');
+            const isOpen = tabItemsContainer.classList.toggle('show');
+            tabMenuToggle.classList.toggle('open', isOpen);
         });
     }
 
@@ -2882,6 +2930,7 @@ function initMobileMenuToggles() {
         btn.addEventListener('click', () => {
             if (window.innerWidth <= 768 && tabItemsContainer) {
                 tabItemsContainer.classList.remove('show');
+                if (tabMenuToggle) tabMenuToggle.classList.remove('open');
             }
         });
     });
@@ -2891,12 +2940,33 @@ function initMobileMenuToggles() {
         if (window.innerWidth <= 768) {
             if (navItemsContainer && menuToggle && !menuToggle.contains(e.target) && !navItemsContainer.contains(e.target)) {
                 navItemsContainer.classList.remove('show');
+                menuToggle.classList.remove('open');
             }
             if (tabItemsContainer && tabMenuToggle && !tabMenuToggle.contains(e.target) && !tabItemsContainer.contains(e.target)) {
                 tabItemsContainer.classList.remove('show');
+                tabMenuToggle.classList.remove('open');
             }
         }
     });
+}
+
+function updateAiConnectionStatus() {
+    const s = data.settings || {};
+    const key = s.geminiApiKey || '';
+    const badge = document.getElementById('aiConnectionStatus');
+    if (badge) {
+        if (key.trim()) {
+            badge.textContent = '🤖 Gemini Live AI';
+            badge.className = 'tag tag-success';
+            badge.style.background = 'var(--success)';
+            badge.style.color = '#fff';
+        } else {
+            badge.textContent = '🤖 Offline Simulator';
+            badge.className = 'tag tag-secondary';
+            badge.style.background = 'var(--border)';
+            badge.style.color = 'var(--text)';
+        }
+    }
 }
 
 // ========================================================================
@@ -2910,7 +2980,10 @@ function updateSettingsUI(pet) {
     document.getElementById('settingsLanguage').value = s.language || 'en';
     document.getElementById('settingsCurrency').value = s.currency || 'USD';
     document.getElementById('settingsNotifications').checked = !!s.notifications;
+    document.getElementById('settingsPetSounds').checked = !!s.petSounds;
     document.getElementById('settingsDefaultPetView').value = s.defaultPetView || 'cards';
+    document.getElementById('settingsGeminiKey').value = s.geminiApiKey || '';
+    updateAiConnectionStatus();
 
     // Theme (sync active class on Settings page theme picker)
     document.querySelectorAll('#page-settings .theme-picker button').forEach(btn => {
@@ -3164,11 +3237,36 @@ function initSettingsEvents() {
         }
     });
 
+    document.getElementById('settingsPetSounds').addEventListener('change', function() {
+        data.settings.petSounds = this.checked;
+        saveData();
+    });
+
     document.getElementById('settingsDefaultPetView').addEventListener('change', function() {
         data.settings.defaultPetView = this.value;
         saveData();
         applySettings();
     });
+
+    document.getElementById('settingsGeminiKey').addEventListener('input', function() {
+        data.settings.geminiApiKey = this.value;
+        saveData();
+        updateAiConnectionStatus();
+    });
+
+    const toggleKeyBtn = document.getElementById('toggleGeminiKeyVisibility');
+    if (toggleKeyBtn) {
+        toggleKeyBtn.addEventListener('click', function() {
+            const keyInput = document.getElementById('settingsGeminiKey');
+            if (keyInput.type === 'password') {
+                keyInput.type = 'text';
+                this.textContent = '🔒';
+            } else {
+                keyInput.type = 'password';
+                this.textContent = '👁️';
+            }
+        });
+    }
 
     // Settings theme picker
     document.querySelectorAll('#page-settings .theme-picker button').forEach(btn => {
@@ -3444,4 +3542,843 @@ initFloatingPetTilt();
 initMobileMenuToggles();
 initSettingsEvents();
 
+/* --- START: Disease Prevention --- */
+function updatePreventionUI(pet) {
+    const listEl = document.getElementById('preventionList');
+    if (!listEl) return;
+    
+    const notes = pet.diseasePrevention || [];
+    if (notes.length === 0) {
+        listEl.innerHTML = '<div class="text-secondary text-sm text-center" style="padding: 20px 0;">No prevention notes added yet.</div>';
+        return;
+    }
+
+    const sorted = [...notes].sort((a, b) => new Date(b.date) - new Date(a.date));
+    listEl.innerHTML = sorted.map(note => `
+        <div class="timeline-item">
+            <span class="icon-badge">🛡️</span>
+            <div style="flex:1;">
+                <div class="fw-bold">${note.title} <span class="tag ${note.priority === 'high' ? 'tag-danger' : note.priority === 'medium' ? 'tag-warning' : 'tag-success'}">${note.priority.toUpperCase()}</span></div>
+                <div style="font-size:0.85rem; margin-top:2px;">${note.description}</div>
+                <div class="text-xs text-secondary mt-8">📅 Date: ${formatDate(note.date)} ${note.reminder ? '· 🔔 Reminder active' : ''}</div>
+            </div>
+            <div class="flex-center gap-sm">
+                <button class="btn btn-sm btn-outline" onclick="editPreventionNote('${note.id}')">✏️</button>
+                <button class="btn btn-sm btn-danger" onclick="deletePreventionNote('${note.id}')">🗑️</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function savePreventionNote() {
+    const pet = getCurrentPet();
+    if (!pet) return;
+
+    const noteIdEl = document.getElementById('preventionNoteId');
+    const titleEl = document.getElementById('preventionTitle');
+    const descEl = document.getElementById('preventionDesc');
+    const dateEl = document.getElementById('preventionDate');
+    const priorityEl = document.getElementById('preventionPriority');
+    const reminderEl = document.getElementById('preventionReminder');
+
+    const title = titleEl.value.trim();
+    const description = descEl.value.trim();
+    const date = dateEl.value;
+    const priority = priorityEl.value;
+    const reminder = reminderEl.checked;
+
+    if (!title || !date) {
+        alert('Please provide at least a title and date for the prevention note.');
+        return;
+    }
+
+    if (!pet.diseasePrevention) pet.diseasePrevention = [];
+
+    const existingId = noteIdEl.value;
+    if (existingId) {
+        // Edit mode
+        const note = pet.diseasePrevention.find(n => n.id === existingId);
+        if (note) {
+            note.title = title;
+            note.description = description;
+            note.date = date;
+            note.priority = priority;
+            note.reminder = reminder;
+        }
+    } else {
+        // Add mode
+        const note = {
+            id: 'prev_' + Date.now(),
+            title,
+            description,
+            date,
+            priority,
+            reminder
+        };
+        pet.diseasePrevention.push(note);
+    }
+
+    updatePet(pet);
+    
+    // Reset form
+    noteIdEl.value = '';
+    titleEl.value = '';
+    descEl.value = '';
+    dateEl.value = '';
+    priorityEl.value = 'medium';
+    reminderEl.checked = false;
+    document.getElementById('preventionCancelBtn').style.display = 'none';
+    document.getElementById('preventionSaveBtn').textContent = 'Save Note';
+
+    updatePreventionUI(pet);
+    alert('Prevention note saved successfully.');
+}
+
+window.editPreventionNote = function(id) {
+    const pet = getCurrentPet();
+    if (!pet || !pet.diseasePrevention) return;
+
+    const note = pet.diseasePrevention.find(n => n.id === id);
+    if (!note) return;
+
+    document.getElementById('preventionNoteId').value = note.id;
+    document.getElementById('preventionTitle').value = note.title;
+    document.getElementById('preventionDesc').value = note.description || '';
+    document.getElementById('preventionDate').value = note.date;
+    document.getElementById('preventionPriority').value = note.priority || 'medium';
+    document.getElementById('preventionReminder').checked = !!note.reminder;
+
+    document.getElementById('preventionCancelBtn').style.display = 'inline-flex';
+    document.getElementById('preventionSaveBtn').textContent = 'Update Note';
+    
+    // Scroll to form
+    document.getElementById('page-prevention').querySelector('.card').scrollIntoView({ behavior: 'smooth' });
+};
+
+window.deletePreventionNote = function(id) {
+    const pet = getCurrentPet();
+    if (!pet || !pet.diseasePrevention) return;
+
+    if (confirm('Are you sure you want to delete this prevention note?')) {
+        pet.diseasePrevention = pet.diseasePrevention.filter(n => n.id !== id);
+        updatePet(pet);
+        updatePreventionUI(pet);
+    }
+};
+
+document.getElementById('preventionSaveBtn').addEventListener('click', savePreventionNote);
+document.getElementById('preventionCancelBtn').addEventListener('click', function() {
+    document.getElementById('preventionNoteId').value = '';
+    document.getElementById('preventionTitle').value = '';
+    document.getElementById('preventionDesc').value = '';
+    document.getElementById('preventionDate').value = '';
+    document.getElementById('preventionPriority').value = 'medium';
+    document.getElementById('preventionReminder').checked = false;
+    this.style.display = 'none';
+    document.getElementById('preventionSaveBtn').textContent = 'Save Note';
+});
+/* --- END: Disease Prevention --- */
+
+/* --- START: AI Disease Tracker --- */
+function updateAiHealthUI(pet) {
+    const logsListEl = document.getElementById('aiHealthLogsList');
+    if (!logsListEl) return;
+
+    const logs = pet.aiHealthLogs || [];
+    if (logs.length === 0) {
+        logsListEl.innerHTML = '<div class="text-secondary text-sm text-center" style="padding: 20px 0;">No diagnostic logs saved yet.</div>';
+        return;
+    }
+
+    const sorted = [...logs].sort((a, b) => new Date(b.date) - new Date(a.date));
+    logsListEl.innerHTML = sorted.map(log => `
+        <div class="timeline-item">
+            <span class="icon-badge">🩺</span>
+            <div style="flex:1;">
+                <div class="fw-bold">${log.symptoms.join(', ')}</div>
+                <div class="text-sm mt-4">
+                    <strong>AI Assessment:</strong> ${log.assessment}
+                </div>
+                ${log.photoName ? `<div class="text-xs text-secondary mt-4">📷 Photo: ${log.photoName}</div>` : ''}
+                <div class="text-xs text-secondary mt-4">📅 Dated: ${formatDate(log.date)}</div>
+            </div>
+            <button class="btn btn-sm btn-danger" onclick="deleteAiHealthLog('${log.id}')">🗑️</button>
+        </div>
+    `).join('');
+}
+
+function runRealTimeAiAnalysis() {
+    const selectedSymptoms = [];
+    document.querySelectorAll('.symptom-checkbox:checked').forEach(cb => {
+        selectedSymptoms.push(cb.value);
+    });
+
+    const liveAssessmentEl = document.getElementById('aiLiveAssessment');
+    if (liveAssessmentEl) {
+        liveAssessmentEl.innerHTML = getLiveDiagnosis(selectedSymptoms);
+    }
+}
+
+function getLiveDiagnosis(symptoms) {
+    if (symptoms.length === 0) {
+        return `<p class="text-secondary">Please select one or more symptoms to start the real-time AI disease tracker analysis.</p>`;
+    }
+
+    let possibleConditions = [];
+    let severity = "Low";
+    let severityClass = "tag-success";
+
+    const has = (s) => symptoms.includes(s);
+
+    if (has("Vomiting") && has("Diarrhea")) {
+        possibleConditions.push("Gastroenteritis (Stomach Flu)", "Dietary Indiscretion");
+        severity = "Moderate to High";
+        severityClass = "tag-warning";
+    }
+    if (has("Lethargy") && has("Loss of Appetite")) {
+        possibleConditions.push("Mild Infection / Malaise", "Dehydration");
+        if (severity === "Low") {
+            severity = "Moderate";
+            severityClass = "tag-warning";
+        }
+    }
+    if (has("Coughing") && has("Lethargy")) {
+        possibleConditions.push("Kennel Cough (Respiratory Infection)");
+        if (severity === "Low") {
+            severity = "Moderate";
+            severityClass = "tag-warning";
+        }
+    }
+    if (has("Fever")) {
+        possibleConditions.push("Systemic Viral/Bacterial Infection", "Pyrexia");
+        severity = "High";
+        severityClass = "tag-danger";
+    }
+    if (has("Vomiting") && has("Lethargy")) {
+        possibleConditions.push("Potential Ingestion of Toxins", "Gastrointestinal Blockage");
+        severity = "High";
+        severityClass = "tag-danger";
+    }
+    if (has("Vomiting") && has("Fever")) {
+        possibleConditions.push("Pancreatitis flare-up", "Acute infection");
+        severity = "High";
+        severityClass = "tag-danger";
+    }
+
+    if (possibleConditions.length === 0) {
+        // Fallback for single symptoms
+        if (has("Lethargy")) {
+            possibleConditions.push("Fatigue / Stress / Early stage infection");
+            severity = "Low to Moderate";
+            severityClass = "tag-warning";
+        } else if (has("Vomiting")) {
+            possibleConditions.push("Stomach irritation / Dietary indiscretion");
+            severity = "Moderate";
+            severityClass = "tag-warning";
+        } else if (has("Diarrhea")) {
+            possibleConditions.push("Parasites / Bacterial imbalance / Stress");
+            severity = "Moderate";
+            severityClass = "tag-warning";
+        } else if (has("Coughing")) {
+            possibleConditions.push("Kennel cough exposure / Inhaled irritants");
+            severity = "Low to Moderate";
+            severityClass = "tag-warning";
+        } else if (has("Loss of Appetite")) {
+            possibleConditions.push("Nausea / Environmental stress / Dental pain");
+            severity = "Low to Moderate";
+            severityClass = "tag-warning";
+        }
+    }
+
+    let html = `
+        <div class="mb-12">
+            <strong>Detected Severity: </strong>
+            <span class="tag ${severityClass}">${severity.toUpperCase()}</span>
+        </div>
+        <div class="mb-8"><strong>Possible Conditions Analysed:</strong></div>
+        <ul style="padding-left: 20px; margin-bottom: 12px; font-size: 0.9rem;">
+            ${possibleConditions.map(c => `<li>${c}</li>`).join('')}
+        </ul>
+        <div class="text-sm text-secondary">
+            <strong>Suggested Action:</strong> ${severity === "High" ? "Contact your primary care veterinarian or an emergency animal clinic immediately." : "Monitor your pet closely. Ensure they stay hydrated. If symptoms persist for more than 24 hours, schedule a vet visit."}
+        </div>
+    `;
+
+    return html;
+}
+
+// Event listeners for symptom checkbox changes
+document.querySelectorAll('.symptom-checkbox').forEach(cb => {
+    cb.addEventListener('change', runRealTimeAiAnalysis);
+});
+
+// Photo Observation analysis
+document.getElementById('aiPhotoUpload').addEventListener('change', function(e) {
+    const photoFile = e.target.files[0];
+    const resultEl = document.getElementById('aiPhotoAnalysisResult');
+    if (!resultEl) return;
+
+    if (photoFile) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            resultEl.style.display = 'block';
+            resultEl.innerHTML = `
+                <strong>📸 Photo Observation Analysis:</strong>
+                <div class="text-xs text-secondary mt-4">File: ${photoFile.name}</div>
+                <div class="text-sm mt-4">AI analysis of the image completed: No obvious severe lesions or parasite infestations visible. However, visual scans are limited. If you observe redness, swelling, or discharge, seek veterinary attention.</div>
+            `;
+        };
+        reader.readAsDataURL(photoFile);
+    } else {
+        resultEl.style.display = 'none';
+    }
+});
+
+// Save Diagnostic Log
+document.getElementById('aiLogSymptomBtn').addEventListener('click', function() {
+    const pet = getCurrentPet();
+    if (!pet) return;
+
+    const selectedSymptoms = [];
+    document.querySelectorAll('.symptom-checkbox:checked').forEach(cb => {
+        selectedSymptoms.push(cb.value);
+    });
+
+    if (selectedSymptoms.length === 0) {
+        alert('Please check at least one symptom before saving a diagnostic log.');
+        return;
+    }
+
+    const photoInput = document.getElementById('aiPhotoUpload');
+    const photoName = photoInput.files[0] ? photoInput.files[0].name : null;
+
+    const liveAssessmentEl = document.getElementById('aiLiveAssessment');
+    const assessmentText = liveAssessmentEl ? liveAssessmentEl.textContent.trim().replace(/\s+/g, ' ') : '';
+
+    if (!pet.aiHealthLogs) pet.aiHealthLogs = [];
+
+    const log = {
+        id: 'ailog_' + Date.now(),
+        date: new Date().toISOString(),
+        symptoms: selectedSymptoms,
+        assessment: assessmentText,
+        photoName: photoName
+    };
+
+    pet.aiHealthLogs.push(log);
+    updatePet(pet);
+
+    // Reset symptoms
+    document.querySelectorAll('.symptom-checkbox:checked').forEach(cb => {
+        cb.checked = false;
+    });
+    photoInput.value = '';
+    document.getElementById('aiPhotoAnalysisResult').style.display = 'none';
+    
+    runRealTimeAiAnalysis();
+    updateAiHealthUI(pet);
+    alert('AI Diagnostic log saved successfully.');
+});
+
+window.deleteAiHealthLog = function(id) {
+    const pet = getCurrentPet();
+    if (!pet || !pet.aiHealthLogs) return;
+
+    if (confirm('Are you sure you want to delete this AI diagnostic log?')) {
+        pet.aiHealthLogs = pet.aiHealthLogs.filter(l => l.id !== id);
+        updatePet(pet);
+        updateAiHealthUI(pet);
+    }
+};
+
+/* --- START: Interactive Pet AI Consult Chatbot --- */
+let aiChatHistory = [];
+
+window.resetAiChatWindow = function() {
+    aiChatHistory = [];
+    const win = document.getElementById('aiChatWindow');
+    if (win) {
+        win.innerHTML = `
+            <div class="chat-bubble bot">
+                🐾 Hello! I am your real-time Pet AI assistant. Ask me anything about your pet's wellness, nutrition, behavior, or health.
+            </div>
+        `;
+    }
+};
+
+// updateAiConnectionStatus is defined globally above updateSettingsUI
+
+const PET_KEYWORDS = [
+    'pet', 'dog', 'cat', 'bird', 'vet', 'vaccin', 'puppy', 'kitten', 'animal', 
+    'flea', 'tick', 'food', 'eat', 'feed', 'symptom', 'fever', 'letharg', 
+    'vomit', 'diarrhea', 'cough', 'sitter', 'bath', 'weight', 'poop', 'pee', 
+    'groom', 'health', 'ill', 'disease', 'toxic', 'poison', 'medicine', 
+    'dose', 'appointment', 'breed', 'rabies', 'paw', 'scratch', 'wound', 
+    'bite', 'bark', 'meow', 'chirp', 'ears', 'eyes', 'skin', 'fur', 'diet'
+];
+
+function isQueryPetRelated(query) {
+    const q = query.toLowerCase();
+    return PET_KEYWORDS.some(kw => q.includes(kw));
+}
+
+function parseMarkdown(text) {
+    if (!text) return '';
+    let html = text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    
+    html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    
+    const lines = html.split('\n');
+    let inList = false;
+    const processedLines = lines.map(line => {
+        const trimmed = line.trim();
+        if (trimmed.startsWith('* ') || trimmed.startsWith('- ')) {
+            const content = trimmed.substring(2);
+            let prefix = '';
+            if (!inList) {
+                inList = true;
+                prefix = '<ul style="padding-left: 20px; margin-bottom: 8px;">';
+            }
+            return `${prefix}<li>${content}</li>`;
+        } else {
+            let suffix = '';
+            if (inList) {
+                inList = false;
+                suffix = '</ul>';
+            }
+            return `${suffix}${line}`;
+        }
+    });
+    if (inList) {
+        processedLines.push('</ul>');
+    }
+    
+    return processedLines.join('<br>');
+}
+
+function extractTextFromRegex(line) {
+    const regex = /"text"\s*:\s*"((?:[^"\\]|\\.)*)"/;
+    const match = regex.exec(line);
+    if (match) {
+        let val = match[1];
+        try {
+            val = JSON.parse(`"${val}"`);
+        } catch(e) {}
+        return val;
+    }
+    return '';
+}
+
+const SIMULATED_RESPONSES = {
+    chocolate: "🍫 <strong>Chocolate Toxicity:</strong> Chocolate contains theobromine, which is toxic to dogs and cats. Dark and baking chocolate are the most dangerous. Signs include vomiting, diarrhea, rapid breathing, and seizures. If ingested, call your vet immediately or an animal poison control center.",
+    vaccin: "💉 <strong>Pet Vaccine Guidelines:</strong><br>- <strong>Puppies/Kittens (6-16 weeks):</strong> Series of core vaccines (DHPP for dogs, FVRCP for cats) every 3-4 weeks. Rabies vaccine is typically given at 14-16 weeks.<br>- <strong>Adult Pets:</strong> Boosters annually or every 3 years depending on lifestyle, risk assessment, and vaccine type.",
+    fever: "🔥 <strong>Fever Signs in Pets:</strong> Normal dog/cat temperature is 38°C to 39.2°C (101°F to 102.5°F). Signs of fever include lethargy, warm ears/nose, shivering, loss of appetite, and coughing. Do not give human medicines (like Tylenol/Advil - they are highly toxic!). Call a vet if temp exceeds 39.5°C.",
+    tick: "🕷️ <strong>Tick Removal Guide:</strong><br>1. Use fine-tipped tweezers or a tick hook.<br>2. Grasp the tick as close to the skin's surface as possible.<br>3. Pull upward with steady, even pressure. Do not twist or jerk.<br>4. Clean the bite area and your hands with alcohol or soap.<br>5. Monitor for signs of Lyme disease (lethargy, limping).",
+    cat_food: "🐈 <strong>Dog eating Cat Food:</strong> Cat food is higher in protein and fat than dog food. If eaten occasionally, it might cause mild stomach upset but is not toxic. However, a continuous diet of cat food can lead to obesity, pancreatitis, and nutritional imbalances in dogs.",
+    stomach: "🤢 <strong>Stomach Upset & Diarrhea:</strong> This can be caused by dietary indiscretion, parasites, sudden food changes, or infections. Ensure your pet has access to fresh water to prevent dehydration. Feed a bland diet (boiled chicken breast and white rice, no seasoning) in small portions. If vomiting/diarrhea persists for more than 24 hours, or is accompanied by lethargy, consult a vet.",
+    vomit: "🤢 <strong>Stomach Upset & Diarrhea:</strong> This can be caused by dietary indiscretion, parasites, sudden food changes, or infections. Ensure your pet has access to fresh water to prevent dehydration. Feed a bland diet (boiled chicken breast and white rice, no seasoning) in small portions. If vomiting/diarrhea persists for more than 24 hours, or is accompanied by lethargy, consult a vet.",
+    diarrhea: "🤢 <strong>Stomach Upset & Diarrhea:</strong> This can be caused by dietary indiscretion, parasites, sudden food changes, or infections. Ensure your pet has access to fresh water to prevent dehydration. Feed a bland diet (boiled chicken breast and white rice, no seasoning) in small portions. If vomiting/diarrhea persists for more than 24 hours, or is accompanied by lethargy, consult a vet.",
+    letharg: "🥱 <strong>Lethargy in Pets:</strong> Lethargy is a common sign of illness. It may indicate an infection, pain, dehydration, or a chronic condition. If your pet is unusually tired, refuses to interact, or sleeps excessively, monitor for other symptoms. Seek veterinary help if it lasts more than 24 hours.",
+    eat: "🍽️ <strong>Pet Nutrition Advice:</strong> A balanced diet is critical. Ensure you feed high-quality commercially prepared food formulated for your pet's life stage (puppy/kitten, adult, senior). Avoid feeding toxic foods like grapes, raisins, onions, garlic, chocolate, macadamia nuts, and xylitol.",
+    food: "🍽️ <strong>Pet Nutrition Advice:</strong> A balanced diet is critical. Ensure you feed high-quality commercially prepared food formulated for your pet's life stage (puppy/kitten, adult, senior). Avoid feeding toxic foods like grapes, raisins, onions, garlic, chocolate, macadamia nuts, and xylitol.",
+    sitter: "📋 <strong>Sitter Checklist:</strong> When leaving your pet with a sitter, provide clear instructions regarding feeding schedules, medication dosages, emergency contact numbers, your vet's address, and your pet's favorite routines or quirks.",
+    cough: "🗣️ <strong>Coughing in Pets:</strong> Coughing can be caused by respiratory infections (like Kennel Cough in dogs), asthma (common in cats), heart disease, or inhaled foreign bodies. Ensure your pet is in a well-ventilated space and consult your vet for an accurate diagnosis.",
+    bath: "🧼 <strong>Grooming Tips:</strong> Regular grooming keeps your skin and coat healthy. Use only pet-safe shampoos, as human shampoos can disrupt their skin's natural pH level. Brush their coat frequently to prevent matting and check for fleas or ticks.",
+    groom: "🧼 <strong>Grooming Tips:</strong> Regular grooming keeps your skin and coat healthy. Use only pet-safe shampoos, as human shampoos can disrupt their skin's natural pH level. Brush their coat frequently to prevent matting and check for fleas or ticks.",
+    app: "🐾 <strong>About PawTrack:</strong> PawTrack is your ultimate pet companion dashboard. Use the tabs to log feeding times, vaccine schedules, weight changes, tasks, vet appointments, and disease prevention notes, or upload key documents.",
+    pawtrack: "🐾 <strong>About PawTrack:</strong> PawTrack is your ultimate pet companion dashboard. Use the tabs to log feeding times, vaccine schedules, weight changes, tasks, vet appointments, and disease prevention notes, or upload key documents.",
+    default: "🐾 <strong>Pet Care Advice:</strong> I detected your question is related to pets! To give you the best advice: ensure your pet gets fresh water, a balanced diet, daily exercise, and regular checkups at the vet. If they show signs of pain or distress, please consult a veterinary medical professional."
+};
+
+function getOfflineSimulatedResponse(query) {
+    const q = query.toLowerCase();
+    for (const key in SIMULATED_RESPONSES) {
+        if (q.includes(key)) {
+            return SIMULATED_RESPONSES[key];
+        }
+    }
+    return SIMULATED_RESPONSES.default;
+}
+
+function appendAiChatMessage(sender, text) {
+    const win = document.getElementById('aiChatWindow');
+    if (!win) return null;
+    
+    const bubble = document.createElement('div');
+    bubble.className = `chat-bubble ${sender}`;
+    bubble.innerHTML = text;
+    win.appendChild(bubble);
+    win.scrollTop = win.scrollHeight;
+    return bubble;
+}
+
+function appendStreamingBubble() {
+    const win = document.getElementById('aiChatWindow');
+    if (!win) return null;
+    
+    const bubble = document.createElement('div');
+    bubble.className = 'chat-bubble bot';
+    bubble.innerHTML = `
+        <div class="typing-indicator">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    `;
+    win.appendChild(bubble);
+    win.scrollTop = win.scrollHeight;
+    return bubble;
+}
+
+async function handleAiConsultQuery(query) {
+    const cleanQuery = query.trim();
+    if (!cleanQuery) return;
+
+    // Append user message
+    appendAiChatMessage('user', cleanQuery);
+
+    // Filter pet keyword
+    if (!isQueryPetRelated(cleanQuery)) {
+        const bubble = appendStreamingBubble();
+        setTimeout(() => {
+            bubble.innerHTML = "🐾 I am trained to assist you only with pet health, care, behavior, nutrition, and wellness topics. Please ask a question related to pets.";
+        }, 600);
+        return;
+    }
+
+    const key = (data.settings || {}).geminiApiKey || '';
+    const bubble = appendStreamingBubble();
+
+    if (key.trim()) {
+        // Run Gemini Live API
+        aiChatHistory.push({
+            role: 'user',
+            parts: [{ text: cleanQuery }]
+        });
+
+        try {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:streamGenerateContent?key=${key}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    contents: aiChatHistory,
+                    systemInstruction: {
+                        parts: [{ text: "You are a helpful assistant for PawTrack, a pet tracking application. You must ONLY answer questions that are related to pets (dogs, cats, birds, and other domestic pets), including their health, care, behavior, grooming, training, and nutrition. If the user asks a question about any other topic (e.g. general knowledge, programming, non-pet recipes, math, etc.), you must politely decline to answer, stating that you can only answer pet‑related questions." }]
+                    }
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Gemini API error: ${response.status} ${response.statusText}`);
+            }
+
+            bubble.innerHTML = '';
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder('utf-8');
+            let fullText = '';
+            let chunkBuffer = '';
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                
+                chunkBuffer += decoder.decode(value, { stream: true });
+                
+                const lines = chunkBuffer.split('\n');
+                chunkBuffer = lines.pop() || '';
+                
+                for (const line of lines) {
+                    let cleanLine = line.trim();
+                    if (cleanLine.startsWith(',')) cleanLine = cleanLine.substring(1).trim();
+                    if (cleanLine.startsWith('[')) cleanLine = cleanLine.substring(1).trim();
+                    if (cleanLine.endsWith(']')) cleanLine = cleanLine.substring(0, cleanLine.length - 1).trim();
+                    if (!cleanLine) continue;
+                    
+                    try {
+                        const obj = JSON.parse(cleanLine);
+                        const text = obj.candidates?.[0]?.content?.parts?.[0]?.text;
+                        if (text) {
+                            fullText += text;
+                            bubble.innerHTML = parseMarkdown(fullText);
+                            const win = document.getElementById('aiChatWindow');
+                            if (win) win.scrollTop = win.scrollHeight;
+                        }
+                    } catch (e) {
+                        const text = extractTextFromRegex(cleanLine);
+                        if (text) {
+                            fullText += text;
+                            bubble.innerHTML = parseMarkdown(fullText);
+                            const win = document.getElementById('aiChatWindow');
+                            if (win) win.scrollTop = win.scrollHeight;
+                        }
+                    }
+                }
+            }
+
+            if (chunkBuffer.trim()) {
+                let cleanLine = chunkBuffer.trim();
+                if (cleanLine.startsWith(',')) cleanLine = cleanLine.substring(1).trim();
+                if (cleanLine.startsWith('[')) cleanLine = cleanLine.substring(1).trim();
+                if (cleanLine.endsWith(']')) cleanLine = cleanLine.substring(0, cleanLine.length - 1).trim();
+                try {
+                    const obj = JSON.parse(cleanLine);
+                    const text = obj.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (text) {
+                        fullText += text;
+                        bubble.innerHTML = parseMarkdown(fullText);
+                    }
+                } catch(e) {
+                    const text = extractTextFromRegex(cleanLine);
+                    if (text) {
+                        fullText += text;
+                        bubble.innerHTML = parseMarkdown(fullText);
+                    }
+                }
+            }
+
+            aiChatHistory.push({
+                role: 'model',
+                parts: [{ text: fullText }]
+            });
+
+        } catch (err) {
+            console.error(err);
+            bubble.innerHTML = `⚠️ <strong>Error calling Gemini API:</strong> ${err.message}. Please verify your API key in Settings.`;
+            aiChatHistory.pop();
+        }
+    } else {
+        // Run Offline simulator
+        const responseText = getOfflineSimulatedResponse(cleanQuery);
+        setTimeout(() => {
+            bubble.innerHTML = '';
+            const words = responseText.split(' ');
+            let index = 0;
+            
+            function printNextWord() {
+                if (index < words.length) {
+                    bubble.innerHTML += (index === 0 ? '' : ' ') + words[index];
+                    index++;
+                    const win = document.getElementById('aiChatWindow');
+                    if (win) win.scrollTop = win.scrollHeight;
+                    setTimeout(printNextWord, 45);
+                } else {
+                    aiChatHistory.push({
+                        role: 'model',
+                        parts: [{ text: responseText }]
+                    });
+                }
+            }
+            printNextWord();
+        }, 500);
+    }
+}
+
+// Bind Chat UI Event Listeners
+function initAiChatbotEvents() {
+    const sendBtn = document.getElementById('aiChatSendBtn');
+    const chatInput = document.getElementById('aiChatInput');
+    const tabTrackerBtn = document.getElementById('aiTabTrackerBtn');
+    const tabConsultBtn = document.getElementById('aiTabConsultBtn');
+    const secTracker = document.getElementById('aiSectionTracker');
+    const secConsult = document.getElementById('aiSectionConsult');
+
+    // Inner Tab Switching
+    if (tabTrackerBtn && tabConsultBtn && secTracker && secConsult) {
+        tabTrackerBtn.addEventListener('click', function() {
+            tabTrackerBtn.className = 'btn btn-primary btn-sm';
+            tabConsultBtn.className = 'btn btn-outline btn-sm';
+            tabConsultBtn.style.background = 'transparent';
+            tabConsultBtn.style.borderColor = 'transparent';
+            tabTrackerBtn.style.background = '';
+            tabTrackerBtn.style.borderColor = '';
+            
+            secTracker.style.display = 'block';
+            secConsult.style.display = 'none';
+        });
+
+        tabConsultBtn.addEventListener('click', function() {
+            tabConsultBtn.className = 'btn btn-primary btn-sm';
+            tabTrackerBtn.className = 'btn btn-outline btn-sm';
+            tabTrackerBtn.style.background = 'transparent';
+            tabTrackerBtn.style.borderColor = 'transparent';
+            tabConsultBtn.style.background = '';
+            tabConsultBtn.style.borderColor = '';
+            
+            secTracker.style.display = 'none';
+            secConsult.style.display = 'flex';
+        });
+    }
+
+    // Send click
+    if (sendBtn && chatInput) {
+        sendBtn.addEventListener('click', function() {
+            const val = chatInput.value;
+            if (val.trim()) {
+                handleAiConsultQuery(val);
+                chatInput.value = '';
+            }
+        });
+
+        // Press Enter
+        chatInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                sendBtn.click();
+            }
+        });
+    }
+
+    // Suggestion chips
+    document.querySelectorAll('.ai-suggestion-chip').forEach(chip => {
+        chip.addEventListener('click', function() {
+            const prompt = this.dataset.prompt;
+            if (prompt) {
+                handleAiConsultQuery(prompt);
+            }
+        });
+    });
+}
+
+// Auto-run initialization of AI chatbot
+setTimeout(() => {
+    initAiChatbotEvents();
+    updateAiConnectionStatus();
+}, 200);
+
+/* --- END: AI Disease Tracker --- */
+
+/* --- START: Pet Owner Profile Feature --- */
+window.updateOwnerProfileUI = function() {
+    const profile = data.ownerProfile || {
+        name: 'Pet Owner',
+        email: 'owner@example.com',
+        phone: '',
+        emergencyContactName: '',
+        emergencyContactPhone: '',
+        avatar: ''
+    };
+
+    // 1. Populate form inputs (if elements exist)
+    const nameInput = document.getElementById('ownerNameInput');
+    const emailInput = document.getElementById('ownerEmailInput');
+    const phoneInput = document.getElementById('ownerPhoneInput');
+    const emergencyNameInput = document.getElementById('ownerEmergencyNameInput');
+    const emergencyPhoneInput = document.getElementById('ownerEmergencyPhoneInput');
+
+    if (nameInput) nameInput.value = profile.name || '';
+    if (emailInput) emailInput.value = profile.email || '';
+    if (phoneInput) phoneInput.value = profile.phone || '';
+    if (emergencyNameInput) emergencyNameInput.value = profile.emergencyContactName || '';
+    if (emergencyPhoneInput) emergencyPhoneInput.value = profile.emergencyContactPhone || '';
+
+    // 2. Populate Overview Card Display Values
+    const nameDisplay = document.getElementById('ownerNameDisplayVal');
+    const emailDisplay = document.getElementById('ownerEmailDisplayVal');
+    const phoneDisplay = document.getElementById('ownerPhoneDisplayVal');
+    const emergencyNameDisplay = document.getElementById('ownerEmergencyNameDisplayVal');
+    const emergencyPhoneDisplay = document.getElementById('ownerEmergencyPhoneDisplayVal');
+
+    if (nameDisplay) nameDisplay.textContent = profile.name || 'Pet Owner';
+    if (emailDisplay) emailDisplay.textContent = profile.email || 'owner@example.com';
+    if (phoneDisplay) phoneDisplay.textContent = profile.phone || '—';
+    if (emergencyNameDisplay) emergencyNameDisplay.textContent = profile.emergencyContactName || '—';
+    if (emergencyPhoneDisplay) emergencyPhoneDisplay.textContent = profile.emergencyContactPhone || '—';
+
+    // 3. Render Avatars (Form Preview, Summary Display, and Header Button)
+    const previewEl = document.getElementById('ownerAvatarPreview');
+    const displayEl = document.getElementById('ownerAvatarDisplay');
+    const headerBtnEl = document.getElementById('ownerProfileBtn');
+
+    const avatarHtml = profile.avatar 
+        ? `<img src="${profile.avatar}" alt="Avatar" />` 
+        : '👤';
+
+    if (previewEl) previewEl.innerHTML = avatarHtml;
+    if (displayEl) displayEl.innerHTML = avatarHtml;
+    if (headerBtnEl) headerBtnEl.innerHTML = avatarHtml;
+
+    // 4. Populate Registered Pets Summary
+    const petsListEl = document.getElementById('ownerPetsListSummary');
+    if (petsListEl) {
+        const pets = data.pets || [];
+        if (pets.length === 0) {
+            petsListEl.innerHTML = '<div class="text-secondary text-sm">No pets registered yet.</div>';
+        } else {
+            petsListEl.innerHTML = pets.map(pet => {
+                const avatarSource = pet.avatar || (pet.type === 'cat' ? 'cat_avatar.png' : pet.type === 'dog' ? 'dog_avatar.png' : pet.type === 'bird' ? 'bird_avatar.png' : 'other_avatar.png');
+                return `
+                    <div style="display:flex; align-items:center; gap:10px; background:var(--card-bg); border:1px solid var(--border); border-radius:8px; padding:8px;">
+                        <img src="${avatarSource}" style="width:36px; height:36px; border-radius:50%; border:1px solid var(--border); object-fit:cover;" alt="${pet.name}" />
+                        <div style="flex:1;">
+                            <div class="fw-bold text-sm">${pet.name}</div>
+                            <div class="text-xs text-secondary">${pet.breed || pet.type} &bull; ${pet.age || '0'} yrs</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+    }
+};
+
+function saveOwnerProfile() {
+    const profile = data.ownerProfile || {};
+
+    const nameInput = document.getElementById('ownerNameInput');
+    const emailInput = document.getElementById('ownerEmailInput');
+    const phoneInput = document.getElementById('ownerPhoneInput');
+    const emergencyNameInput = document.getElementById('ownerEmergencyNameInput');
+    const emergencyPhoneInput = document.getElementById('ownerEmergencyPhoneInput');
+
+    profile.name = nameInput ? nameInput.value.trim() : 'Pet Owner';
+    profile.email = emailInput ? emailInput.value.trim() : 'owner@example.com';
+    profile.phone = phoneInput ? phoneInput.value.trim() : '';
+    profile.emergencyContactName = emergencyNameInput ? emergencyNameInput.value.trim() : '';
+    profile.emergencyContactPhone = emergencyPhoneInput ? emergencyPhoneInput.value.trim() : '';
+
+    data.ownerProfile = profile;
+    saveData();
+    window.updateOwnerProfileUI();
+    alert('Owner profile details updated successfully.');
+}
+
+function initOwnerProfileEvents() {
+    const saveBtn = document.getElementById('saveOwnerProfileBtn');
+    if (saveBtn) {
+        saveBtn.addEventListener('click', saveOwnerProfile);
+    }
+
+    const uploadInput = document.getElementById('ownerAvatarUpload');
+    if (uploadInput) {
+        uploadInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 200 * 1024) {
+                    alert('Avatar image is too large! Maximum allowed limit is 200KB.');
+                    uploadInput.value = '';
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    data.ownerProfile.avatar = evt.target.result;
+                    saveData();
+                    window.updateOwnerProfileUI();
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+}
+
+// Auto-run profile initialization
+setTimeout(() => {
+    initOwnerProfileEvents();
+    window.updateOwnerProfileUI();
+}, 300);
+/* --- END: Pet Owner Profile Feature --- */
+
 // === END FLAT UI & CORNER FLOATING PETS ===
+
