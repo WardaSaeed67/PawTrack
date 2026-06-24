@@ -1518,7 +1518,7 @@ if (data.pets.length === 0) {
     updateUI();
 }
 
-if (Notification.permission === 'default') {
+if (typeof Notification !== 'undefined' && Notification.permission === 'default') {
     Notification.requestPermission();
 }
 
@@ -2459,7 +2459,7 @@ const firedAlerts = new Set();
 
 function checkUpcomingAlerts() {
     const pet = getCurrentPet();
-    if (!pet || Notification.permission !== 'granted') return;
+    if (!pet || typeof Notification === 'undefined' || Notification.permission !== 'granted') return;
 
     const now = new Date();
     const todayStr = getTodayStr();
@@ -4309,7 +4309,7 @@ window.updateOwnerProfileUI = function() {
             petsListEl.innerHTML = '<div class="text-secondary text-sm">No pets registered yet.</div>';
         } else {
             petsListEl.innerHTML = pets.map(pet => {
-                const avatarSource = pet.avatar || (pet.type === 'cat' ? 'cat_avatar.png' : pet.type === 'dog' ? 'dog_avatar.png' : pet.type === 'bird' ? 'bird_avatar.png' : 'other_avatar.png');
+                const avatarSource = pet.avatar || (pet.type === 'cat' ? 'cat_avatar.jpg' : pet.type === 'dog' ? 'dog_avatar.png' : pet.type === 'bird' ? 'bird_avatar.png' : 'other_avatar.jpg');
                 return `
                     <div style="display:flex; align-items:center; gap:10px; background:var(--card-bg); border:1px solid var(--border); border-radius:8px; padding:8px;">
                         <img src="${avatarSource}" style="width:36px; height:36px; border-radius:50%; border:1px solid var(--border); object-fit:cover;" alt="${pet.name}" />
