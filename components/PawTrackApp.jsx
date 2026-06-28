@@ -16,7 +16,7 @@ export default function PawTrackApp({ htmlContent }) {
     initialized.current = true;
 
     // Import app.js immediately — DOM is already rendered by dangerouslySetInnerHTML
-    import('/app.js').catch((err) => {
+    import(/* webpackIgnore: true */ '/app.js').catch((err) => {
       console.error('[PawTrack] Failed to load app.js:', err);
     });
   }, []);
