@@ -128,7 +128,7 @@ export default function RegisterForm() {
           placeholder="John Doe"
           value={formData.name}
           onChange={handleChange}
-          autoComplete="name"
+          autoComplete="off"
           disabled={loading}
         />
         {errors.name && <span className="auth-error">{errors.name}</span>}
@@ -145,7 +145,7 @@ export default function RegisterForm() {
           placeholder="you@example.com"
           value={formData.email}
           onChange={handleChange}
-          autoComplete="email"
+          autoComplete="off"
           disabled={loading}
         />
         {errors.email && <span className="auth-error">{errors.email}</span>}
@@ -162,7 +162,7 @@ export default function RegisterForm() {
           placeholder="Min. 8 characters"
           value={formData.password}
           onChange={handleChange}
-          autoComplete="new-password"
+          autoComplete="off"
           disabled={loading}
         />
         {/* Password strength indicator */}
@@ -193,7 +193,7 @@ export default function RegisterForm() {
           placeholder="Re-enter your password"
           value={formData.confirmPassword}
           onChange={handleChange}
-          autoComplete="new-password"
+          autoComplete="off"
           disabled={loading}
         />
         {errors.confirmPassword && <span className="auth-error">{errors.confirmPassword}</span>}

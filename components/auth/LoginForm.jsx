@@ -100,7 +100,7 @@ export default function LoginForm() {
           placeholder="you@example.com"
           value={formData.email}
           onChange={handleChange}
-          autoComplete="email"
+          autoComplete="off"
           disabled={loading}
         />
         {errors.email && <span className="auth-error">{errors.email}</span>}
@@ -117,7 +117,7 @@ export default function LoginForm() {
           placeholder="Enter your password"
           value={formData.password}
           onChange={handleChange}
-          autoComplete="current-password"
+          autoComplete="off"
           disabled={loading}
         />
         {errors.password && <span className="auth-error">{errors.password}</span>}
