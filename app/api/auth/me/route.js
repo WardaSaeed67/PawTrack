@@ -6,6 +6,9 @@
 import { getSession } from '../../../../lib/auth/session';
 import { findUserById } from '../../../../lib/auth/db';
 
+// This route uses cookies — must be dynamic
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     const session = await getSession();
