@@ -1,0 +1,302 @@
+/* ========== PawTrack Auth Pages ========== */
+/* Uses the same CSS variables from the main app for consistent theming */
+
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg, #FFF0F0);
+  font-family: var(--font, 'Nunito', sans-serif);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Animated background paws */
+.auth-page::before {
+  content: '🐾';
+  position: absolute;
+  font-size: 180px;
+  opacity: 0.04;
+  top: -40px;
+  right: -30px;
+  transform: rotate(-20deg);
+  pointer-events: none;
+}
+
+.auth-page::after {
+  content: '🐾';
+  position: absolute;
+  font-size: 140px;
+  opacity: 0.04;
+  bottom: -20px;
+  left: -20px;
+  transform: rotate(30deg);
+  pointer-events: none;
+}
+
+.auth-card {
+  background: var(--card-bg, #FFFAFA);
+  border-radius: var(--radius, 20px);
+  box-shadow: var(--shadow, 0 8px 24px rgba(192, 57, 43, 0.12));
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 440px;
+  position: relative;
+  z-index: 1;
+  animation: authSlideUp 0.5s ease-out;
+}
+
+@keyframes authSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.auth-logo {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.auth-logo-icon {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 4px;
+  animation: authPawBounce 2s ease-in-out infinite;
+}
+
+@keyframes authPawBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.auth-logo-text {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--accent, #C0392B);
+  letter-spacing: -0.5px;
+}
+
+.auth-subtitle {
+  text-align: center;
+  color: var(--text-secondary, #6B3A3A);
+  font-size: 15px;
+  margin-bottom: 32px;
+  font-weight: 600;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.auth-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text, #3D1A1A);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.auth-input {
+  padding: 14px 16px;
+  border: 2px solid var(--border, #F0D0D0);
+  border-radius: 12px;
+  font-size: 15px;
+  font-family: var(--font, 'Nunito', sans-serif);
+  background: var(--input-bg, #FFF8F8);
+  color: var(--text, #3D1A1A);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.auth-input:focus {
+  border-color: var(--accent, #C0392B);
+  box-shadow: 0 0 0 3px var(--accent-light, #F5C8C8);
+}
+
+.auth-input.error {
+  border-color: var(--danger, #C0392B);
+  box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.15);
+}
+
+.auth-error {
+  font-size: 12px;
+  color: var(--danger, #C0392B);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.auth-error::before {
+  content: '⚠';
+  font-size: 11px;
+}
+
+.auth-btn {
+  padding: 14px 24px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 800;
+  font-family: var(--font, 'Nunito', sans-serif);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-btn-primary {
+  background: var(--btn-primary, #C0392B);
+  color: var(--btn-primary-text, #FFF);
+}
+
+.auth-btn-primary:hover:not(:disabled) {
+  background: var(--btn-hover, #A93226);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(192, 57, 43, 0.3);
+}
+
+.auth-btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.auth-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Loading spinner inside button */
+.auth-btn-loading {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.auth-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2.5px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: authSpin 0.6s linear infinite;
+}
+
+@keyframes authSpin {
+  to { transform: rotate(360deg); }
+}
+
+.auth-general-error {
+  background: rgba(192, 57, 43, 0.08);
+  border: 1px solid rgba(192, 57, 43, 0.2);
+  border-radius: 10px;
+  padding: 12px 16px;
+  color: var(--danger, #C0392B);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  animation: authShake 0.4s ease;
+}
+
+@keyframes authShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+.auth-success {
+  background: rgba(39, 174, 96, 0.08);
+  border: 1px solid rgba(39, 174, 96, 0.2);
+  border-radius: 10px;
+  padding: 12px 16px;
+  color: var(--success, #27AE60);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 14px;
+  color: var(--text-secondary, #6B3A3A);
+}
+
+.auth-footer a {
+  color: var(--accent, #C0392B);
+  text-decoration: none;
+  font-weight: 700;
+  transition: color 0.2s ease;
+}
+
+.auth-footer a:hover {
+  color: var(--accent-dark, #A93226);
+  text-decoration: underline;
+}
+
+/* Password strength indicator */
+.auth-password-strength {
+  display: flex;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.auth-strength-bar {
+  height: 4px;
+  flex: 1;
+  border-radius: 2px;
+  background: var(--border, #F0D0D0);
+  transition: background 0.3s ease;
+}
+
+.auth-strength-bar.weak { background: var(--danger, #C0392B); }
+.auth-strength-bar.medium { background: var(--warning, #E67E22); }
+.auth-strength-bar.strong { background: var(--success, #27AE60); }
+
+.auth-strength-text {
+  font-size: 11px;
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+.auth-strength-text.weak { color: var(--danger, #C0392B); }
+.auth-strength-text.medium { color: var(--warning, #E67E22); }
+.auth-strength-text.strong { color: var(--success, #27AE60); }
+
+/* Responsive */
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 36px 24px;
+    border-radius: 16px;
+  }
+
+  .auth-logo-text {
+    font-size: 24px;
+  }
+
+  .auth-input {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+}
