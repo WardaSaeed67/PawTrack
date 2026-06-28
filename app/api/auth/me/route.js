@@ -24,10 +24,15 @@ export async function GET() {
     const user = await findUserById(session.userId);
 
     if (!user) {
-      return Response.json(
-        { error: 'User not found' },
-        { status: 404 }
-      );
+      // In serverless environments (like Vercel), the in-memory array resets per instance.
+      // We fallback to the session data so the user remains logged in.
+      return Response.json({
+        user: {
+          id: session.userId,
+          name: session.name,
+          email: session.email
+        }
+      }, { status: 200 });
     }
 
     return Response.json({ user }, { status: 200 });
