@@ -4360,3 +4360,115 @@ setTimeout(() => {
 
 // === END FLAT UI & CORNER FLOATING PETS ===
 
+// === AUTH INTEGRATION: Account Details, Profile Auto-fill, Logout ===
+(function initAuthIntegration() {
+    // Fetch the authenticated user's data from the session
+    async function fetchAuthUser() {
+        try {
+            const res = await fetch('/api/auth/me');
+            if (!res.ok) return null;
+            const data = await res.json();
+            return data.user || null;
+        } catch {
+            return null;
+        }
+    }
+
+    // Populate account details in Privacy Settings section
+    function populateAccountDetails(user) {
+        const nameEl = document.getElementById('authAccountName');
+        const emailEl = document.getElementById('authAccountEmail');
+        const statusEl = document.getElementById('authAccountStatus');
+
+        if (nameEl) nameEl.textContent = user.name || 'Unknown';
+        if (emailEl) emailEl.textContent = user.email || 'Unknown';
+        if (statusEl) {
+            statusEl.textContent = '● Active';
+            statusEl.style.color = 'var(--success)';
+        }
+    }
+
+    // Auto-fill profile email and name from auth session
+    function autoFillProfile(user) {
+        // Only auto-fill if the owner profile is still at default values
+        const ownerProfile = (window.data || {}).ownerProfile || {};
+        const isDefaultEmail = !ownerProfile.email || ownerProfile.email === 'owner@example.com';
+        const isDefaultName = !ownerProfile.name || ownerProfile.name === 'Pet Owner';
+
+        // Auto-fill the email input and display
+        if (isDefaultEmail && user.email) {
+            const emailInput = document.getElementById('ownerEmailInput');
+            const emailDisplay = document.getElementById('ownerEmailDisplayVal');
+            if (emailInput) emailInput.value = user.email;
+            if (emailDisplay) emailDisplay.textContent = user.email;
+
+            // Also persist to data
+            if (window.data) {
+                if (!window.data.ownerProfile) window.data.ownerProfile = {};
+                window.data.ownerProfile.email = user.email;
+            }
+        }
+
+        // Auto-fill the name input and display
+        if (isDefaultName && user.name) {
+            const nameInput = document.getElementById('ownerNameInput');
+            const nameDisplay = document.getElementById('ownerNameDisplayVal');
+            if (nameInput) nameInput.value = user.name;
+            if (nameDisplay) nameDisplay.textContent = user.name;
+
+            // Also persist to data
+            if (window.data) {
+                if (!window.data.ownerProfile) window.data.ownerProfile = {};
+                window.data.ownerProfile.name = user.name;
+            }
+        }
+
+        // Save to localStorage if we updated anything
+        if ((isDefaultEmail || isDefaultName) && typeof saveData === 'function') {
+            saveData();
+        }
+    }
+
+    // Handle logout button
+    function initLogoutButton() {
+        const logoutBtn = document.getElementById('authLogoutBtn');
+        if (!logoutBtn) return;
+
+        logoutBtn.addEventListener('click', async function() {
+            logoutBtn.disabled = true;
+            logoutBtn.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px;"><span style="width:16px;height:16px;border:2.5px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.6s linear infinite;display:inline-block;"></span> Logging out...</span>';
+
+            try {
+                await fetch('/api/auth/logout', { method: 'POST' });
+                // Redirect to login page
+                window.location.href = '/login';
+            } catch {
+                logoutBtn.disabled = false;
+                logoutBtn.textContent = '🚪 Logout';
+                alert('Failed to logout. Please try again.');
+            }
+        });
+    }
+
+    // Run after DOM is ready (with small delay to let other init code run first)
+    setTimeout(async () => {
+        const user = await fetchAuthUser();
+        if (user) {
+            populateAccountDetails(user);
+            autoFillProfile(user);
+        } else {
+            // Not authenticated — show placeholder
+            const nameEl = document.getElementById('authAccountName');
+            const emailEl = document.getElementById('authAccountEmail');
+            const statusEl = document.getElementById('authAccountStatus');
+            if (nameEl) nameEl.textContent = 'Not signed in';
+            if (emailEl) emailEl.textContent = '—';
+            if (statusEl) {
+                statusEl.textContent = '● Offline';
+                statusEl.style.color = 'var(--text-secondary)';
+            }
+        }
+        initLogoutButton();
+    }, 500);
+})();
+// === END AUTH INTEGRATION ===

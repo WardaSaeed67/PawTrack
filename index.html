@@ -966,14 +966,38 @@
                                 <span class="chevron">▼</span>
                             </button>
                             <div class="collapsible-content">
+                                <!-- Account Details (populated from auth session) -->
+                                <div id="authAccountSection" style="margin-bottom: 18px; padding: 16px; background: var(--input-bg); border-radius: var(--radius); border: 1px solid var(--border);">
+                                    <h4 style="margin: 0 0 12px 0; font-size: 0.95rem; color: var(--text);">👤 Account Details</h4>
+                                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <span class="text-secondary text-sm" style="font-weight: 600;">Full Name</span>
+                                            <span id="authAccountName" class="text-sm" style="font-weight: 700; color: var(--text);">Loading...</span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <span class="text-secondary text-sm" style="font-weight: 600;">Email</span>
+                                            <span id="authAccountEmail" class="text-sm" style="font-weight: 700; color: var(--accent);">Loading...</span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <span class="text-secondary text-sm" style="font-weight: 600;">Status</span>
+                                            <span id="authAccountStatus" class="text-sm" style="font-weight: 700; color: var(--success);">● Active</span>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="form-group flex-between" style="margin-bottom:14px;">
                                     <label for="settingsDataSharing">Data Sharing (Placeholder)</label>
                                     <input type="checkbox" id="settingsDataSharing" style="width:24px; height:24px;" />
                                 </div>
-                                <div class="form-group flex-between" style="margin-bottom:0;">
+                                <div class="form-group flex-between" style="margin-bottom:18px;">
                                     <label for="settingsUsageAnalytics">Usage Analytics (Placeholder)</label>
                                     <input type="checkbox" id="settingsUsageAnalytics" style="width:24px; height:24px;" />
                                 </div>
+
+                                <!-- Logout Button -->
+                                <button class="btn btn-danger btn-block" id="authLogoutBtn" style="margin-top: 8px; padding: 14px; font-size: 15px; font-weight: 800; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                    🚪 Logout
+                                </button>
                             </div>
                         </div>
 
