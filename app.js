@@ -1580,7 +1580,12 @@ function handleRouting() {
 }
 
 window.addEventListener('hashchange', handleRouting);
-window.addEventListener('load', handleRouting);
+// In Next.js the 'load' event fires before useEffect; call directly to ensure initial routing
+if (document.readyState === 'complete') {
+    handleRouting();
+} else {
+    window.addEventListener('load', handleRouting);
+}
 
 // Core new pages refresh dispatcher
 function updateNewPagesUI(pet) {
@@ -4049,132 +4054,105 @@ async function handleAiConsultQuery(query) {
         return;
     }
 
-    const key = (data.settings || {}).geminiApiKey || '';
     const bubble = appendStreamingBubble();
 
-    if (key.trim()) {
-        // Run Gemini Live API
-        aiChatHistory.push({
-            role: 'user',
-            parts: [{ text: cleanQuery }]
+    // Use the server-side /api/gemini proxy (key stored in .env.local, never exposed to browser)
+    aiChatHistory.push({
+        role: 'user',
+        parts: [{ text: cleanQuery }]
+    });
+
+    try {
+        const response = await fetch('/api/gemini', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                contents: aiChatHistory,
+                systemInstruction: {
+                    parts: [{ text: "You are a helpful assistant for PawTrack, a pet tracking application. You must ONLY answer questions that are related to pets (dogs, cats, birds, and other domestic pets), including their health, care, behavior, grooming, training, and nutrition. If the user asks a question about any other topic (e.g. general knowledge, programming, non-pet recipes, math, etc.), you must politely decline to answer, stating that you can only answer pet‑related questions." }]
+                }
+            })
         });
 
-        try {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:streamGenerateContent?key=${key}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    contents: aiChatHistory,
-                    systemInstruction: {
-                        parts: [{ text: "You are a helpful assistant for PawTrack, a pet tracking application. You must ONLY answer questions that are related to pets (dogs, cats, birds, and other domestic pets), including their health, care, behavior, grooming, training, and nutrition. If the user asks a question about any other topic (e.g. general knowledge, programming, non-pet recipes, math, etc.), you must politely decline to answer, stating that you can only answer pet‑related questions." }]
-                    }
-                })
-            });
+        if (!response.ok) {
+            throw new Error(`Gemini API error: ${response.status} ${response.statusText}`);
+        }
 
-            if (!response.ok) {
-                throw new Error(`Gemini API error: ${response.status} ${response.statusText}`);
-            }
+        bubble.innerHTML = '';
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder('utf-8');
+        let fullText = '';
+        let chunkBuffer = '';
 
-            bubble.innerHTML = '';
-            const reader = response.body.getReader();
-            const decoder = new TextDecoder('utf-8');
-            let fullText = '';
-            let chunkBuffer = '';
-
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-                
-                chunkBuffer += decoder.decode(value, { stream: true });
-                
-                const lines = chunkBuffer.split('\n');
-                chunkBuffer = lines.pop() || '';
-                
-                for (const line of lines) {
-                    let cleanLine = line.trim();
-                    if (cleanLine.startsWith(',')) cleanLine = cleanLine.substring(1).trim();
-                    if (cleanLine.startsWith('[')) cleanLine = cleanLine.substring(1).trim();
-                    if (cleanLine.endsWith(']')) cleanLine = cleanLine.substring(0, cleanLine.length - 1).trim();
-                    if (!cleanLine) continue;
-                    
-                    try {
-                        const obj = JSON.parse(cleanLine);
-                        const text = obj.candidates?.[0]?.content?.parts?.[0]?.text;
-                        if (text) {
-                            fullText += text;
-                            bubble.innerHTML = parseMarkdown(fullText);
-                            const win = document.getElementById('aiChatWindow');
-                            if (win) win.scrollTop = win.scrollHeight;
-                        }
-                    } catch (e) {
-                        const text = extractTextFromRegex(cleanLine);
-                        if (text) {
-                            fullText += text;
-                            bubble.innerHTML = parseMarkdown(fullText);
-                            const win = document.getElementById('aiChatWindow');
-                            if (win) win.scrollTop = win.scrollHeight;
-                        }
-                    }
-                }
-            }
-
-            if (chunkBuffer.trim()) {
-                let cleanLine = chunkBuffer.trim();
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            
+            chunkBuffer += decoder.decode(value, { stream: true });
+            
+            const lines = chunkBuffer.split('\n');
+            chunkBuffer = lines.pop() || '';
+            
+            for (const line of lines) {
+                let cleanLine = line.trim();
                 if (cleanLine.startsWith(',')) cleanLine = cleanLine.substring(1).trim();
                 if (cleanLine.startsWith('[')) cleanLine = cleanLine.substring(1).trim();
                 if (cleanLine.endsWith(']')) cleanLine = cleanLine.substring(0, cleanLine.length - 1).trim();
+                if (!cleanLine) continue;
+                
                 try {
                     const obj = JSON.parse(cleanLine);
                     const text = obj.candidates?.[0]?.content?.parts?.[0]?.text;
                     if (text) {
                         fullText += text;
                         bubble.innerHTML = parseMarkdown(fullText);
+                        const win = document.getElementById('aiChatWindow');
+                        if (win) win.scrollTop = win.scrollHeight;
                     }
-                } catch(e) {
+                } catch (e) {
                     const text = extractTextFromRegex(cleanLine);
                     if (text) {
                         fullText += text;
                         bubble.innerHTML = parseMarkdown(fullText);
+                        const win = document.getElementById('aiChatWindow');
+                        if (win) win.scrollTop = win.scrollHeight;
                     }
                 }
             }
-
-            aiChatHistory.push({
-                role: 'model',
-                parts: [{ text: fullText }]
-            });
-
-        } catch (err) {
-            console.error(err);
-            bubble.innerHTML = `⚠️ <strong>Error calling Gemini API:</strong> ${err.message}. Please verify your API key in Settings.`;
-            aiChatHistory.pop();
         }
-    } else {
-        // Run Offline simulator
-        const responseText = getOfflineSimulatedResponse(cleanQuery);
-        setTimeout(() => {
-            bubble.innerHTML = '';
-            const words = responseText.split(' ');
-            let index = 0;
-            
-            function printNextWord() {
-                if (index < words.length) {
-                    bubble.innerHTML += (index === 0 ? '' : ' ') + words[index];
-                    index++;
-                    const win = document.getElementById('aiChatWindow');
-                    if (win) win.scrollTop = win.scrollHeight;
-                    setTimeout(printNextWord, 45);
-                } else {
-                    aiChatHistory.push({
-                        role: 'model',
-                        parts: [{ text: responseText }]
-                    });
+
+        if (chunkBuffer.trim()) {
+            let cleanLine = chunkBuffer.trim();
+            if (cleanLine.startsWith(',')) cleanLine = cleanLine.substring(1).trim();
+            if (cleanLine.startsWith('[')) cleanLine = cleanLine.substring(1).trim();
+            if (cleanLine.endsWith(']')) cleanLine = cleanLine.substring(0, cleanLine.length - 1).trim();
+            try {
+                const obj = JSON.parse(cleanLine);
+                const text = obj.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (text) {
+                    fullText += text;
+                    bubble.innerHTML = parseMarkdown(fullText);
+                }
+            } catch(e) {
+                const text = extractTextFromRegex(cleanLine);
+                if (text) {
+                    fullText += text;
+                    bubble.innerHTML = parseMarkdown(fullText);
                 }
             }
-            printNextWord();
-        }, 500);
+        }
+
+        aiChatHistory.push({
+            role: 'model',
+            parts: [{ text: fullText }]
+        });
+
+    } catch (err) {
+        console.error(err);
+        bubble.innerHTML = `⚠️ <strong>Error:</strong> ${err.message}. Please ensure GEMINI_API_KEY is set in .env.local and restart the server.`;
+        aiChatHistory.pop();
     }
 }
 
