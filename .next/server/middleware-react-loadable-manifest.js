@@ -1,1 +1,1 @@
-self.__REACT_LOADABLE_MANIFEST="{}"
+self.__REACT_LOADABLE_MANIFEST="{\"components\\\\PawTrackApp.jsx -> /app.js\":{\"id\":\"components\\\\PawTrackApp.jsx -> /app.js\",\"files\":[\"static/chunks/_app-pages-browser_app_js.js\"]}}"
