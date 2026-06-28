@@ -4232,8 +4232,8 @@ setTimeout(() => {
 /* --- START: Pet Owner Profile Feature --- */
 window.updateOwnerProfileUI = function() {
     const profile = data.ownerProfile || {
-        name: 'Pet Owner',
-        email: 'owner@example.com',
+        name: '',
+        email: '',
         phone: '',
         emergencyContactName: '',
         emergencyContactPhone: '',
@@ -4260,8 +4260,8 @@ window.updateOwnerProfileUI = function() {
     const emergencyNameDisplay = document.getElementById('ownerEmergencyNameDisplayVal');
     const emergencyPhoneDisplay = document.getElementById('ownerEmergencyPhoneDisplayVal');
 
-    if (nameDisplay) nameDisplay.textContent = profile.name || 'Pet Owner';
-    if (emailDisplay) emailDisplay.textContent = profile.email || 'owner@example.com';
+    if (nameDisplay) nameDisplay.textContent = profile.name || '—';
+    if (emailDisplay) emailDisplay.textContent = profile.email || '—';
     if (phoneDisplay) phoneDisplay.textContent = profile.phone || '—';
     if (emergencyNameDisplay) emergencyNameDisplay.textContent = profile.emergencyContactName || '—';
     if (emergencyPhoneDisplay) emergencyPhoneDisplay.textContent = profile.emergencyContactPhone || '—';
@@ -4450,7 +4450,7 @@ setTimeout(() => {
         });
     }
 
-    // Run after DOM is ready (with small delay to let other init code run first)
+    // Run quickly after DOM is ready
     setTimeout(async () => {
         const user = await fetchAuthUser();
         if (user) {
@@ -4469,6 +4469,6 @@ setTimeout(() => {
             }
         }
         initLogoutButton();
-    }, 500);
+    }, 100);
 })();
 // === END AUTH INTEGRATION ===

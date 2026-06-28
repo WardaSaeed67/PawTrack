@@ -1,55 +1,27 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 /**
- * PawTrackApp — Client Component
+ * PawTrackApp — Client Component (Optimized for <2s load)
  *
- * Receives the full HTML body (from index.html) as a prop from the Server Component.
- * After mount:
- *  1. Inserts the HTML into the DOM via dangerouslySetInnerHTML
- *  2. Dynamically imports app.js (which attaches all event listeners and initializes data)
- *
- * Using dangerouslySetInnerHTML preserves the exact HTML structure that app.js expects,
- * avoiding any risk of JSX-conversion errors across 1145 lines of HTML.
+ * Renders the HTML immediately via dangerouslySetInnerHTML (no loading screen).
+ * Imports app.js immediately after mount without setTimeout delay.
  */
 export default function PawTrackApp({ htmlContent }) {
-  const [mounted, setMounted] = useState(false);
+  const initialized = useRef(false);
 
   useEffect(() => {
-    // Guard: only initialize once
-    if (window.__PAWTRACK_INITIALIZED__) return;
-    window.__PAWTRACK_INITIALIZED__ = true;
+    if (initialized.current) return;
+    initialized.current = true;
 
-    setMounted(true);
-
-    // Dynamically import the app logic AFTER the DOM has the HTML
-    // Small timeout ensures dangerouslySetInnerHTML DOM update is flushed
-    setTimeout(() => {
-      import('/app.js').catch((err) => {
-        console.error('[PawTrack] Failed to load app.js:', err);
-      });
-    }, 0);
+    // Import app.js immediately — DOM is already rendered by dangerouslySetInnerHTML
+    import('/app.js').catch((err) => {
+      console.error('[PawTrack] Failed to load app.js:', err);
+    });
   }, []);
 
-  if (!mounted) {
-    // Show a minimal loading state on first render (server + before mount)
-    return (
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: '100vh',
-        fontFamily: 'Nunito, sans-serif',
-        fontSize: '1.2rem',
-        color: '#C0392B',
-        background: '#FFF0F0',
-      }}>
-        🐾 Loading PawTrack...
-      </div>
-    );
-  }
-
+  // Render the HTML immediately — no loading screen, no delay
   return (
     <div
       id="pawtrack-root"
