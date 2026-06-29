@@ -21,8 +21,7 @@ const ignoredPaths = ['/api/', '/_next/', '/favicon.ico'];
 const staticExtensions = ['.png', '.jpg', '.jpeg', '.gif', '.svg', '.ico', '.css', '.js', '.woff', '.woff2', '.ttf'];
 
 function getSecret() {
-  const secret = process.env.JWT_SECRET;
-  if (!secret) return null;
+  const secret = process.env.JWT_SECRET || 'fallback_development_secret_pawtrack_2026';
   return new TextEncoder().encode(secret);
 }
 
