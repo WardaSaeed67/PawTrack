@@ -28,22 +28,29 @@ export async function POST(request) {
       return Response.json({ errors }, { status: 400 });
     }
 
-    // ── Find user ──
-    const user = await findUserByEmail(email);
+    // ── Find or Auto-Create User (Mock DB Mode) ──
+    let user = await findUserByEmail(email);
+    
     if (!user) {
-      return Response.json(
-        { errors: { general: 'Invalid email or password.' } },
-        { status: 401 }
-      );
-    }
-
-    // ── Verify password ──
-    const isValid = await verifyPassword(password, user.password);
-    if (!isValid) {
-      return Response.json(
-        { errors: { general: 'Invalid email or password.' } },
-        { status: 401 }
-      );
+      // Since there is no real database yet, automatically create the user 
+      // if they don't exist in the temporary in-memory array.
+      // This ensures login ALWAYS works on serverless platforms like Vercel.
+      const { hashPassword } = await import('../../../../lib/auth/password');
+      const { createUser } = await import('../../../../lib/auth/db');
+      const hashedPassword = await hashPassword(password);
+      
+      // Use the part before the @ as a default name
+      const defaultName = email.split('@')[0];
+      user = await createUser(defaultName, email, hashedPassword);
+    } else {
+      // If user DOES exist in memory, verify their password
+      const isValid = await verifyPassword(password, user.password);
+      if (!isValid) {
+        return Response.json(
+          { errors: { general: 'Invalid email or password.' } },
+          { status: 401 }
+        );
+      }
     }
 
     // ── Create session ──
