@@ -97,8 +97,7 @@ export default function RegisterForm() {
 
       setSuccess('Account created! Redirecting...');
       setTimeout(() => {
-        router.push('/');
-        router.refresh();
+        window.location.href = '/';
       }, 500);
     } catch {
       setErrors({ general: 'Network error. Please try again.' });

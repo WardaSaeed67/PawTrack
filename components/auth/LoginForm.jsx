@@ -71,8 +71,7 @@ export default function LoginForm() {
 
       setSuccess('Login successful! Redirecting...');
       setTimeout(() => {
-        router.push('/');
-        router.refresh();
+        window.location.href = '/';
       }, 500);
     } catch {
       setErrors({ general: 'Network error. Please try again.' });
